@@ -7,9 +7,6 @@
 
 #include "targetver.h"
 
-#include "../Interface/G_Math/GMathDefines.h"
-#include "../Interface/G_Math/GMatrix.h"
-
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files
 #include <windows.h>

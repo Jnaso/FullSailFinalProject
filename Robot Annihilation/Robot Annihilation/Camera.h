@@ -8,8 +8,6 @@ class Camera
 	};
 
 	MousePos CurrentPos, PreviousPos;
-	
-	GW::MATH::GMATRIXF View;
 
 public:
 	void Update(float delta);
