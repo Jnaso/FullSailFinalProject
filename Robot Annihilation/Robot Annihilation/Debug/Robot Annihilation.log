@@ -1,3 +1,2 @@
-﻿  graphicsclass.cpp
-c:\users\josh naso\desktop\c++\cursed-turtle-studios\robot annihilation\robot annihilation\graphicsclass.cpp(25): warning C4316: 'DX': object allocated on the heap may not be aligned 16
-  Robot Annihilation.vcxproj -> C:\Users\Josh Naso\Desktop\C++\Cursed-Turtle-Studios\Robot Annihilation\Debug\Robot Annihilation.exe
+﻿  Robot Annihilation.cpp
+  Robot Annihilation.vcxproj -> C:\Users\young\OneDrive\Documents\Full Sail\FinalProjectRepository\Cursed-Turtle-Studios\Robot Annihilation\Debug\Robot Annihilation.exe
