@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Robot Annihilation", "Robot Annihilation\Robot Annihilation.vcxproj", "{489E169C-C9D9-4ED5-A61A-E782486AFA80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Debug|x64.ActiveCfg = Debug|x64
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Debug|x64.Build.0 = Debug|x64
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Debug|x86.ActiveCfg = Debug|Win32
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Debug|x86.Build.0 = Debug|Win32
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Release|x64.ActiveCfg = Release|x64
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Release|x64.Build.0 = Release|x64
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Release|x86.ActiveCfg = Release|Win32
+		{489E169C-C9D9-4ED5-A61A-E782486AFA80}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E92C2DD5-0CCC-4BC4-9848-FFA6DD0891CD}
+	EndGlobalSection
+EndGlobal
