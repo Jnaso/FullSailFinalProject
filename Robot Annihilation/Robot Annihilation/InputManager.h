@@ -10,6 +10,14 @@ public:
 	InputManager();
 	~InputManager();
 
+
+
+
+
+
+
+
+
 	bool Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, int screenHeight);
 	bool Update();
 
