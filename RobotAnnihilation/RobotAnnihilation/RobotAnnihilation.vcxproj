@@ -155,14 +155,11 @@
     <ClInclude Include="allofthelights.h" />
     <ClInclude Include="dxstuff.h" />
     <ClInclude Include="graphicsclass.h" />
-    <ClInclude Include="header.h" />
     <ClInclude Include="InventoryManager.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="RobotAnnihilation.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RobotAnnihilation.h" />
     <ClInclude Include="shaderstuff.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WICTextureLoader.h" />
