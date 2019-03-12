@@ -15,6 +15,10 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <iostream>
+
+//Global Included Files
+#include "InventoryManager.h"
 
 
 // reference additional headers your program requires here
