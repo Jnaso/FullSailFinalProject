@@ -72,23 +72,23 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		file.read((char*)&framesAmount, sizeof(uint32_t));
 		for (uint32_t j = 0; j < framesAmount; j++)
 		{
-			XMMATRIX data;
-			file.read((char*)&data.r[0].m128_f32[0], sizeof(float));
-			file.read((char*)&data.r[0].m128_f32[1], sizeof(float));
-			file.read((char*)&data.r[0].m128_f32[2], sizeof(float));
-			file.read((char*)&data.r[0].m128_f32[3], sizeof(float));
-			file.read((char*)&data.r[1].m128_f32[0], sizeof(float));
-			file.read((char*)&data.r[1].m128_f32[1], sizeof(float));
-			file.read((char*)&data.r[1].m128_f32[2], sizeof(float));
-			file.read((char*)&data.r[1].m128_f32[3], sizeof(float));
-			file.read((char*)&data.r[2].m128_f32[0], sizeof(float));
-			file.read((char*)&data.r[2].m128_f32[1], sizeof(float));
-			file.read((char*)&data.r[2].m128_f32[2], sizeof(float));
-			file.read((char*)&data.r[2].m128_f32[3], sizeof(float));
-			file.read((char*)&data.r[3].m128_f32[0], sizeof(float));
-			file.read((char*)&data.r[3].m128_f32[1], sizeof(float));
-			file.read((char*)&data.r[3].m128_f32[2], sizeof(float));
-			file.read((char*)&data.r[3].m128_f32[3], sizeof(float));
+			float4x4 data;
+			file.read((char*)&data[0].x, sizeof(float));
+			file.read((char*)&data[0].y, sizeof(float));
+			file.read((char*)&data[0].z, sizeof(float));
+			file.read((char*)&data[0].w, sizeof(float));
+			file.read((char*)&data[1].x, sizeof(float));
+			file.read((char*)&data[1].y, sizeof(float));
+			file.read((char*)&data[1].z, sizeof(float));
+			file.read((char*)&data[1].w, sizeof(float));
+			file.read((char*)&data[2].x, sizeof(float));
+			file.read((char*)&data[2].y, sizeof(float));
+			file.read((char*)&data[2].z, sizeof(float));
+			file.read((char*)&data[2].w, sizeof(float));
+			file.read((char*)&data[3].x, sizeof(float));
+			file.read((char*)&data[3].y, sizeof(float));
+			file.read((char*)&data[3].z, sizeof(float));
+			file.read((char*)&data[3].w, sizeof(float));
 			ObjectAnimation.frames[i].joints.push_back(data);
 		}
 	}
@@ -98,26 +98,26 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 	ObjectAnimation.bindPose.joints.resize(ObjectAnimation.frames[0].joints.size());
 	for (uint32_t i = 0; i < ObjectAnimation.frames[0].joints.size(); i++)
 	{
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[0].m128_f32[0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[0].m128_f32[1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[0].m128_f32[2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[0].m128_f32[3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[1].m128_f32[0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[1].m128_f32[1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[1].m128_f32[2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[1].m128_f32[3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[2].m128_f32[0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[2].m128_f32[1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[2].m128_f32[2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[2].m128_f32[3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[3].m128_f32[0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[3].m128_f32[1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[3].m128_f32[2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i].r[3].m128_f32[3], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][0], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][1], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][2], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][3], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][0], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][1], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][2], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][3], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][0], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][1], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][2], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][3], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][0], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][1], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][2], sizeof(float));
+		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][3], sizeof(float));
 	}
 	for (unsigned int i = 0; i < ObjectAnimation.bindPose.joints.size(); i++)
 	{
-		ObjectAnimation.bindPose.joints[i] = XMMatrixInverse(nullptr, ObjectAnimation.bindPose.joints[i]);
+		ObjectAnimation.bindPose.joints[i] = XMMatrixToFloat4x4(XMMatrixInverse(nullptr, Float4x4ToXMMatrix(ObjectAnimation.bindPose.joints[i])));
 	}
 	for (unsigned int i = 0; i < ObjectAnimation.frames[0].joints.size(); i++)
 	{

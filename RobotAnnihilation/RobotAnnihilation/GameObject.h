@@ -1,5 +1,17 @@
 #pragma once
-#include "header.h"
+#include "MathDefines.h"
+#include "WICTextureLoader.h"
+#include <fstream>
+#include <vector>
+#include <dxgi1_2.h>
+#include <d3d11_2.h>
+#include <DirectXMath.h>
+
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "DXGI.lib")
+
+using namespace DirectX;
 
 class GameObject
 {
