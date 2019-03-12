@@ -52,7 +52,6 @@ bld/
 *.svd
 *.csproj
 *.unityproj
-*.sln
 *.suo
 *.tmp
 *.user
