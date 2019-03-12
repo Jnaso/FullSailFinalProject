@@ -151,13 +151,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="allofthelights.h" />
+    <ClInclude Include="dxstuff.h" />
+    <ClInclude Include="graphicsclass.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RobotAnnihilation.h" />
+    <ClInclude Include="shaderstuff.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="allofthelights.cpp" />
+    <ClCompile Include="dxstuff.cpp" />
+    <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
+    <ClCompile Include="shaderstuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />
@@ -165,6 +173,10 @@
   <ItemGroup>
     <Image Include="RobotAnnihilation.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PixelShader.ps" />
+    <None Include="VertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
