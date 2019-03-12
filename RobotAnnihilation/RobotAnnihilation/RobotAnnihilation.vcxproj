@@ -152,17 +152,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="allofthelights.h" />
+    <ClInclude Include="dxstuff.h" />
+    <ClInclude Include="graphicsclass.h" />
+    <ClInclude Include="header.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RobotAnnihilation.h" />
+    <ClInclude Include="shaderstuff.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="allofthelights.cpp" />
+    <ClCompile Include="dxstuff.cpp" />
+    <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
+    <ClCompile Include="shaderstuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />
@@ -170,6 +179,10 @@
   <ItemGroup>
     <Image Include="RobotAnnihilation.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PixelShader.ps" />
+    <None Include="VertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
