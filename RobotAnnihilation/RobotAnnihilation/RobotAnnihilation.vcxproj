@@ -156,6 +156,7 @@
     <ClInclude Include="dxstuff.h" />
     <ClInclude Include="graphicsclass.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
     <ClInclude Include="RobotAnnihilation.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="allofthelights.cpp" />
     <ClCompile Include="dxstuff.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />
