@@ -358,3 +358,13 @@ void DX::PassViewdMatrix(XMMATRIX &other)
 {
 	other = myView;
 }
+
+void DX::SetViewMatrix(XMMATRIX other)
+{
+	myView = other;
+}
+
+XMMATRIX DX::GetViewMatrix()
+{
+	return myView;
+}

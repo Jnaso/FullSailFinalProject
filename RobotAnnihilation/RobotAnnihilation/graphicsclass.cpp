@@ -116,6 +116,75 @@ bool Graphics::Render()
 	myDX->PassProjectionMatrix(projection);
 
 	//Manipulate matricies here 
+	if (GetAsyncKeyState(0x53))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, 0, .15f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(0x57))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, 0, -.15f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(0x44))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(-.15f, 0, 0));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(0x41))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(.15f, 0, 0));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(0x20))
+	{
+		myDX->SetViewMatrix(myDX->GetViewMatrix() = XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, .15f, 0));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(0x58))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, -.15f, 0));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationY(.015f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationY(-.015f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(VK_UP))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(.015f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
+
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(-.015f));
+		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+	}
 
 	myObject->Render(myDX->GetDeviceContext());
 

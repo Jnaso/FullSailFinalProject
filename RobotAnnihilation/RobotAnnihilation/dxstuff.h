@@ -50,6 +50,9 @@ public:
 	void PassWorldMatrix(XMMATRIX &world);
 	void PassViewdMatrix(XMMATRIX &view);
 
+	void SetViewMatrix(XMMATRIX);
+	XMMATRIX GetViewMatrix();
+
 };
 
 #endif // !_DXSTUFF_H_

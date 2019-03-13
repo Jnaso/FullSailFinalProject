@@ -211,8 +211,8 @@ void GameObject::Render(ID3D11DeviceContext* context)
 {
 	UINT strides[] = { sizeof(Vertex) };
 	UINT offsets[] = { 0 };
-	//ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
-	context->IASetVertexBuffers(0, 1, &ObjectVBuffer, strides, offsets);
+	ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
+	context->IASetVertexBuffers(0, 1, vbuffer, strides, offsets);
 	context->IASetIndexBuffer(ObjectIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
