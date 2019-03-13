@@ -7,6 +7,8 @@
 #include "shaderstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
+#include "Camera.h"
+#include "InputManager.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -24,13 +26,14 @@ private:
 	GameObject *Player;
 	Shaders *myShaders;
 	Lighting *myLighting;
+	Camera *myCamera;
 
 public:
 	Graphics();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void Shutdown();
-	bool Render();
+	bool Render(InputManager *);
 };
 
 #endif // !_GRAPHICSCLASS_H_

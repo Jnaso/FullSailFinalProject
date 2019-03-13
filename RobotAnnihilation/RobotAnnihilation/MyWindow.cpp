@@ -17,7 +17,7 @@ bool MyWindow::Run()
 	}
 
 	//Render every frame and stop if anything goes wrong 
-	result = myGraphics->Render();
+	result = myGraphics->Render(myInput);
 	if (!result)
 	{
 		return false;
