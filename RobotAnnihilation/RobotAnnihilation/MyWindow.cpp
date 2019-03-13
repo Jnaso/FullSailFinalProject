@@ -141,7 +141,7 @@ bool MyWindow::Initialize()
 		return false;
 	}
 
-	return false;
+	return true;
 }
 
 void MyWindow::Shutdown()

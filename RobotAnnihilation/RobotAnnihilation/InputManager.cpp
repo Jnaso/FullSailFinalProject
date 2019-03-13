@@ -17,11 +17,18 @@ void InputManager::SetMousePos(float x, float y)
 
 InputManager::InputManager()
 {
+	m_keys = new bool[256];
+
+	for (int i = 0; i < 256; i++)
+	{
+		m_keys[i] = false;
+	}
 }
 
 
 InputManager::~InputManager()
 {
+	delete[] m_keys;
 }
 
 InputManager::KEYSTATE InputManager::GetKeyState(int keyCode)

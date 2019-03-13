@@ -46,7 +46,7 @@ class InputManager
 private:
 	enum KEYSTATE { UP, DOWN };
 
-	bool m_keys[256];
+	bool *m_keys;
 
 	float2 mousePos;
 
