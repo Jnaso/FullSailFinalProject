@@ -219,7 +219,9 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		myInput->SetKeyState(wparam, false);
 		return 0;
 	}
-
+	case WM_MOUSEMOVE:
+		myInput->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+		break;
 	default:
 	{
 		//All other messages can be handled normally 

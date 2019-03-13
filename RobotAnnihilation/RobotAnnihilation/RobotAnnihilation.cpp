@@ -6,7 +6,6 @@
 #include "graphicsclass.h"
 #include "XTime.h"
 #include "MyWindow.h"
-#include <windowsx.h>
 
 #define MAX_LOADSTRING 100
 
