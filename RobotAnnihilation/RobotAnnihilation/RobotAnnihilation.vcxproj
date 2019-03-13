@@ -155,7 +155,7 @@
     <ClInclude Include="allofthelights.h" />
     <ClInclude Include="dxstuff.h" />
     <ClInclude Include="graphicsclass.h" />
-    <ClInclude Include="InventoryManager.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
     <ClInclude Include="RobotAnnihilation.h" />
@@ -166,7 +166,7 @@
     <ClInclude Include="XTime.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InventoryManager.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="allofthelights.cpp" />
     <ClCompile Include="dxstuff.cpp" />

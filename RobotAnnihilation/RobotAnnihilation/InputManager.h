@@ -1,5 +1,5 @@
 #pragma once
-class InventoryManager
+class InputManager
 {
 private:
 	enum KEYSTATE { UP, DOWN };
@@ -8,8 +8,8 @@ private:
 
 public:
 
-	InventoryManager();
-	~InventoryManager();
+	InputManager();
+	~InputManager();
 
 	KEYSTATE GetKeyState(int keyCode);
 
