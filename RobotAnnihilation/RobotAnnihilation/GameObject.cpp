@@ -2,7 +2,7 @@
 
 GameObject::GameObject(const char* filePath, ID3D11Device* device)
 {
-	ReadBinFile(filePath, device);
+	ReadMeshFile(filePath, device);
 }
 
 GameObject::GameObject()
@@ -13,7 +13,7 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
+void GameObject::ReadMeshFile(const char * filePath, ID3D11Device* device)
 {
 	std::fstream file(filePath, std::ios_base::in | std::ios_base::binary);
 	uint32_t Count = 0;
@@ -63,78 +63,27 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 	mats.resize(matsAmount);
 	file.read((char*)mats.data(), sizeof(material_t) * matsAmount);
 
-	uint32_t framesAmount;
-	file.read((char*)&framesAmount, sizeof(uint32_t));
-	//Read animation data here
-	ObjectAnimation.frames.resize(framesAmount);
-	for (uint32_t i = 0; i < framesAmount; i++)
-	{
-		file.read((char*)&ObjectAnimation.frames[i].time, sizeof(double));
-		uint32_t framesAmount;
-		file.read((char*)&framesAmount, sizeof(uint32_t));
-		for (uint32_t j = 0; j < framesAmount; j++)
-		{
-			float4x4 data;
-			file.read((char*)&data[0].x, sizeof(float));
-			file.read((char*)&data[0].y, sizeof(float));
-			file.read((char*)&data[0].z, sizeof(float));
-			file.read((char*)&data[0].w, sizeof(float));
-			file.read((char*)&data[1].x, sizeof(float));
-			file.read((char*)&data[1].y, sizeof(float));
-			file.read((char*)&data[1].z, sizeof(float));
-			file.read((char*)&data[1].w, sizeof(float));
-			file.read((char*)&data[2].x, sizeof(float));
-			file.read((char*)&data[2].y, sizeof(float));
-			file.read((char*)&data[2].z, sizeof(float));
-			file.read((char*)&data[2].w, sizeof(float));
-			file.read((char*)&data[3].x, sizeof(float));
-			file.read((char*)&data[3].y, sizeof(float));
-			file.read((char*)&data[3].z, sizeof(float));
-			file.read((char*)&data[3].w, sizeof(float));
-			ObjectAnimation.frames[i].joints.push_back(data);
-		}
-	}
-	double time = 0;
-	file.read((char*)&time, sizeof(double));
-	ObjectAnimation.bindPose.time = 0;
-	ObjectAnimation.bindPose.joints.resize(ObjectAnimation.frames[0].joints.size());
-	for (uint32_t i = 0; i < ObjectAnimation.frames[0].joints.size(); i++)
-	{
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][0][3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][1][3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][2][3], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][0], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][1], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][2], sizeof(float));
-		file.read((char*)&ObjectAnimation.bindPose.joints[i][3][3], sizeof(float));
-	}
-	for (unsigned int i = 0; i < ObjectAnimation.bindPose.joints.size(); i++)
-	{
-		ObjectAnimation.bindPose.joints[i] = XMMatrixToFloat4x4(XMMatrixInverse(nullptr, Float4x4ToXMMatrix(ObjectAnimation.bindPose.joints[i])));
-	}
-	for (unsigned int i = 0; i < ObjectAnimation.frames[0].joints.size(); i++)
-	{
-		int index;
-		file.read((char*)&index, sizeof(int32_t));
-		ObjectAnimation.parent_indicies.push_back(index);
-	}
-	file.read((char*)&ObjectAnimation.duration, sizeof(double));
 	file.close();
+
 	ID3D11Resource* res = {};
 	for (uint32_t i = 0; i < pathsAmount; i++)
 	{
 		HRESULT hr;
-		wchar_t* dest = new wchar_t[paths[i].size()];
-		mbstowcs(dest, (const char*)&paths[i], paths[i].size());
+		file_path_t newFilePath;
+		newFilePath[0] = 'A';
+		newFilePath[1] = 's';
+		newFilePath[2] = 's';
+		newFilePath[3] = 'e';
+		newFilePath[4] = 't';
+		newFilePath[5] = 's';
+		newFilePath[6] = '/';
+		for (size_t j = 7; j < 260; j++)
+		{
+			char temp = paths[i][j - 7];
+			newFilePath[j] = temp;
+		}
+		wchar_t* dest = new wchar_t[newFilePath.size()];
+		mbstowcs(dest, (const char*)&newFilePath, newFilePath.size());
 		//HRESULT hr = CreateWICTextureFromFile(device, dest, &res, &srv);
 
 		if (i == 0)
@@ -181,60 +130,16 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 void GameObject::Update(float delta)
 {
 	frametime += delta;
-	float4x4* joints = SetJoints();
 }
 
-float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
+Animation** GameObject::GetRunAnimation()
 {
-	float4x4* answer;
-	std::vector<float4x4> Joints;
-	for (uint32_t i = 0; i < frame1.size(); i++)
-	{
-		XMVECTOR result = XMQuaternionSlerp(XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame1[i])), XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame2[i])), ratio);
-		XMMATRIX back = XMMatrixRotationQuaternion(result);
-		//((p2 - p1) * ratio + p1);
-		XMVECTOR pos;
-		pos.m128_f32[0] = ((frame2[i][3].x - frame1[i][3].x) * ratio + frame1[i][3].x);
-		pos.m128_f32[1] = ((frame2[i][3].y - frame1[i][3].y) * ratio + frame1[i][3].y);
-		pos.m128_f32[2] = ((frame2[i][3].z - frame1[i][3].z) * ratio + frame1[i][3].z);
-		pos.m128_f32[3] = ((frame2[i][3].w - frame1[i][3].w) * ratio + frame1[i][3].w);
-		back.r[3].m128_f32[0] = pos.m128_f32[0];
-		back.r[3].m128_f32[1] = pos.m128_f32[1];
-		back.r[3].m128_f32[2] = pos.m128_f32[2];
-		back.r[3].m128_f32[3] = pos.m128_f32[3];
-		Joints.push_back(XMMatrixToFloat4x4(back));
-	}
-	answer = new float4x4[Joints.size()];
-	for (uint32_t i = 0; i < Joints.size(); i++)
-	{
-		answer[i] = Joints[i];
-	}
-	return answer;
+	return &RunAnimation;
 }
 
-float4x4* GameObject::SetJoints()
+void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, Animation * storage)
 {
-	uint32_t frame1 = 0;
-	uint32_t frame2 = 0;
-	for (uint32_t i = 0; i < ObjectAnimation.frames.size(); i++)
-	{
-		if (i == 0 && frametime < ObjectAnimation.frames[i].time)
-		{
-			frame1 = ObjectAnimation.frames.size() - 1;
-			frame2 = i;
-		}
-		if (frametime > ObjectAnimation.frames[i].time && frametime < ObjectAnimation.frames[i+1].time)
-		{
-			frame1 = i;
-			frame2 = i + 1;
-		}
-	}
-	float ratio = 0;
-	if (frame2 == 0)
-		ratio = (frametime - (ObjectAnimation.frames[frame1].time - ObjectAnimation.duration) / ObjectAnimation.frames[frame2].time - (ObjectAnimation.frames[frame1].time - ObjectAnimation.duration));
-	else
-		ratio = (frametime - ObjectAnimation.frames[frame1].time) / (ObjectAnimation.frames[frame2].time - ObjectAnimation.frames[frame1].time);
-	return LerpJoints(ObjectAnimation.frames[frame1].joints, ObjectAnimation.frames[frame2].joints, ratio, ObjectAnimation.parent_indicies);
+	storage = new Animation(filePath, device);
 }
 
 std::vector<Vertex> GameObject::GetObjectVerts()
