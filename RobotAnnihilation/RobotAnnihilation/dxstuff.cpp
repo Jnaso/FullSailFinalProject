@@ -233,7 +233,7 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	myWorld = XMMatrixIdentity();
 
 	//Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -13.0f, 1.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0, 0.0f);
 	myView = XMMatrixLookAtLH(Eye, At, Up);

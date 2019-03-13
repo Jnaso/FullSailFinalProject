@@ -118,7 +118,6 @@ bool Graphics::Render()
 	//Manipulate matricies here 
 
 	myObject->Render(myDX->GetDeviceContext());
-	myDX->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	ID3D11ShaderResourceView * myShade;
 	hr = CreateWICTextureFromFile(myDX->GetDevice(), L"Assests/Run.fbm/PPG_3D_Player_D.png", nullptr, &myShade);

@@ -189,17 +189,20 @@ bool GameObject::Initialize(const char* filePath, ID3D11Device* device)
 	HRESULT result;
 	ReadBinFile(filePath, device);
 	D3D11_BUFFER_DESC desc = {};
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.ByteWidth = sizeof(Vertex) * ObjectVerts.size();
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	result = device->CreateBuffer(&desc, nullptr, &ObjectVBuffer);
+	vertexData.pSysMem = ObjectVerts.data();
+	result = device->CreateBuffer(&desc, &vertexData, &ObjectVBuffer);
 	if (FAILED(result)) return false;
 	desc.ByteWidth = sizeof(uint32_t) * ObjectIndices.size();
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	result = device->CreateBuffer(&desc, nullptr, &ObjectIndexBuffer);
+	indexData.pSysMem = ObjectIndices.data();
+	result = device->CreateBuffer(&desc, &indexData, &ObjectIndexBuffer);
 	if (FAILED(result)) return false;
 	return true;
 }
@@ -208,9 +211,10 @@ void GameObject::Render(ID3D11DeviceContext* context)
 {
 	UINT strides[] = { sizeof(Vertex) };
 	UINT offsets[] = { 0 };
-	ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
-	context->IASetVertexBuffers(0, 1, vbuffer, strides, offsets);
+	//ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
+	context->IASetVertexBuffers(0, 1, &ObjectVBuffer, strides, offsets);
 	context->IASetIndexBuffer(ObjectIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void GameObject::Shutdown()
