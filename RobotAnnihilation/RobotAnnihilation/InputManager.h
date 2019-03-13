@@ -3,11 +3,12 @@
 
 #pragma region Key_Macros
 
-#define _ARROWRIGHT 37
+#define _ARROWLEFT 37
 #define _ARROWUP 38
-#define _ARROWDOWN 38
-#define _ARROWLEFT 39
+#define _ARROWRIGHT 39
+#define _ARROWDOWN 40
 		
+
 #define _SHIFT 16
 #define _CTRL 17
 #define _SPACE 32
