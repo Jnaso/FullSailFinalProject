@@ -12,7 +12,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-InventoryManager inv;
+InputManager input;
 Graphics *myGraphics;
 XTime timer;
 
@@ -199,10 +199,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
 	case WM_KEYDOWN:
-		inv.SetKeyState(wParam, true);
+		input.SetKeyState(wParam, true);
 		break;
 	case WM_KEYUP:
-		inv.SetKeyState(wParam, false);
+		input.SetKeyState(wParam, false);
 		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

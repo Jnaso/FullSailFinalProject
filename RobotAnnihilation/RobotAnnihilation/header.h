@@ -18,7 +18,7 @@
 #include <iostream>
 
 //Global Included Files
-#include "InventoryManager.h"
+#include "InputManager.h"
 
 
 // reference additional headers your program requires here
