@@ -51,7 +51,7 @@ void InputManager::SetMousePos(float x, float y)
 	mousePos.x = x;
 	mousePos.y = y;
 
-	std::cout << "MousePOS: " << "( " << mousePos.x << ", " << mousePos.y << " )" << std::endl;
+	//std::cout << "MousePOS: " << "( " << mousePos.x << ", " << mousePos.y << " )" << std::endl;
 }
 
 InputManager::InputManager()
