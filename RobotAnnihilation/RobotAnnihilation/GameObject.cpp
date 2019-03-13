@@ -148,7 +148,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 1)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Emissive) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Emissive);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -156,7 +157,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 2)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Normal) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Specular);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -164,7 +166,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 3)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Specular) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Normal);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;

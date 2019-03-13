@@ -1,11 +1,15 @@
 #pragma once
 #include "MathDefines.h"
 #include "WICTextureLoader.h"
-#include <fstream>
-#include <vector>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <dxgi1_2.h>
 #include <d3d11_2.h>
 #include <DirectXMath.h>
+#include <time.h>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
