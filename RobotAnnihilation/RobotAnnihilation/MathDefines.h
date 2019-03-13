@@ -105,8 +105,9 @@ using float4x4_a = std::array< float4_a, 4 >;
 
 struct Vertex
 {
-	float3 pos, norm, Tangent;
+	float3 pos, norm;
 	float2 texCords;
+	float3 Tangent;
 	int joints[4];
 	float4 weights;
 };
