@@ -147,7 +147,6 @@ bool Graphics::Render(InputManager *myInput)
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, 0, -.15f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
-		moveZ += .25f;
 	}
 
 	if (myInput->GetKeyState((int)'D'))
