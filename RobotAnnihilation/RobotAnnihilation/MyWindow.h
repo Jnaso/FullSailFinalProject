@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include "graphicsclass.h"
 #include "InputManager.h"
+#include <windowsx.h>
 
 class MyWindow
 {
