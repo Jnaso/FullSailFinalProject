@@ -169,6 +169,11 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 
 }
 
+void GameObject::Update(float delta)
+{
+	frametime += delta;
+}
+
 std::vector<Vertex> GameObject::GetObjectVerts()
 {
 	return ObjectVerts;
@@ -214,7 +219,7 @@ void GameObject::Render(ID3D11DeviceContext* context)
 	ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
 	context->IASetVertexBuffers(0, 1, vbuffer, strides, offsets);
 	context->IASetIndexBuffer(ObjectIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void GameObject::Shutdown()

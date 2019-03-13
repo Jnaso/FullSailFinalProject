@@ -4,6 +4,7 @@
 #include "header.h"
 #include "RobotAnnihilation.h"
 #include "graphicsclass.h"
+#include "XTime.h"
 
 #define MAX_LOADSTRING 100
 
@@ -13,6 +14,7 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 InventoryManager inv;
 Graphics *myGraphics;
+XTime timer;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -68,6 +70,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		else
 		{
 			// In the future, do per frame/tick updates here...
+			timer.Signal();
 			myGraphics->Render();
 		}
 	}

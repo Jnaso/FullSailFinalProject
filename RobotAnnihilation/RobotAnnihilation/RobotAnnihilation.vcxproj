@@ -163,6 +163,7 @@
     <ClInclude Include="shaderstuff.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WICTextureLoader.h" />
+    <ClInclude Include="XTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InventoryManager.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />
+    <ClCompile Include="XTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

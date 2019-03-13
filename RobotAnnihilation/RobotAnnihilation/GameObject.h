@@ -31,6 +31,8 @@ class GameObject
 	ID3D11Buffer* ObjectVBuffer = nullptr;
 	ID3D11Buffer* ObjectIndexBuffer = nullptr;
 
+	float frametime;
+
 public:
 	GameObject();
 	~GameObject();
@@ -40,6 +42,8 @@ public:
 	void Shutdown();
 
 	void ReadBinFile(const char* filePath, ID3D11Device* device);
+
+	void Update(float delta);
 
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();
