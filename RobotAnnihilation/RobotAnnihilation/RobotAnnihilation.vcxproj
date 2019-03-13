@@ -176,6 +176,7 @@
     <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="MyWindow.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />
