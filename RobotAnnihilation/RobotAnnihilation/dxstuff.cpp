@@ -350,14 +350,8 @@ void DX::PassWorldMatrix(XMMATRIX &other)
 	other = myWorld;
 }
 
-//View Matrix getter 
-XMMATRIX DX::GetView()
+//Passes the view matrix into another matrix
+void DX::PassViewdMatrix(XMMATRIX &other)
 {
-	return myView;
-}
-
-//View matrix setter 
-void DX::SetView(XMMATRIX newView)
-{
-	myView = newView;
+	other = myView;
 }

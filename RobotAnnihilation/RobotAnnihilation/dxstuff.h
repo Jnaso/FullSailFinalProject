@@ -48,9 +48,7 @@ public:
 
 	void PassProjectionMatrix(XMMATRIX &proj);
 	void PassWorldMatrix(XMMATRIX &world);
-
-	XMMATRIX GetView();
-	void SetView(XMMATRIX newView);
+	void PassViewdMatrix(XMMATRIX &view);
 
 };
 

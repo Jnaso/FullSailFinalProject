@@ -4,6 +4,9 @@
 
 #include <Windows.h>
 #include "dxstuff.h"
+#include "shaderstuff.h"
+#include "allofthelights.h"
+#include "GameObject.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -16,14 +19,14 @@ const float NEAR_PLANE = 0.1f;
 
 class Graphics
 {
-
 private:
 	DX *myDX;
+	GameObject *myObject;
+	Shaders *myShaders;
+	Lighting *myLighting;
 
 public:
 	Graphics();
-	Graphics(const Graphics &other);
-	~Graphics();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void Shutdown();

@@ -2,18 +2,11 @@
 
 Graphics::Graphics()
 {
+	//Zero memory 
 	myDX = nullptr;
-}
-
-Graphics::Graphics(const Graphics &other)
-{
-
-
-}
-
-Graphics::~Graphics()
-{
-
+	myObject = nullptr;
+	myLighting = nullptr;
+	myShaders = nullptr;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -34,6 +27,44 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	//Initialize the game object 
+	myObject = new GameObject();
+	if (!myObject)
+	{
+		return false;
+	}
+
+	//Make sure the object initializes with no problem 
+	result = myObject->Initialize("", myDX->GetDevice());
+	if (!result)
+	{
+		return false;
+	}
+
+	//Initialize the shader object 
+	myShaders = new Shaders();
+	if (!myShaders)
+	{
+		return false;
+	}
+
+	//Initialize the shaders
+	result = myShaders->Initialize(myDX->GetDevice());
+	if (!result)
+	{
+		return false;
+	}
+
+	//Initialize the lighting 
+	myLighting = new Lighting();
+	if (!myLighting)
+	{
+		return false;
+	}
+
+	myLighting->SetDirectionalColor(1.0f, 1.0f, 1.0f, 1.0f);
+	myLighting->SetDirection(0.0f, 0.0f, 1.0f);
+
 	return true;
 }
 
@@ -46,13 +77,53 @@ void Graphics::Shutdown()
 		delete myDX;
 		myDX = nullptr;
 	}
+
+	if (myLighting)
+	{
+		delete myLighting;
+		myLighting = 0;
+	}
+
+	if (myShaders)
+	{
+		myShaders->Shutdown();
+		delete myShaders;
+		myShaders = 0;
+	}
+
+	if (myObject)
+	{
+		myObject->Shutdown();
+		delete myObject;
+		myObject = nullptr;
+	}
+
 }
 
 //Called each frame 
 bool Graphics::Render()
 {
+	XMMATRIX world, view, projection;
+	bool result;
+
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
+
+	myDX->PassWorldMatrix(world);
+	myDX->PassViewdMatrix(view);
+	myDX->PassProjectionMatrix(projection);
+
+	//Manipulate matricies here 
+
+	myObject->Render(myDX->GetDeviceContext());
+	myDX->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	
+	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices()[0], world, view, projection, myObject->GetObjectTextures()[0], myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+	if (!result)
+	{
+		return false;
+	}
+
 
 	//Present the swap chain 
 	myDX->PresentScreen();

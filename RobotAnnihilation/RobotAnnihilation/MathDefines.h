@@ -144,7 +144,7 @@ private:
 	component_t components[COUNT];
 };
 
-float4x4 XMMatrixToFloat4x4(XMMATRIX input)
+inline float4x4 XMMatrixToFloat4x4(XMMATRIX input)
 {
 	float4x4 output;
 	for (int i = 0; i < 4; i++)
@@ -157,7 +157,7 @@ float4x4 XMMatrixToFloat4x4(XMMATRIX input)
 	return output;
 }
 
-XMMATRIX Float4x4ToXMMatrix(float4x4 input)
+inline XMMATRIX Float4x4ToXMMatrix(float4x4 input)
 {
 	XMMATRIX output;
 	for (int i = 0; i < 4; i++)
@@ -170,7 +170,7 @@ XMMATRIX Float4x4ToXMMatrix(float4x4 input)
 	return output;
 }
 
-float4 XMVectortofloat4(XMVECTOR input)
+inline float4 XMVectortofloat4(XMVECTOR input)
 {
 	float4 output;
 	output.x = input.m128_f32[0];
@@ -180,7 +180,7 @@ float4 XMVectortofloat4(XMVECTOR input)
 	return output;
 }
 
-XMVECTOR float4toXMVector(float4 input)
+inline XMVECTOR float4toXMVector(float4 input)
 {
 	XMVECTOR output;
 	output.m128_f32[0] = input.x;
