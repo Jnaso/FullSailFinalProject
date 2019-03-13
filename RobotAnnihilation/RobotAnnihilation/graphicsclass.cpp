@@ -62,7 +62,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	myLighting->SetDirectionalColor(1.0f, 1.0f, 1.0f, 1.0f);
+	myLighting->SetDirectionalColor(1.0f, 0.0f, 0.0f, 1.0f);
 	myLighting->SetDirection(0.0f, 0.0f, 1.0f);
 
 	return true;
