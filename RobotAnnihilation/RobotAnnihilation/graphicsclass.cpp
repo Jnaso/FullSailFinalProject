@@ -5,6 +5,7 @@ Graphics::Graphics()
 	//Zero memory 
 	myDX = nullptr;
 	Player = nullptr;
+	Ground = nullptr;
 	myLighting = nullptr;
 	myShaders = nullptr;
 	myCamera = nullptr;
@@ -35,6 +36,11 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
+	Ground = new GameObject("Assets/GroundPlane.mesh", myDX->GetDevice());
+	if (!Ground)
+	{
+		return false;
+	}
 
 	//Make sure the object initializes with no problem 
 	result = Player->Initialize(myDX->GetDevice());
@@ -42,6 +48,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
+
+	result = Ground->Initialize(myDX->GetDevice());
 
 	//Initialize the shader object 
 	myShaders = new Shaders();
@@ -107,6 +115,13 @@ void Graphics::Shutdown()
 		Player->Shutdown();
 		delete Player;
 		Player = nullptr;
+	}
+
+	if (Ground)
+	{
+		Ground->Shutdown();
+		delete Ground;
+		Ground = nullptr;
 	}
 
 	if (myCamera)
@@ -208,6 +223,11 @@ bool Graphics::Render(InputManager *myInput)
 	Player->Render(myDX->GetDeviceContext());
 
 	result = myShaders->Render(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+
+	Ground->Render(myDX->GetDeviceContext());
+
+	result = myShaders->Render(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+
 	if (!result)
 	{
 		return false;

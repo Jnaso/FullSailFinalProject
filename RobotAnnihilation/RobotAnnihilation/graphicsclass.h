@@ -24,6 +24,7 @@ class Graphics
 private:
 	DX *myDX;
 	GameObject *Player;
+	GameObject *Ground;
 	Shaders *myShaders;
 	Lighting *myLighting;
 	Camera *myCamera;
