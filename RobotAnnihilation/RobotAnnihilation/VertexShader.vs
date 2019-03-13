@@ -7,9 +7,12 @@ cbuffer ConstantBuffer
 
 struct VertexInput
 {
-	float4 pos : POSITION;
-	float2 tex : TEXCOORD0;
+	float3 pos : POSITION;
 	float3 norm : NORMAL;
+	float2 tex : TEXCOORD0;
+	float3 tan : TANGENT;
+	float4 joints : JOINTS;
+	float4 weights : WEIGHTS;
 };
 
 struct PixelInput
@@ -23,7 +26,7 @@ PixelInput VertexShader(VertexInput in)
 {
 	PixelInput out;
 
-	out.pos = mul(in.pos, worldMatrix);
+	out.pos = float4(mul(in.pos, worldMatrix).xyz, 1.0f);
 	out.pos = mul(out.pos, viewMatrix);
 	out.pos = mul(out.pos, projectionMatrix);
 
