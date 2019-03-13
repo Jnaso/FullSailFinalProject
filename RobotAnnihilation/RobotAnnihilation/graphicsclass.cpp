@@ -35,7 +35,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Make sure the object initializes with no problem 
-	result = myObject->Initialize("Assests/Run.bin", myDX->GetDevice());
+	result = myObject->Initialize("Assests/Run.mesh", myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -106,6 +106,8 @@ bool Graphics::Render()
 	XMMATRIX world, view, projection;
 	bool result;
 
+	HRESULT hr;
+
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
 
@@ -118,13 +120,13 @@ bool Graphics::Render()
 	myObject->Render(myDX->GetDeviceContext());
 	myDX->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	ID3D11ShaderResourceView * myShade = myObject->GetDiffuseTexture();
+	ID3D11ShaderResourceView * myShade;
+	hr = CreateWICTextureFromFile(myDX->GetDevice(), L"Assests/Run.fbm/PPG_3D_Player_D.png", nullptr, &myShade);
 	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices().size(), world, view, projection, myShade, myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
 	if (!result)
 	{
 		return false;
 	}
-
 
 	//Present the swap chain 
 	myDX->PresentScreen();
