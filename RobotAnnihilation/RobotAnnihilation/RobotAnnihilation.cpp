@@ -5,6 +5,7 @@
 #include "RobotAnnihilation.h"
 #include "graphicsclass.h"
 #include "XTime.h"
+#include <windowsx.h>
 
 #define MAX_LOADSTRING 100
 
@@ -204,6 +205,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		input.SetKeyState(wParam, false);
 		break;
+	case WM_MOUSEMOVE:
+		input.SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
