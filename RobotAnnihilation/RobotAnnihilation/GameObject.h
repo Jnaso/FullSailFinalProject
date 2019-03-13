@@ -23,10 +23,10 @@ class GameObject
 	anim_clip ObjectAnimation;
 
 	// Storage for reading in function
-	ID3D11ShaderResourceView* Diffuse = nullptr;
-	ID3D11ShaderResourceView* Emissive = nullptr;
-	ID3D11ShaderResourceView* Specular = nullptr;
-	ID3D11ShaderResourceView* Normal = nullptr;
+	ID3D11ShaderResourceView* Diffuse;
+	ID3D11ShaderResourceView* Emissive;
+	ID3D11ShaderResourceView* Specular;
+	ID3D11ShaderResourceView* Normal;
 
 	ID3D11Buffer* ObjectVBuffer = nullptr;
 	ID3D11Buffer* ObjectIndexBuffer = nullptr;
@@ -35,9 +35,10 @@ class GameObject
 
 public:
 	GameObject();
+	GameObject(const char* filePath, ID3D11Device* device);
 	~GameObject();
 
-	bool Initialize(const char* filePath, ID3D11Device* device);
+	bool Initialize(ID3D11Device* device);
 	void Render(ID3D11DeviceContext* context);
 	void Shutdown();
 
@@ -48,5 +49,6 @@ public:
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();
 	ID3D11ShaderResourceView* GetDiffuseTexture();
+	float4x4* SetJoints();
 };
 

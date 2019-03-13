@@ -28,14 +28,14 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Initialize the game object 
-	myObject = new GameObject();
+	myObject = new GameObject("Assets/Run.mesh", myDX->GetDevice());
 	if (!myObject)
 	{
 		return false;
 	}
 
 	//Make sure the object initializes with no problem 
-	result = myObject->Initialize("Assests/Run.mesh", myDX->GetDevice());
+	result = myObject->Initialize(myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -189,7 +189,7 @@ bool Graphics::Render()
 	myObject->Render(myDX->GetDeviceContext());
 
 	ID3D11ShaderResourceView * myShade;
-	hr = CreateWICTextureFromFile(myDX->GetDevice(), L"Assests/Run.fbm/PPG_3D_Player_D.png", nullptr, &myShade);
+	hr = CreateWICTextureFromFile(myDX->GetDevice(), L"Assets/Run.fbm/PPG_3D_Player_D.png", nullptr, &myShade);
 	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices().size(), world, view, projection, myShade, myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
 	if (!result)
 	{
