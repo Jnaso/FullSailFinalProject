@@ -7,13 +7,15 @@
 #include "shaderstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
+#include "Camera.h"
+#include "InputManager.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
 //Vsync flag 
 const bool VSYNC_ENABLED = true;
 //Far plane 
-const float FAR_PLANE = 100.0f;
+const float FAR_PLANE = 1000.0f;
 //Near plane
 const float NEAR_PLANE = 0.1f;
 
@@ -25,13 +27,14 @@ private:
 	GameObject *Ground;
 	Shaders *myShaders;
 	Lighting *myLighting;
+	Camera *myCamera;
 
 public:
 	Graphics();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void Shutdown();
-	bool Render();
+	bool Render(InputManager *);
 };
 
 #endif // !_GRAPHICSCLASS_H_

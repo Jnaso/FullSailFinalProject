@@ -8,6 +8,7 @@ Graphics::Graphics()
 	Ground = nullptr;
 	myLighting = nullptr;
 	myShaders = nullptr;
+	myCamera = nullptr;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -64,6 +65,15 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	//Intialize the camera
+	myCamera = new Camera();
+	if (!myCamera)
+	{
+		return false;
+	}
+
+	myCamera->SetPosition(0.0f, 0.0f, -5.0f);
+
 	//Initialize the lighting 
 	myLighting = new Lighting();
 	if (!myLighting)
@@ -114,10 +124,16 @@ void Graphics::Shutdown()
 		Ground = nullptr;
 	}
 
+	if (myCamera)
+	{
+		delete myCamera;
+		myCamera = nullptr;
+	}
+
 }
 
 //Called each frame 
-bool Graphics::Render()
+bool Graphics::Render(InputManager *myInput)
 {
 	XMMATRIX world, view, projection;
 	bool result;
@@ -127,75 +143,78 @@ bool Graphics::Render()
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
 
+	myCamera->Update();
+
 	myDX->PassWorldMatrix(world);
 	myDX->PassViewdMatrix(view);
 	myDX->PassProjectionMatrix(projection);
 
 	//Manipulate matricies here 
-	if (GetAsyncKeyState(0x53))
+	if (myInput->GetKeyState((int)'S'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, 0, .15f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(0x57))
+	if (myInput->GetKeyState((int)'W'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, 0, -.15f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
+		moveZ += .25f;
 	}
 
-	if (GetAsyncKeyState(0x44))
+	if (myInput->GetKeyState((int)'D'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(-.15f, 0, 0));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(0x41))
+	if (myInput->GetKeyState((int)'A'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(.15f, 0, 0));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(0x20))
+	if (myInput->GetKeyState(_SPACE))
 	{
 		myDX->SetViewMatrix(myDX->GetViewMatrix() = XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, .15f, 0));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(0x58))
+	if (myInput->GetKeyState((int)'X'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixTranslation(0, -.15f, 0));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(VK_LEFT))
+	if (myInput->GetKeyState(_ARROWLEFT))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationY(.015f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT))
+	if (myInput->GetKeyState(_ARROWRIGHT))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationY(-.015f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(VK_UP))
+	if (myInput->GetKeyState(_ARROWUP))
 	{
-		myDX->SetViewMatrix(XMMatrixIdentity());
+	    myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(.015f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	if (GetAsyncKeyState(VK_DOWN))
+	if (myInput->GetKeyState(_ARROWDOWN))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(-.015f));
