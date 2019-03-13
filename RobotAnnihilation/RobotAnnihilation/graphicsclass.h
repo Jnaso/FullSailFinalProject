@@ -11,7 +11,7 @@
 //Full screen flag 
 const bool FULL_SCREEN = false;
 //Vsync flag 
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 //Far plane 
 const float FAR_PLANE = 100.0f;
 //Near plane

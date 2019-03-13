@@ -1,9 +1,13 @@
 #include "GameObject.h"
 
+GameObject::GameObject(const char* filePath, ID3D11Device* device)
+{
+	ReadBinFile(filePath, device);
+}
+
 GameObject::GameObject()
 {
 }
-
 
 GameObject::~GameObject()
 {
@@ -128,13 +132,15 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 	ID3D11Resource* res = {};
 	for (uint32_t i = 0; i < pathsAmount; i++)
 	{
+		HRESULT hr;
 		wchar_t* dest = new wchar_t[paths[i].size()];
 		mbstowcs(dest, (const char*)&paths[i], paths[i].size());
 		//HRESULT hr = CreateWICTextureFromFile(device, dest, &res, &srv);
 
 		if (i == 0)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Diffuse) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Diffuse);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -142,7 +148,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 1)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Emissive) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Emissive);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -150,7 +157,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 2)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Normal) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Specular);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -158,7 +166,8 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		if (i == 3)
 		{
-			if (CreateWICTextureFromFile(device, dest, &res, &Specular) == S_OK)
+			hr = CreateWICTextureFromFile(device, dest, &res, &Normal);
+			if (hr == S_OK)
 			{
 				res->Release();
 				continue;
@@ -172,6 +181,60 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 void GameObject::Update(float delta)
 {
 	frametime += delta;
+	float4x4* joints = SetJoints();
+}
+
+float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
+{
+	float4x4* answer;
+	std::vector<float4x4> Joints;
+	for (uint32_t i = 0; i < frame1.size(); i++)
+	{
+		XMVECTOR result = XMQuaternionSlerp(XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame1[i])), XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame2[i])), ratio);
+		XMMATRIX back = XMMatrixRotationQuaternion(result);
+		//((p2 - p1) * ratio + p1);
+		XMVECTOR pos;
+		pos.m128_f32[0] = ((frame2[i][3].x - frame1[i][3].x) * ratio + frame1[i][3].x);
+		pos.m128_f32[1] = ((frame2[i][3].y - frame1[i][3].y) * ratio + frame1[i][3].y);
+		pos.m128_f32[2] = ((frame2[i][3].z - frame1[i][3].z) * ratio + frame1[i][3].z);
+		pos.m128_f32[3] = ((frame2[i][3].w - frame1[i][3].w) * ratio + frame1[i][3].w);
+		back.r[3].m128_f32[0] = pos.m128_f32[0];
+		back.r[3].m128_f32[1] = pos.m128_f32[1];
+		back.r[3].m128_f32[2] = pos.m128_f32[2];
+		back.r[3].m128_f32[3] = pos.m128_f32[3];
+		Joints.push_back(XMMatrixToFloat4x4(back));
+	}
+	answer = new float4x4[Joints.size()];
+	for (uint32_t i = 0; i < Joints.size(); i++)
+	{
+		answer[i] = Joints[i];
+	}
+	return answer;
+}
+
+float4x4* GameObject::SetJoints()
+{
+	uint32_t frame1 = 0;
+	uint32_t frame2 = 0;
+	for (uint32_t i = 0; i < ObjectAnimation.frames.size(); i++)
+	{
+		if (i == 0 && frametime < ObjectAnimation.frames[i].time)
+		{
+			frame1 = ObjectAnimation.frames.size() - 1;
+			frame2 = i;
+		}
+		if (frametime > ObjectAnimation.frames[i].time && frametime < ObjectAnimation.frames[i+1].time)
+		{
+			frame1 = i;
+			frame2 = i + 1;
+		}
+	}
+	float ratio = 0;
+	if (frame2 == 0)
+		ratio = (frametime - (ObjectAnimation.frames[frame1].time - ObjectAnimation.duration) / ObjectAnimation.frames[frame2].time - (ObjectAnimation.frames[frame1].time - ObjectAnimation.duration));
+	else
+		ratio = (frametime - ObjectAnimation.frames[frame1].time) / (ObjectAnimation.frames[frame2].time - ObjectAnimation.frames[frame1].time);
+	return LerpJoints(ObjectAnimation.frames[frame1].joints, ObjectAnimation.frames[frame2].joints, ratio, ObjectAnimation.parent_indicies);
 }
 
 std::vector<Vertex> GameObject::GetObjectVerts()
@@ -189,10 +252,9 @@ ID3D11ShaderResourceView* GameObject::GetDiffuseTexture()
 	return Diffuse;
 }
 
-bool GameObject::Initialize(const char* filePath, ID3D11Device* device)
+bool GameObject::Initialize(ID3D11Device* device)
 {
 	HRESULT result;
-	ReadBinFile(filePath, device);
 	D3D11_BUFFER_DESC desc = {};
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	desc.CPUAccessFlags = 0;

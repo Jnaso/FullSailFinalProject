@@ -38,8 +38,100 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	D3D11_RASTERIZER_DESC myRasterDesc;
 	D3D11_VIEWPORT myViewport;
 	float fieldOfView, aspectRatio;
+	IDXGIFactory *myFactory;
+	IDXGIAdapter *myAdapter;
+	IDXGIOutput *myOutput;
+	unsigned int numModes, numerator, denminator;
+	DXGI_MODE_DESC *displayModeList;
+	DXGI_ADAPTER_DESC adapterDesc;
+	int error;
+	size_t stringLength;
 
 	vsync = myVsync;
+
+	//Creates the DirectX graphics interface factory
+	//__uuidof = returns the GUID of a data type
+	//GUID = Unique identifier for a data type 
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&myFactory);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Use the factory to initialize the adapter  
+	result = myFactory->EnumAdapters(0, &myAdapter);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Use the adapter to create the output 
+	result = myAdapter->EnumOutputs(0, &myOutput);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get the number of modes that fit the adapter output display 
+	result = myOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Resize our mode array to the number of modes 
+	displayModeList = new DXGI_MODE_DESC[numModes];
+	if (!displayModeList)
+	{
+		return false;
+	}
+
+	//Fill in the array with the display modes 
+	result = myOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Find the display mode that matches our screen's dimensions and store the numerator and denominator
+	for (unsigned int i = 0; i < numModes; i++)
+	{
+		if (displayModeList[i].Width == (unsigned int)windowWidth)
+		{
+			if (displayModeList[i].Height == (unsigned int)windowHeight)
+			{
+				numerator = displayModeList[i].RefreshRate.Numerator;
+				denminator = displayModeList[i].RefreshRate.Denominator;
+			}
+		}
+	}
+
+	//Get the video card description 
+	result = myAdapter->GetDesc(&adapterDesc);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Store the video card memory 
+	videoCard = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+
+	//Error check to make sure the video card description has good data
+	error = wcstombs_s(&stringLength, videoCardDesc, 128, adapterDesc.Description, 128);
+	if (error != 0)
+	{
+		return false;
+	}
+
+	//All video card info is retrieved, clean up all objects we used
+	delete[] displayModeList;
+	displayModeList = nullptr;
+	myOutput->Release();
+	myOutput = nullptr;
+	myAdapter->Release();
+	myAdapter = nullptr;
+	myFactory->Release();
+	myFactory = nullptr;
 
 	//Zero memory for the swap chain description
 	ZeroMemory(&mySwapChainDesc, sizeof(mySwapChainDesc));
@@ -51,9 +143,16 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	mySwapChainDesc.BufferDesc.Height = windowHeight;
 	//Buffer display format 
 	mySwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//The refresh rate will be affected by whether vsync is enabled or not later
-	mySwapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	mySwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	if (vsync)
+	{
+		mySwapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
+		mySwapChainDesc.BufferDesc.RefreshRate.Denominator = denminator;
+	}
+	else
+	{
+		mySwapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+		mySwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	}
 	mySwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	mySwapChainDesc.OutputWindow = window;
 
