@@ -28,11 +28,18 @@ class GameObject
 	ID3D11ShaderResourceView* Specular;
 	ID3D11ShaderResourceView* Normal;
 
+	ID3D11Buffer* ObjectVBuffer;
+	ID3D11Buffer* ObjectIndexBuffer;
+
 	// What will be passed in to shader
 	std::vector<ID3D11ShaderResourceView*> Textures;
 public:
 	GameObject();
 	~GameObject();
+
+	bool Initialize(const char* filePath, ID3D11Device* device);
+	void Render(ID3D11DeviceContext* context);
+	void Shutdown();
 
 	void ReadBinFile(const char* filePath, ID3D11Device* device);
 

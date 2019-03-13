@@ -201,3 +201,42 @@ std::vector<ID3D11ShaderResourceView*> GameObject::GetObjectTextures()
 {
 	return Textures;
 }
+
+bool GameObject::Initialize(const char* filePath, ID3D11Device* device)
+{
+	HRESULT result;
+	ReadBinFile(filePath, device);
+	D3D11_BUFFER_DESC desc = {};
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(Vertex) * ObjectVerts.size();
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	result = device->CreateBuffer(&desc, nullptr, &ObjectVBuffer);
+	if (FAILED(result)) return false;
+	desc.ByteWidth = sizeof(uint32_t) * ObjectIndices.size();
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	result = device->CreateBuffer(&desc, nullptr, &ObjectIndexBuffer);
+	if (FAILED(result)) return false;
+	return true;
+}
+
+void GameObject::Render(ID3D11DeviceContext* context)
+{
+	UINT strides[] = { sizeof(Vertex) };
+	UINT offsets[] = { 0 };
+	ID3D11Buffer	*vbuffer[] = { ObjectVBuffer };
+	context->IASetVertexBuffers(0, 1, vbuffer, strides, offsets);
+	context->IASetIndexBuffer(ObjectIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+}
+
+void GameObject::Shutdown()
+{
+	if (ObjectVBuffer) ObjectVBuffer->Release();
+	if (ObjectIndexBuffer) ObjectIndexBuffer->Release();
+	for (size_t i = 0; i < Textures.size(); i++)
+	{
+		if (Textures[i]) Textures[i]->Release();
+	}
+}
