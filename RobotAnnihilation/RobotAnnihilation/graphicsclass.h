@@ -21,7 +21,7 @@ class Graphics
 {
 private:
 	DX *myDX;
-	GameObject *myObject;
+	GameObject *Player;
 	Shaders *myShaders;
 	Lighting *myLighting;
 

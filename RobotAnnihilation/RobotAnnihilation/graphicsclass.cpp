@@ -4,7 +4,7 @@ Graphics::Graphics()
 {
 	//Zero memory 
 	myDX = nullptr;
-	myObject = nullptr;
+	Player = nullptr;
 	myLighting = nullptr;
 	myShaders = nullptr;
 }
@@ -28,15 +28,15 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Initialize the game object 
-	myObject = new GameObject("Assets/Run.mesh", myDX->GetDevice());
-	myObject->AddAninimation("Assets/Run.anim", myDX->GetDevice(), *myObject->GetRunAnimation());
-	if (!myObject)
+	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
+	Player->AddAninimation("Assets/Run.anim", myDX->GetDevice(), *Player->GetRunAnimation());
+	if (!Player)
 	{
 		return false;
 	}
 
 	//Make sure the object initializes with no problem 
-	result = myObject->Initialize(myDX->GetDevice());
+	result = Player->Initialize(myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -92,11 +92,11 @@ void Graphics::Shutdown()
 		myShaders = 0;
 	}
 
-	if (myObject)
+	if (Player)
 	{
-		myObject->Shutdown();
-		delete myObject;
-		myObject = nullptr;
+		Player->Shutdown();
+		delete Player;
+		Player = nullptr;
 	}
 
 }
@@ -187,10 +187,9 @@ bool Graphics::Render()
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
 
-	myObject->Render(myDX->GetDeviceContext());
+	Player->Render(myDX->GetDeviceContext());
 
-	ID3D11ShaderResourceView * myShade = myObject->GetDiffuseTexture();
-	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices().size(), world, view, projection, myShade, myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+	result = myShaders->Render(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
 	if (!result)
 	{
 		return false;
