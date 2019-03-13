@@ -1,6 +1,7 @@
 #pragma once
 #include "MathDefines.h"
 #include "WICTextureLoader.h"
+#include "Animation.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <dxgi1_2.h>
@@ -10,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -19,12 +21,8 @@ using namespace DirectX;
 
 class GameObject
 {
-	//Conversions converter;
-
 	std::vector<Vertex> ObjectVerts;
 	std::vector<uint32_t> ObjectIndices;
-
-	anim_clip ObjectAnimation;
 
 	// Storage for reading in function
 	ID3D11ShaderResourceView* Diffuse;
@@ -35,7 +33,11 @@ class GameObject
 	ID3D11Buffer* ObjectVBuffer = nullptr;
 	ID3D11Buffer* ObjectIndexBuffer = nullptr;
 
+	Animation* RunAnimation;
+
 	float frametime;
+
+	void ReadMeshFile(const char* filePath, ID3D11Device* device);
 
 public:
 	GameObject();
@@ -46,13 +48,14 @@ public:
 	void Render(ID3D11DeviceContext* context);
 	void Shutdown();
 
-	void ReadBinFile(const char* filePath, ID3D11Device* device);
-
 	void Update(float delta);
+
+	Animation** GetRunAnimation();
+
+	void AddAninimation(const char* filePath, ID3D11Device* device, Animation* storage);
 
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();
 	ID3D11ShaderResourceView* GetDiffuseTexture();
-	float4x4* SetJoints();
 };
 
