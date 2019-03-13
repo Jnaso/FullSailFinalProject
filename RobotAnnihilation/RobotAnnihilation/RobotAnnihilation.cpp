@@ -3,6 +3,7 @@
 
 #include "header.h"
 #include "RobotAnnihilation.h"
+#include "graphicsclass.h"
 
 #define MAX_LOADSTRING 100
 
@@ -11,6 +12,7 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 InventoryManager inv;
+Graphics *myGraphics;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -49,6 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+
     // Main message loop:
 	while (true)
 	{
@@ -65,9 +68,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		else
 		{
 			// In the future, do per frame/tick updates here...
+			myGraphics->Render();
 		}
 	}
 
+	myGraphics->Shutdown();
+	delete myGraphics;
+	myGraphics = nullptr;
 
 #ifndef NDEBUG
 	FreeConsole();
@@ -128,6 +135,20 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   BOOL result;
+
+   myGraphics = new Graphics();
+   if (!myGraphics)
+   {
+	   return FALSE;
+   }
+
+   result = myGraphics->Initialize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), hWnd);
+   if (!result)
+   {
+	   return FALSE;
+   }
 
    return TRUE;
 }

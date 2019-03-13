@@ -23,16 +23,14 @@ class GameObject
 	anim_clip ObjectAnimation;
 
 	// Storage for reading in function
-	ID3D11ShaderResourceView* Diffuse;
-	ID3D11ShaderResourceView* Emissive;
-	ID3D11ShaderResourceView* Specular;
-	ID3D11ShaderResourceView* Normal;
+	ID3D11ShaderResourceView* Diffuse = nullptr;
+	ID3D11ShaderResourceView* Emissive = nullptr;
+	ID3D11ShaderResourceView* Specular = nullptr;
+	ID3D11ShaderResourceView* Normal = nullptr;
 
-	ID3D11Buffer* ObjectVBuffer;
-	ID3D11Buffer* ObjectIndexBuffer;
+	ID3D11Buffer* ObjectVBuffer = nullptr;
+	ID3D11Buffer* ObjectIndexBuffer = nullptr;
 
-	// What will be passed in to shader
-	std::vector<ID3D11ShaderResourceView*> Textures;
 public:
 	GameObject();
 	~GameObject();
@@ -45,6 +43,6 @@ public:
 
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();
-	std::vector<ID3D11ShaderResourceView*> GetObjectTextures();
+	ID3D11ShaderResourceView* GetDiffuseTexture();
 };
 

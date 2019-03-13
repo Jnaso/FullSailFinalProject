@@ -22,18 +22,18 @@ struct PixelInput
 	float3 norm : NORMAL;
 };
 
-PixelInput VertexShader(VertexInput in)
+PixelInput Main(VertexInput input)
 {
-	PixelInput out;
+	PixelInput output;
 
-	out.pos = float4(mul(in.pos, worldMatrix).xyz, 1.0f);
-	out.pos = mul(out.pos, viewMatrix);
-	out.pos = mul(out.pos, projectionMatrix);
+	output.pos = float4(mul(input.pos, worldMatrix).xyz, 1.0f);
+	output.pos = mul(output.pos, viewMatrix);
+	output.pos = mul(output.pos, projectionMatrix);
 
-	out.tex = in.tex;
+	output.tex = input.tex;
 
-	out.norm = mul(in.norm, worldMatrix);
-	out.norm = normalize(out.norm);
+	output.norm = mul(input.norm, worldMatrix);
+	output.norm = normalize(output.norm);
 
-	return out;
+	return output;
 }

@@ -54,6 +54,9 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	//The refresh rate will be affected by whether vsync is enabled or not later
 	mySwapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 	mySwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	mySwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	mySwapChainDesc.OutputWindow = window;
+
 	//Used for multisampling 
 	//Count = number of multisamples per pixel
 	mySwapChainDesc.SampleDesc.Count = 1;

@@ -16,7 +16,7 @@ bool Shaders::Initialize(ID3D11Device *myDevice)
 {
 	bool result;
 
-	result = CompileShaders(myDevice, (WCHAR*)L"../Robot Annihilation/VertexShader.vs", (WCHAR*)L"../Robot Annihilation/PixelShader.ps");
+	result = CompileShaders(myDevice, (WCHAR*)L"VertexShader.vs", (WCHAR*)L"PixelShader.ps");
 	if (!result)
 	{
 		return false;
@@ -63,7 +63,7 @@ bool Shaders::CompileShaders(ID3D11Device *myDevice, WCHAR *vertexFile, WCHAR* p
 	errors = 0;
 
 	//Compile the vertex shader from the file
-	result = D3DCompileFromFile(vertexFile, NULL, NULL, "VertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errors);
+	result = D3DCompileFromFile(vertexFile, NULL, NULL, "Main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errors);
 
 	if (FAILED(result))
 	{
@@ -77,7 +77,7 @@ bool Shaders::CompileShaders(ID3D11Device *myDevice, WCHAR *vertexFile, WCHAR* p
 	}
 
 	//Compile the vertex shader from the file
-	result = D3DCompileFromFile(pixelFile, NULL, NULL, "PixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errors);
+	result = D3DCompileFromFile(pixelFile, NULL, NULL, "Main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errors);
 
 	if (FAILED(result))
 	{

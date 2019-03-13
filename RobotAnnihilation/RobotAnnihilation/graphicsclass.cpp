@@ -35,7 +35,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Make sure the object initializes with no problem 
-	result = myObject->Initialize("", myDX->GetDevice());
+	result = myObject->Initialize("Assests/Run.bin", myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -117,8 +117,9 @@ bool Graphics::Render()
 
 	myObject->Render(myDX->GetDeviceContext());
 	myDX->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	
-	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices()[0], world, view, projection, myObject->GetObjectTextures()[0], myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+
+	ID3D11ShaderResourceView * myShade = myObject->GetDiffuseTexture();
+	result = myShaders->Render(myDX->GetDeviceContext(), myObject->GetObjectIndices().size(), world, view, projection, myShade, myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
 	if (!result)
 	{
 		return false;

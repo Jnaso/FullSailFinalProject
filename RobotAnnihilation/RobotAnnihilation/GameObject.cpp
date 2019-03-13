@@ -166,22 +166,6 @@ void GameObject::ReadBinFile(const char * filePath, ID3D11Device* device)
 		}
 		delete dest;
 	}
-	if (Diffuse)
-	{
-		Textures.push_back(Diffuse);
-	}
-	if (Emissive)
-	{
-		Textures.push_back(Emissive);
-	}
-	if (Normal)
-	{
-		Textures.push_back(Normal);
-	}
-	if (Specular)
-	{
-		Textures.push_back(Specular);
-	}
 
 }
 
@@ -195,9 +179,9 @@ std::vector<uint32_t> GameObject::GetObjectIndices()
 	return ObjectIndices;
 }
 
-std::vector<ID3D11ShaderResourceView*> GameObject::GetObjectTextures()
+ID3D11ShaderResourceView* GameObject::GetDiffuseTexture()
 {
-	return Textures;
+	return Diffuse;
 }
 
 bool GameObject::Initialize(const char* filePath, ID3D11Device* device)
@@ -233,8 +217,9 @@ void GameObject::Shutdown()
 {
 	if (ObjectVBuffer) ObjectVBuffer->Release();
 	if (ObjectIndexBuffer) ObjectIndexBuffer->Release();
-	for (size_t i = 0; i < Textures.size(); i++)
-	{
-		if (Textures[i]) Textures[i]->Release();
-	}
+	if (Diffuse) Diffuse->Release();
+	if (Emissive) Emissive->Release();
+	if (Specular) Specular->Release();
+	if (Normal) Normal->Release();
+	
 }
