@@ -31,7 +31,10 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
-	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));	if (!Player)
+	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
+	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
+	Player->SetCurrentAnimation(Player->GetIdleAnimation());
+	if (!Player)
 	{
 		return false;
 	}
@@ -134,6 +137,19 @@ void Graphics::Shutdown()
 //Called each frame 
 bool Graphics::Render(InputManager *myInput)
 {
+	bool moving = false;
+	if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+	{
+		moving = true;
+	}
+	if (moving)
+	{
+		Player->SetCurrentAnimation(Player->GetRunAnimation());
+	}
+	else
+	{
+		Player->SetCurrentAnimation(Player->GetIdleAnimation());
+	}
 	XMMATRIX world, view, projection;
 	bool result;
 
@@ -221,7 +237,7 @@ bool Graphics::Render(InputManager *myInput)
 
 	Player->Render(myDX->GetDeviceContext());
 
-	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetRunAnimation()->GetJoints());
+	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
 
 	Ground->Render(myDX->GetDeviceContext());
 

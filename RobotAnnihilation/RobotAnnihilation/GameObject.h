@@ -33,7 +33,9 @@ class GameObject
 	ID3D11Buffer* ObjectVBuffer = nullptr;
 	ID3D11Buffer* ObjectIndexBuffer = nullptr;
 
+	Animation* CurrentAnimation;
 	Animation* RunAnimation;
+	Animation* IdleAnimation;
 
 	float frametime;
 
@@ -52,6 +54,12 @@ public:
 
 	Animation* GetRunAnimation();
 	void SetRunAnimation(Animation* anim);
+
+	Animation* GetIdleAnimation();
+	void SetIdleAnimation(Animation* anim);
+
+	Animation* GetCurrentAnimation();
+	void SetCurrentAnimation(Animation* anim);
 
 	Animation* AddAninimation(const char* filePath, ID3D11Device* device);
 
