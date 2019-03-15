@@ -1,4 +1,5 @@
 Texture2D shaderTexture;
+Texture2D normalTexture;
 SamplerState Sampler;
 
 cbuffer LightBuffer
@@ -13,6 +14,8 @@ struct PixelInput
 	float4 pos : SV_POSITION;
 	float2 tex : TEXCOORD0;
 	float3 norm : NORMAL;
+	float3 Tang : TANGENT;
+	float3 Binomial : BINOMIAL;
 };
 
 float4 Main(PixelInput input) : SV_TARGET
@@ -21,13 +24,17 @@ float4 Main(PixelInput input) : SV_TARGET
 	float3 lightDir;
 	float lightIntensity;
 	float4 finalColor;
+	float3 sampNorm;
 
 	textureColor = shaderTexture.Sample(Sampler, input.tex);
+	sampNorm = (2 * normalTexture.Sample(Sampler, input.tex).xyz) - 1.0f;
+	float3x3 tbn = float3x3(input.Tang, input.Binomial, input.norm);
+	sampNorm = normalize(mul(sampNorm, tbn));
 
 	float4 ambient = textureColor * float4(1.0f, 1.0f, 1.0f, 1.0f) * .5f;
 
 	lightDir = -lightDirection;
-	lightIntensity = saturate(dot(input.norm, lightDir));
+	lightIntensity = saturate(dot(sampNorm, lightDir));
 	finalColor = saturate(directionColor * lightIntensity);
 
 	finalColor = finalColor * textureColor;

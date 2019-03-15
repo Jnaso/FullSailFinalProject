@@ -223,7 +223,7 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	}
 	case WM_MOUSEMOVE:
 		myInput->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
-		SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
+		//SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 		break;
 	default:
 	{

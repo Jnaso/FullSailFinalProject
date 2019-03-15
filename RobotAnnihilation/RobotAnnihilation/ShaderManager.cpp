@@ -51,10 +51,10 @@ void ShaderManager::Shutdown()
 	}
 }
 
-bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, vector<float4x4> binds)
+bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, vector<float4x4> binds)
 {
 	bool result;
-	result = myAnimatedShader->Render(myContext, indicies, world, view, projection, texture, lightDir, dirColor, binds);
+	result = myAnimatedShader->Render(myContext, indicies, world, view, projection, texture, normalTexture, lightDir, dirColor, binds);
 	if (!result)
 	{
 		return false;

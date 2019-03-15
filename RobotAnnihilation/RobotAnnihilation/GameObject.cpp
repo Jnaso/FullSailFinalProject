@@ -183,6 +183,11 @@ ID3D11ShaderResourceView* GameObject::GetDiffuseTexture()
 	return Diffuse;
 }
 
+ID3D11ShaderResourceView* GameObject::GetNormalTexture()
+{
+	return Normal;
+}
+
 bool GameObject::Initialize(ID3D11Device* device)
 {
 	HRESULT result;

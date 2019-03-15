@@ -66,5 +66,6 @@ public:
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();
 	ID3D11ShaderResourceView* GetDiffuseTexture();
+	ID3D11ShaderResourceView* GetNormalTexture();
 };
 

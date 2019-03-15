@@ -23,6 +23,8 @@ struct PixelInput
 	float4 pos : SV_POSITION;
 	float2 tex : TEXCOORD0;
 	float3 norm : NORMAL;
+	float3 Tang : TANGENT;
+	float3 Binomial : BINOMIAL;
 };
 
 PixelInput Main(VertexInput input)
@@ -47,6 +49,8 @@ PixelInput Main(VertexInput input)
 
 	output.norm = mul(skinnedNorm, worldMatrix);
 	output.norm = normalize(output.norm);
+	output.Tang = normalize(mul(float4(input.tan, 0), worldMatrix).xyz);
+	output.Binomial = cross(output.norm, output.Tang);
 
 	return output;
 }
