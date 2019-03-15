@@ -92,12 +92,15 @@ void Animation::ReadAnimFile(const char* filePath, ID3D11Device* device)
 void Animation::Update(float delta)
 {
 	frameTime += delta;
+	if (frameTime > ObjAnim.duration)
+	{
+		frameTime -= ObjAnim.duration;
+	}
 	SetJoints(frameTime);
 }
 
-float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
+std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
 {
-	float4x4* answer;
 	std::vector<float4x4> Joints;
 	for (uint32_t i = 0; i < frame1.size(); i++)
 	{
@@ -115,12 +118,7 @@ float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, f
 		back.r[3].m128_f32[3] = pos.m128_f32[3];
 		Joints.push_back(XMMatrixToFloat4x4(back));
 	}
-	answer = new float4x4[Joints.size()];
-	for (uint32_t i = 0; i < Joints.size(); i++)
-	{
-		answer[i] = Joints[i];
-	}
-	return answer;
+	return Joints;
 }
 
 void Animation::SetJoints(float frametime)
@@ -133,11 +131,13 @@ void Animation::SetJoints(float frametime)
 		{
 			frame1 = ObjAnim.frames.size() - 1;
 			frame2 = i;
+			break;
 		}
 		if (frametime > ObjAnim.frames[i].time && frametime < ObjAnim.frames[i + 1].time)
 		{
 			frame1 = i;
 			frame2 = i + 1;
+			break;
 		}
 	}
 	float ratio = 0;
@@ -148,7 +148,7 @@ void Animation::SetJoints(float frametime)
 	Joints = LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio, ObjAnim.parent_indicies);
 }
 
-float4x4* Animation::GetJoints()
+std::vector<float4x4> Animation::GetJoints()
 {
 	return Joints;
 }

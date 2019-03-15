@@ -20,7 +20,7 @@ class Animation
 	float frameTime = 0;
 	anim_clip ObjAnim;
 
-	float4x4* Joints;
+	std::vector<float4x4> Joints;
 public:
 	Animation();
 	Animation(const char* filePath, ID3D11Device* device);
@@ -28,6 +28,6 @@ public:
 	void ReadAnimFile(const char * filePath, ID3D11Device * device);
 	void SetJoints(float frametime);
 	void Update(float update);
-	float4x4* GetJoints();
+	std::vector<float4x4> GetJoints();
 };
 

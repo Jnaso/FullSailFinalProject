@@ -138,9 +138,14 @@ Animation* GameObject::GetRunAnimation()
 	return RunAnimation;
 }
 
-void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, Animation * storage)
+void GameObject::SetRunAnimation(Animation* anim)
 {
-	storage = new Animation(filePath, device);
+	RunAnimation = anim;
+}
+
+Animation* GameObject::AddAninimation(const char * filePath, ID3D11Device * device)
+{
+	return new Animation(filePath, device);
 }
 
 std::vector<Vertex> GameObject::GetObjectVerts()
