@@ -142,10 +142,14 @@ void Animation::SetJoints(float frametime)
 	}
 	float ratio = 0;
 	if (frame2 == 0)
-		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration) / ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration));
+		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration) / (ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration)));
 	else
 		ratio = (frametime - ObjAnim.frames[frame1].time) / (ObjAnim.frames[frame2].time - ObjAnim.frames[frame1].time);
 	Joints = LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio, ObjAnim.parent_indicies);
+	for (unsigned int i = 0; i < Joints.size(); i++)
+	{
+		Joints[i] = XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(ObjAnim.bindPose.joints[i]), Float4x4ToXMMatrix(Joints[i]))));
+	}
 }
 
 std::vector<float4x4> Animation::GetJoints()

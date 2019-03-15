@@ -6,6 +6,7 @@
 
 #include "shaderstuff.h"
 #include "StaticShader.h"
+#include "MathDefines.h"
 
 class ShaderManager
 {
@@ -19,7 +20,7 @@ public:
 	bool Initialize(ID3D11Device *);
 	void Shutdown();
 
-	bool RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor);
+	bool RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds);
 	bool RenderStaticShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor);
 };
 

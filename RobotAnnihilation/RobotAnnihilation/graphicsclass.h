@@ -4,11 +4,11 @@
 
 #include <Windows.h>
 #include "dxstuff.h"
-#include "shaderstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "ShaderManager.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -25,7 +25,7 @@ private:
 	DX *myDX;
 	GameObject *Player;
 	GameObject *Ground;
-	AnimatedShader *myShaders;
+	ShaderManager *myShaderManager;
 	Lighting *myLighting;
 	Camera *myCamera;
 

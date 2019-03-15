@@ -1,3 +1,4 @@
+//#pragma pack_major(row_major)
 cbuffer MatrixBuffer
 {
 	matrix worldMatrix;
@@ -22,7 +23,7 @@ struct PixelInputType
 	float3 normal : NORMAL;
 };
 
-PixelInputType ColorVertexShader(VertexInputType input)
+PixelInputType Main(VertexInputType input)
 {
 	PixelInputType output;
 	float4 worldPosition;

@@ -13,7 +13,7 @@
 using namespace std;
 using namespace DirectX;
 
-const unsigned int MAX_POSES = 50;
+const unsigned int MAX_POSES = 28;
 
 class AnimatedShader
 {
@@ -43,7 +43,7 @@ private:
 	void DestroyShaders();
 	void ProcessShaderErrors(ID3D10Blob *error);
 
-	bool UpdateShaderBuffers(ID3D11DeviceContext *myContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor);
+	bool UpdateShaderBuffers(ID3D11DeviceContext *myContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, std::vector<float4x4> binds);
 	void DrawShaders(ID3D11DeviceContext *myContext, int indicies);
 
 public:
@@ -51,7 +51,7 @@ public:
 
 	bool Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor);
+	bool Render(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, std::vector<float4x4> binds);
 };
 
 #endif // !_SHADERSTUFF_H_

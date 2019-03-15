@@ -32,12 +32,12 @@ void AnimatedShader::Shutdown()
 }
 
 //Called every frame, updates the shader information and then draws them
-bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
+bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds)
 {
 	bool result;
 
 	//Update information
-	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor);
+	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor, binds);
 	if (!result)
 	{
 		return false;
@@ -252,7 +252,7 @@ void AnimatedShader::ProcessShaderErrors(ID3D10Blob *errors)
 }
 
 //Updates and sets the constant buffer data 
-bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
+bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mapped;
@@ -276,6 +276,11 @@ bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, X
 	constData->world = world;
 	constData->view = view;
 	constData->projection = projection;
+
+	for (int i = 0; i < binds.size(); i++)
+	{
+		constData->bindPoses[i] = binds[i];
+	}
 
 	//Unmap the buffer and subresource
 	myDeviceContext->Unmap(myConstantBuffer, 0);

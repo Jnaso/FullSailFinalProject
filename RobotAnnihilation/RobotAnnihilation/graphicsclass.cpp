@@ -7,7 +7,7 @@ Graphics::Graphics()
 	Player = nullptr;
 	Ground = nullptr;
 	myLighting = nullptr;
-	myShaders = nullptr;
+	myShaderManager = nullptr;
 	myCamera = nullptr;
 }
 
@@ -51,14 +51,14 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	result = Ground->Initialize(myDX->GetDevice());
 
 	//Initialize the shader object 
-	myShaders = new AnimatedShader();
-	if (!myShaders)
+	myShaderManager = new ShaderManager();
+	if (!myShaderManager)
 	{
 		return false;
 	}
 
 	//Initialize the shaders
-	result = myShaders->Initialize(myDX->GetDevice());
+	result = myShaderManager->Initialize(myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -99,14 +99,14 @@ void Graphics::Shutdown()
 	if (myLighting)
 	{
 		delete myLighting;
-		myLighting = 0;
+		myLighting = nullptr;
 	}
 
-	if (myShaders)
+	if (myShaderManager)
 	{
-		myShaders->Shutdown();
-		delete myShaders;
-		myShaders = 0;
+		myShaderManager->Shutdown();
+		delete myShaderManager;
+		myShaderManager = nullptr;
 	}
 
 	if (Player)
@@ -221,11 +221,11 @@ bool Graphics::Render(InputManager *myInput)
 
 	Player->Render(myDX->GetDeviceContext());
 
-	result = myShaders->Render(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetRunAnimation()->GetJoints());
 
 	Ground->Render(myDX->GetDeviceContext());
 
-	result = myShaders->Render(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
+	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor());
 
 	if (!result)
 	{
