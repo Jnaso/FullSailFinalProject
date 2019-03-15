@@ -50,7 +50,7 @@ public:
 
 	void Update(float delta);
 
-	Animation** GetRunAnimation();
+	Animation* GetRunAnimation();
 
 	void AddAninimation(const char* filePath, ID3D11Device* device, Animation* storage);
 

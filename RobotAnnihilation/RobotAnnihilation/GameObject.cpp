@@ -133,9 +133,9 @@ void GameObject::Update(float delta)
 	RunAnimation->Update(delta);
 }
 
-Animation** GameObject::GetRunAnimation()
+Animation* GameObject::GetRunAnimation()
 {
-	return &RunAnimation;
+	return RunAnimation;
 }
 
 void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, Animation * storage)
