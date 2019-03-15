@@ -25,7 +25,7 @@ private:
 	DX *myDX;
 	GameObject *Player;
 	GameObject *Ground;
-	Shaders *myShaders;
+	AnimatedShader *myShaders;
 	Lighting *myLighting;
 	Camera *myCamera;
 

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _SHADERSTUFF_H_
-#define _SHADERSTUFF_H_
+#ifndef _STATICSHADER_H_
+#define _STATICSHADER_H_
 
 #pragma comment(lib, "D3DCompiler.lib")
 
@@ -8,14 +8,12 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h> 
 #include <fstream>
-#include "MathDefines.h"
 
 using namespace std;
 using namespace DirectX;
 
-const unsigned int MAX_POSES = 50;
 
-class AnimatedShader
+class StaticShader
 {
 private:
 	struct ConstantBuffer
@@ -23,7 +21,6 @@ private:
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
-		float4x4 bindPoses[MAX_POSES];
 	};
 
 	struct ConstantLightBuffer
@@ -47,12 +44,11 @@ private:
 	void DrawShaders(ID3D11DeviceContext *myContext, int indicies);
 
 public:
-	AnimatedShader();
+	StaticShader();
 
 	bool Initialize(ID3D11Device *myDevice);
 	void Shutdown();
 	bool Render(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor);
 };
 
-#endif // !_SHADERSTUFF_H_
-
+#endif // !_STATICSHADER_H_

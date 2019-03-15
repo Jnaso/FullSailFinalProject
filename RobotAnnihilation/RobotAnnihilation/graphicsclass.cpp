@@ -31,7 +31,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
-	Player->AddAninimation("Assets/Run.anim", myDX->GetDevice(), *Player->GetRunAnimation());
+	Player->AddAninimation("Assets/Run.anim", myDX->GetDevice(), Player->GetRunAnimation());
 	if (!Player)
 	{
 		return false;
@@ -52,7 +52,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	result = Ground->Initialize(myDX->GetDevice());
 
 	//Initialize the shader object 
-	myShaders = new Shaders();
+	myShaders = new AnimatedShader();
 	if (!myShaders)
 	{
 		return false;

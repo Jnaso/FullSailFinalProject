@@ -1,6 +1,6 @@
-#include "ShaderStuff.h"
+#include "StaticShader.h"
 
-AnimatedShader::AnimatedShader()
+StaticShader::StaticShader()
 {
 	//Zero memory 
 	myVertexShader = nullptr;
@@ -11,12 +11,11 @@ AnimatedShader::AnimatedShader()
 	mySampler = nullptr;
 }
 
-//Set up the shaders
-bool AnimatedShader::Initialize(ID3D11Device *myDevice)
+bool StaticShader::Initialize(ID3D11Device *myDevice)
 {
 	bool result;
 
-	result = CompileShaders(myDevice, (WCHAR*)L"VertexShader.vs", (WCHAR*)L"PixelShader.ps");
+	result = CompileShaders(myDevice, (WCHAR*)L"VertexShaderStatic.vs", (WCHAR*)L"PixelShader.ps");
 	if (!result)
 	{
 		return false;
@@ -25,14 +24,12 @@ bool AnimatedShader::Initialize(ID3D11Device *myDevice)
 	return true;
 }
 
-//Cleans up all objects
-void AnimatedShader::Shutdown()
+void StaticShader::Shutdown()
 {
 	DestroyShaders();
 }
 
-//Called every frame, updates the shader information and then draws them
-bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
+bool StaticShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
 {
 	bool result;
 
@@ -49,8 +46,7 @@ bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, 
 	return true;
 }
 
-//Loads in the shaders from a file, also initializes the constant buffers and the sampler 
-bool AnimatedShader::CompileShaders(ID3D11Device *myDevice, WCHAR *vertexFile, WCHAR* pixelFile)
+bool StaticShader::CompileShaders(ID3D11Device *myDevice, WCHAR *vertexFile, WCHAR* pixelFile)
 {
 	HRESULT result;
 	ID3D10Blob *vertexShaderBuffer, *pixelShaderBuffer, *errors;
@@ -187,8 +183,7 @@ bool AnimatedShader::CompileShaders(ID3D11Device *myDevice, WCHAR *vertexFile, W
 	return true;
 }
 
-//Cleans up all object pointers
-void AnimatedShader::DestroyShaders()
+void StaticShader::DestroyShaders()
 {
 	if (myConstantBuffer)
 	{
@@ -227,8 +222,7 @@ void AnimatedShader::DestroyShaders()
 	}
 }
 
-//Writes any shader errors to a text doc 
-void AnimatedShader::ProcessShaderErrors(ID3D10Blob *errors)
+void StaticShader::ProcessShaderErrors(ID3D10Blob *errors)
 {
 	char *errorMessages;
 	unsigned int bufferSize;
@@ -251,8 +245,7 @@ void AnimatedShader::ProcessShaderErrors(ID3D10Blob *errors)
 	errorMessages = nullptr;
 }
 
-//Updates and sets the constant buffer data 
-bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
+bool StaticShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mapped;
@@ -308,8 +301,7 @@ bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, X
 	return true;
 }
 
-//Sets all the shader data 
-void AnimatedShader::DrawShaders(ID3D11DeviceContext *myDeviceContext, int indicies)
+void StaticShader::DrawShaders(ID3D11DeviceContext *myDeviceContext, int indicies)
 {
 	//Set the input layout
 	myDeviceContext->IASetInputLayout(myLayout);
