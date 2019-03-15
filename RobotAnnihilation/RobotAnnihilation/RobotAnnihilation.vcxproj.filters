@@ -124,5 +124,6 @@
   <ItemGroup>
     <None Include="VertexShader.vs" />
     <None Include="PixelShader.ps" />
+    <None Include="VertexShaderBasic.vs" />
   </ItemGroup>
 </Project>
