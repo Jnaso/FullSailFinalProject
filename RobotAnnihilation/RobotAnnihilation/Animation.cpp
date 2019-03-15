@@ -92,7 +92,7 @@ void Animation::ReadAnimFile(const char* filePath, ID3D11Device* device)
 void Animation::Update(float delta)
 {
 	frameTime += delta;
-	float4x4* joints = SetJoints(frameTime);
+	SetJoints(frameTime);
 }
 
 float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
@@ -123,7 +123,7 @@ float4x4* LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, f
 	return answer;
 }
 
-float4x4* Animation::SetJoints(float frametime)
+void Animation::SetJoints(float frametime)
 {
 	uint32_t frame1 = 0;
 	uint32_t frame2 = 0;
@@ -145,5 +145,10 @@ float4x4* Animation::SetJoints(float frametime)
 		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration) / ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration));
 	else
 		ratio = (frametime - ObjAnim.frames[frame1].time) / (ObjAnim.frames[frame2].time - ObjAnim.frames[frame1].time);
-	return LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio, ObjAnim.parent_indicies);
+	Joints = LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio, ObjAnim.parent_indicies);
+}
+
+float4x4* Animation::GetJoints()
+{
+	return Joints;
 }

@@ -130,6 +130,7 @@ void GameObject::ReadMeshFile(const char * filePath, ID3D11Device* device)
 void GameObject::Update(float delta)
 {
 	frametime += delta;
+	RunAnimation->Update(delta);
 }
 
 Animation** GameObject::GetRunAnimation()
