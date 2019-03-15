@@ -31,7 +31,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
-	Player->AddAninimation("Assets/Run.anim", myDX->GetDevice(), *Player->GetRunAnimation());
+	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
 	if (!Player)
 	{
 		return false;
@@ -237,4 +237,9 @@ bool Graphics::Render(InputManager *myInput)
 	myDX->PresentScreen();
 
 	return true;
+}
+
+void Graphics::Update(float delta)
+{
+	Player->Update(delta);
 }

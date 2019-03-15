@@ -51,8 +51,9 @@ public:
 	void Update(float delta);
 
 	Animation* GetRunAnimation();
+	void SetRunAnimation(Animation* anim);
 
-	void AddAninimation(const char* filePath, ID3D11Device* device, Animation* storage);
+	Animation* AddAninimation(const char* filePath, ID3D11Device* device);
 
 	std::vector<Vertex> GetObjectVerts();
 	std::vector<uint32_t> GetObjectIndices();

@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include "graphicsclass.h"
 #include "InputManager.h"
+#include "XTime.h"
 #include <windowsx.h>
 
 class MyWindow
@@ -16,7 +17,9 @@ private:
 
 	Graphics *myGraphics;
 	InputManager *myInput;
-
+	XTime timer;
+	
+	void Update(float delta);
 	bool Run();
 	void CreateWindows(int&, int&);
 	void ShutdownWindows();

@@ -171,7 +171,7 @@ void MyWindow::Render()
 	bool done, result;
 
 	ZeroMemory(&msg, sizeof(MSG));
-
+	
 	done = false;
 	while (!done)
 	{
@@ -191,6 +191,8 @@ void MyWindow::Render()
 		}
 		else
 		{
+			timer.Signal();
+			Update(timer.Delta());
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
@@ -255,4 +257,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
 	}
+}
+
+void MyWindow::Update(float delta)
+{
+	myGraphics->Update(delta);
 }

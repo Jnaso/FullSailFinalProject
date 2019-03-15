@@ -30,6 +30,7 @@ private:
 	Camera *myCamera;
 
 public:
+	void Update(float delta);
 	Graphics();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
