@@ -194,6 +194,7 @@
   <ItemGroup>
     <None Include="PixelShader.ps" />
     <None Include="VertexShader.vs" />
+    <None Include="VertexShaderBasic.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
