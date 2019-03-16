@@ -34,7 +34,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
 	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
 	Player->SetCurrentAnimation(Player->GetIdleAnimation());
-	Player->GetPhysicsComponent()->SetVelocity(float3{0, .01, .01});
+	Player->GetPhysicsComponent()->SetVelocity(float3{2.5, 2.5, 1.5});
 	if (!Player)
 	{
 		return false;

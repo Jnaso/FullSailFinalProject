@@ -49,18 +49,23 @@ void PhysicsComponent::SetAccel(float3 newAcc)
 
 void PhysicsComponent::Update(float delta)
 {
-	position += velocity;
+	float3 velocitydelta;
+	velocitydelta.x = velocity.x * delta;
+	velocitydelta.y = velocity.y * delta;
+	velocitydelta.z = velocity.z * delta;
+	position += velocitydelta;
+	if (velocity.x >= 0)
+	{
+		velocity.x -= delta;
+	}
+	velocity.y -= delta;
+	if (velocity.z >= 0)
+	{
+		velocity.z -= delta;
+	}
 	//velocity -= delta;
-	/*if (velocity.x < 0)
+	if (position.y < 0)
 	{
-		velocity.x = 0;
+		position.y = 0;
 	}
-	if (velocity.y < 0)
-	{
-		velocity.y = 0;
-	}
-	if (velocity.z < 0)
-	{
-		velocity.z = 0;
-	}*/
 }
