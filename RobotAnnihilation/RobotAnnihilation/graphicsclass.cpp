@@ -34,6 +34,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
 	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
 	Player->SetCurrentAnimation(Player->GetIdleAnimation());
+	Player->GetPhysicsComponent()->SetVelocity(float3{0, .01, .01});
 	if (!Player)
 	{
 		return false;
@@ -237,7 +238,11 @@ bool Graphics::Render(InputManager *myInput)
 
 	Player->Render(myDX->GetDeviceContext());
 
+	world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
+
 	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
+
+	myDX->PassWorldMatrix(world);
 
 	Ground->Render(myDX->GetDeviceContext());
 

@@ -3,6 +3,7 @@
 GameObject::GameObject(const char* filePath, ID3D11Device* device)
 {
 	ReadMeshFile(filePath, device);
+	ObjectPhysics = new PhysicsComponent();
 }
 
 GameObject::GameObject()
@@ -131,6 +132,7 @@ void GameObject::Update(float delta)
 {
 	frametime += delta;
 	CurrentAnimation->Update(delta);
+	ObjectPhysics->Update(delta);
 }
 
 Animation* GameObject::GetRunAnimation()
@@ -188,6 +190,16 @@ ID3D11ShaderResourceView* GameObject::GetNormalTexture()
 	return Normal;
 }
 
+PhysicsComponent * GameObject::GetPhysicsComponent()
+{
+	return ObjectPhysics;
+}
+
+void GameObject::SetPhysicsComponent(PhysicsComponent * newPhysics)
+{
+	ObjectPhysics = newPhysics;
+}
+
 bool GameObject::Initialize(ID3D11Device* device)
 {
 	HRESULT result;
@@ -228,5 +240,5 @@ void GameObject::Shutdown()
 	if (Emissive) Emissive->Release();
 	if (Specular) Specular->Release();
 	if (Normal) Normal->Release();
-	
+	delete ObjectPhysics;
 }

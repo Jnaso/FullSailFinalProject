@@ -46,6 +46,68 @@ struct float3
 	inline float* data() { return &x; }
 	inline const float* data()const { return &x; }
 	inline constexpr size_t size()const { return 3; }
+	inline float3& operator+=(float3 b)
+	{
+		this->x += b.x;
+		this->y += b.y;
+		this->z += b.z;
+		return *this;
+	}
+	inline const float3& operator+=(float3 b)const
+	{
+		float3 newVal;
+		newVal.x = this->x + b.x;
+		newVal.y = this->y + b.y;
+		newVal.z = this->z + b.z;
+		return newVal;
+	}
+	inline float3& operator-=(float3 b)
+	{
+		this->x -= b.x;
+		this->y -= b.y;
+		this->z -= b.z;
+		return *this;
+	}
+	inline const float3& operator-=(float3 b)const
+	{
+		float3 newVal;
+		newVal.x = this->x - b.x;
+		newVal.y = this->y - b.y;
+		newVal.z = this->z - b.z;
+		return newVal;
+	}
+	inline float3& operator-=(float b)
+	{
+		this->x -= b;
+		this->y -= b;
+		this->z -= b;
+		return *this;
+	}
+	inline const float3& operator-=(float b)const
+	{
+		float3 newVal;
+		newVal.x = this->x - b;
+		newVal.y = this->y - b;
+		newVal.z = this->z - b;
+		return newVal;
+	}
+
+	inline float3& operator*(float val)
+	{
+		this->x *= val;
+		this->y *= val;
+		this->z *= val;
+		return *this;
+	}
+
+	inline const float3& operator*(float val)const
+	{
+		float3 newVal;
+		newVal.x = this->x *val;
+		newVal.y = this->y *val;
+		newVal.z = this->z *val;
+		return newVal;
+	}
 
 	inline float3& normalize() {
 		// compute distance

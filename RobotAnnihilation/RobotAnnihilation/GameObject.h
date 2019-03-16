@@ -2,6 +2,7 @@
 #include "MathDefines.h"
 #include "WICTextureLoader.h"
 #include "Animation.h"
+#include "PhysicsComponent.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <dxgi1_2.h>
@@ -21,6 +22,8 @@ using namespace DirectX;
 
 class GameObject
 {
+	PhysicsComponent* ObjectPhysics;
+
 	std::vector<Vertex> ObjectVerts;
 	std::vector<uint32_t> ObjectIndices;
 
@@ -67,5 +70,8 @@ public:
 	std::vector<uint32_t> GetObjectIndices();
 	ID3D11ShaderResourceView* GetDiffuseTexture();
 	ID3D11ShaderResourceView* GetNormalTexture();
+
+	PhysicsComponent* GetPhysicsComponent();
+	void SetPhysicsComponent(PhysicsComponent* newPhysics);
 };
 
