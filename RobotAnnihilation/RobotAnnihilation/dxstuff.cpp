@@ -337,6 +337,13 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0, 0.0f);
 	myView = XMMatrixLookAtLH(Eye, At, Up);
 
+	//Initialize Sprite Batch
+	spriteBatch.reset(new DirectX::SpriteBatch(myDeviceContext));
+	if (!spriteBatch)
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -456,6 +463,12 @@ void DX::PassWorldMatrix(XMMATRIX &other)
 void DX::PassViewdMatrix(XMMATRIX &other)
 {
 	other = myView;
+}
+
+void DX::CreateImage(const char * dir, DirectX::SimpleMath::Vector2 pos)
+{
+	Image temp(dir, myDevice, pos);
+	ImagesToRender.push_back(temp);
 }
 
 void DX::SetViewMatrix(XMMATRIX other)

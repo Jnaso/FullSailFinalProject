@@ -29,6 +29,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	myDX->CreateImage("H:/FullSail/Final Project/Temporary/TestProj/TestProj/DrawingStuffturtle.dds", DirectX::SimpleMath::Vector2(100, 100));
+
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
@@ -165,6 +167,7 @@ bool Graphics::Render(InputManager *myInput)
 	myDX->PassProjectionMatrix(projection);
 
 	//Manipulate matricies here 
+	#pragma region Input
 	if (myInput->GetKeyState((int)'S'))
 	{
 		myDX->SetViewMatrix(XMMatrixIdentity());
@@ -223,7 +226,7 @@ bool Graphics::Render(InputManager *myInput)
 
 	if (myInput->GetKeyState(_ARROWUP))
 	{
-	    myDX->SetViewMatrix(XMMatrixIdentity());
+		myDX->SetViewMatrix(XMMatrixIdentity());
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(.015f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
@@ -234,6 +237,8 @@ bool Graphics::Render(InputManager *myInput)
 		myDX->SetViewMatrix(myDX->GetViewMatrix()  * XMMatrixRotationX(-.015f));
 		myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	}
+#pragma endregion
+
 
 	Player->Render(myDX->GetDeviceContext());
 
@@ -248,8 +253,21 @@ bool Graphics::Render(InputManager *myInput)
 		return false;
 	}
 
+	
+	//Draw Text / Images
+	myDX->spriteBatch->Begin();
+
+	for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
+	{
+		myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
+	}
+
+	myDX->spriteBatch->End();
+
 	//Present the swap chain 
 	myDX->PresentScreen();
+
+	
 
 	return true;
 }
