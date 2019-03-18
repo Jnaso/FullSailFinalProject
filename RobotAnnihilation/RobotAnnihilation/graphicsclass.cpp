@@ -171,7 +171,7 @@ bool Graphics::Render(InputManager *myInput)
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
 
-	myCamera->Update();
+	myCamera->Update({ Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z });
 
 	myDX->PassWorldMatrix(world);
 	myCamera->PassInViewMatrix(view);
