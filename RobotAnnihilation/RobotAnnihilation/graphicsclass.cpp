@@ -268,8 +268,9 @@ bool Graphics::Render(InputManager *myInput)
 
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
-		world = XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z);
-		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), bullets[i]->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
+		bullets[i]->Render(myDX->GetDeviceContext());
+		world = XMMatrixMultiply(XMMatrixScaling(.5, .5, .5), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	}	
 	world = XMMatrixIdentity();
 
@@ -297,6 +298,7 @@ for (unsigned int i = 0; i < bullets.size(); i++)
 		bullets[i]->Update(delta);
 		if (bullets[i]->GetPhysicsComponent()->GetPosition().x > 10 || bullets[i]->GetPhysicsComponent()->GetPosition().z > 40)
 		{
+			bullets[i]->Shutdown();
 			bullets.erase(bullets.begin() + i);
 		}
 	}
@@ -305,7 +307,8 @@ for (unsigned int i = 0; i < bullets.size(); i++)
 void Graphics::ShootBullet(float x, float y)
 {
 	GameObject* newBullet = new GameObject("Assets/Sphere.mesh", myDX->GetDevice());
-	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 1.0f, Player->GetPhysicsComponent()->GetPosition().z});
+	newBullet->Initialize(myDX->GetDevice());
+	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
 	newBullet->GetPhysicsComponent()->SetVelocity(float3{ 0, 0, 30});
 	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
 	newBullet->GetPhysicsComponent()->SetMass(2.0f);

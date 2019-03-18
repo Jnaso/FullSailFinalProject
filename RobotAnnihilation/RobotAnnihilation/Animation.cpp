@@ -102,7 +102,7 @@ void Animation::Update(float delta)
 	}
 }
 
-std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
+std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
 {
 	std::vector<float4x4> Joints;
 	for (uint32_t i = 0; i < frame1.size(); i++)
@@ -158,4 +158,14 @@ void Animation::SetJoints(float frametime)
 std::vector<float4x4> Animation::GetJoints()
 {
 	return Joints;
+}
+
+void Animation::SetJoints(std::vector<float4x4> newJ)
+{
+	Joints = newJ;
+}
+
+std::vector<int32_t> Animation::GetParents()
+{
+	return ObjAnim.parent_indicies;
 }
