@@ -51,10 +51,10 @@ void ShaderManager::Shutdown()
 	}
 }
 
-bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, vector<float4x4> binds)
+bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, vector<float4x4> binds, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx)
 {
 	bool result;
-	result = myAnimatedShader->Render(myContext, indicies, world, view, projection, texture, normalTexture, lightDir, dirColor, binds);
+	result = myAnimatedShader->Render(myContext, indicies, world, view, projection, texture, normalTexture, lightDir, dirColor, binds, myPos, myCol, spotCol, spotDir, spotPos, spotEx);
 	if (!result)
 	{
 		return false;
@@ -63,11 +63,11 @@ bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int ind
 	return true;
 }
 
-bool ShaderManager::RenderStaticShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor)
+bool ShaderManager::RenderStaticShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx)
 {
 	bool result;
 
-	result = myStaticShader->Render(myContext, indicies, world, view, projection, texture, lightDir, dirColor);
+	result = myStaticShader->Render(myContext, indicies, world, view, projection, texture, lightDir, dirColor, myPos, myCol, spotCol, spotDir, spotPos, spotEx);
 	if (!result)
 	{
 		return false;

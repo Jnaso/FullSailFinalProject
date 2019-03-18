@@ -2,8 +2,6 @@
 #include <iostream>
 
 
-
-
 InputManager::InputManager()
 {
 	m_keys = new bool[256];
@@ -88,15 +86,22 @@ InputManager::KEYSTATE InputManager::GetKeyState(int keyCode)
 
 void InputManager::SetMousePos(float x, float y)
 {
+	prevMousePos = { mousePos.x, mousePos.y };
 	mousePos.x = x;
 	mousePos.y = y;
 
 	//std::cout << "MousePOS: " << "( " << mousePos.x << ", " << mousePos.y << " )" << std::endl;
 }
 
+float2 InputManager::GetPrevMousePos()
+{
+	return prevMousePos;
+}
+
 float2 InputManager::GetMousePos()
 {
 	return mousePos;
 }
+
 
 

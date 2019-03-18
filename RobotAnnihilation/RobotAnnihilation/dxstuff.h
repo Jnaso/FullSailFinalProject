@@ -51,7 +51,9 @@ public:
 	void PassViewdMatrix(XMMATRIX &view);
 
 	void SetViewMatrix(XMMATRIX);
+	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetViewMatrix();
+	XMMATRIX GetWorldMatrix();
 
 };
 

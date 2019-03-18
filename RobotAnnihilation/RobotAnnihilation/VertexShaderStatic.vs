@@ -1,4 +1,5 @@
 //#pragma pack_major(row_major)
+
 cbuffer MatrixBuffer
 {
 	matrix worldMatrix;
@@ -16,28 +17,32 @@ struct VertexInputType
 	float4 weights : WEIGHTS;
 };
 
-struct PixelInputType
+struct PixelInput
 {
-	float4 position : SV_POSITION;
+	float4 pos : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	float3 normal : NORMAL;
+	float3 norm : NORMAL;
+	float3 Tang : TANGENT;
+	float3 Binomial : BINOMIAL;
+	float3 PixelPos : TEXCOORD1;
 };
 
-PixelInputType Main(VertexInputType input)
+PixelInput Main(VertexInputType input)
 {
-	PixelInputType output;
-	float4 worldPosition;
+	PixelInput output;
 
 	input.position.w = 1.0f;
 
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.pos = mul(input.position, worldMatrix);
+	output.pos = mul(output.pos, viewMatrix);
+	output.pos = mul(output.pos, projectionMatrix);
 
 	output.tex = input.tex;
 
-	output.normal = mul(input.normal, worldMatrix);
-	output.normal = normalize(output.normal);
+	output.norm = mul(input.normal, worldMatrix);
+	output.norm = normalize(output.norm);
+	
+	output.PixelPos = mul(input.position, worldMatrix).xyz;
 
 	return output;
 }

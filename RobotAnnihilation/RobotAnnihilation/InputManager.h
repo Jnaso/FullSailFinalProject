@@ -50,6 +50,7 @@ private:
 	bool *m_keys;
 
 	float2 mousePos;
+	float2 prevMousePos;
 
 public:
 
@@ -61,7 +62,7 @@ public:
 
 	void SetMousePos(float x, float y);
 	float2 GetMousePos();
-
+	float2 GetPrevMousePos();
 	
 };
 

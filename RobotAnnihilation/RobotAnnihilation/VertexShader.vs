@@ -1,4 +1,5 @@
 //#pragma pack_major(row_major)
+#define NUM_LIGHTS 2
 
 cbuffer ConstantBuffer
 {
@@ -7,6 +8,7 @@ cbuffer ConstantBuffer
 	matrix projectionMatrix;
 	float4x4 bindPoses[28];
 };
+
 
 struct VertexInput
 {
@@ -25,11 +27,13 @@ struct PixelInput
 	float3 norm : NORMAL;
 	float3 Tang : TANGENT;
 	float3 Binomial : BINOMIAL;
+	float3 PixelPos : TEXCOORD1;
 };
 
 PixelInput Main(VertexInput input)
 {
 	PixelInput output = (PixelInput)0;
+	float4 pixelPosition;
 
 	float4 skinned = float4(0, 0, 0, 1);
 	float4 skinnedNorm = float4(0, 0, 0, 0);
@@ -51,6 +55,8 @@ PixelInput Main(VertexInput input)
 	output.norm = normalize(output.norm);
 	output.Tang = normalize(mul(float4(input.tan, 0), worldMatrix).xyz);
 	output.Binomial = cross(output.norm, output.Tang);
+
+	output.PixelPos = mul(float4(input.pos, 1.0f), worldMatrix).xyz;
 
 	return output;
 }

@@ -2,12 +2,21 @@ Texture2D shaderTexture;
 Texture2D normalTexture;
 SamplerState Sampler;
 
+//#define NUM_LIGHTS 2
+
 cbuffer LightBuffer
 {
 	float4 directionColor;
 	float3 lightDirection;
 	float padding;
+	float4 lightPosition[2];
+	float4 lightCols[2];
+	float4 SpotCol;
+	float4 SpotDir;
+	float4 SpotPos;
+	float4 SpotEx;
 };
+
 
 struct PixelInput
 {
@@ -16,6 +25,7 @@ struct PixelInput
 	float3 norm : NORMAL;
 	float3 Tang : TANGENT;
 	float3 Binomial : BINOMIAL;
+	float3 PixelPos : TEXCOORD1;
 };
 
 float4 Main(PixelInput input) : SV_TARGET
@@ -25,19 +35,45 @@ float4 Main(PixelInput input) : SV_TARGET
 	float lightIntensity;
 	float4 finalColor;
 	float3 sampNorm;
+	float3 normal = normalize(input.norm);
 
 	textureColor = shaderTexture.Sample(Sampler, input.tex);
 	sampNorm = (2 * normalTexture.Sample(Sampler, input.tex).xyz) - 1.0f;
 	float3x3 tbn = float3x3(input.Tang, input.Binomial, input.norm);
 	sampNorm = normalize(mul(sampNorm, tbn));
 
-	float4 ambient = textureColor * float4(1.0f, 1.0f, 1.0f, 1.0f) * .5f;
+	float3 ambient = textureColor.rgb * float3(1.0f, 1.0f, 1.0f) * .5f;
 
 	lightDir = -lightDirection;
-	lightIntensity = saturate(dot(sampNorm, lightDir));
-	finalColor = saturate(directionColor * lightIntensity);
+	lightIntensity = saturate(dot(input.norm, lightDir));
 
-	finalColor = finalColor * textureColor;
+	float3 direct = (float3)0;
+	if (lightIntensity > 0)
+	{
+		direct = directionColor.rgb * lightIntensity * textureColor.rgb;
+	}
 
-	return finalColor + ambient;
+	float3 pLightDir1 = normalize(lightPosition[0].xyz - input.PixelPos);
+	float PDot1 = saturate(dot(pLightDir1, normal));
+	float attenuation1 = saturate(1.0f - (length(pLightDir1) / lightPosition[0].w));
+	float3 Point1 = (lightCols[0].rgb * PDot1 * textureColor.rgb) * attenuation1;
+
+	float3 pLightDir2 = normalize(lightPosition[1].xyz - input.PixelPos);
+	float PDot2 = saturate(dot(pLightDir2, normal));
+	float attenuation2 = saturate(1.0f - (length(pLightDir2) / lightPosition[1].w));
+	float3 Point2 = (lightCols[1].rgb * PDot2 * textureColor.rgb) * attenuation2;
+
+	float3 SPLightDir = normalize(SpotPos.xyz - input.PixelPos);
+	float surfaceRatio = saturate(dot(-SPLightDir, normalize(SpotDir.xyz)));
+	float spotFactor = (surfaceRatio > SpotEx.y) ? 1.0f : 0.0f;
+	float lightRatio = saturate(dot(SPLightDir, normal));
+	float att1 = 1.0 - saturate(length(SpotPos.xyz - input.PixelPos) / SpotEx.z);
+	float att2 = 1.0 - saturate((SpotEx.x - surfaceRatio) / (SpotEx.x - SpotEx.y));
+	float finalAtt = att1 * att2;
+	float3 Spot = spotFactor * lightRatio * SpotCol.rgb * textureColor.rgb * finalAtt;
+
+	finalColor.rgb = ambient + direct + Point1 + Point2 + Spot;
+	finalColor.a = textureColor.a;
+
+	return finalColor;
 }

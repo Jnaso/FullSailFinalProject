@@ -28,9 +28,11 @@ private:
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;
 	Camera *myCamera;
+	XMFLOAT4 myPosition[2];
+	XMFLOAT4 myColors[2];
 
 public:
-	void Update(float delta);
+	void Update(InputManager *, float delta);
 	Graphics();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);

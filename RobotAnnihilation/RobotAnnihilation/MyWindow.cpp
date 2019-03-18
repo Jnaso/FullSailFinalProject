@@ -261,5 +261,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 void MyWindow::Update(float delta)
 {
-	myGraphics->Update(delta);
+	myGraphics->Update(myInput, delta);
 }

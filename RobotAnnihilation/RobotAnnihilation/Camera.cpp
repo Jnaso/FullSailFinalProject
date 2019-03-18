@@ -11,6 +11,10 @@ Camera::Camera()
 	myRotX = 0;
 	myRotY = 0;
 	myRotZ = 0;
+
+	positionVect = { 0, 3, -5 };
+	upVect = { 0, 1, 0 };
+	lookAtVect = {0, 0, 1};
 }
 
 //Sets the position variables 
@@ -44,55 +48,126 @@ XMFLOAT3 Camera::GetRotation()
 //Update the camera position and rotation with the current data 
 void Camera::Update()
 {
+	XMVECTOR DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };
+	XMVECTOR DefaultRight = { 1.0f, 0.0f, 0.0f, 0.0f };
+	XMVECTOR camforward = { 0.0f, 0.0f, 1.0f, 0.0f };
+	XMVECTOR camRight = { 1.0f, 0.0f, 0.0f, 0.0f };
+
+
 	XMFLOAT3 up, position, lookAt;
-	XMVECTOR upVect, positionVect, lookAtVect;
-	float yaw, pitch, roll;
+	//float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
+	//XMMATRIX groundWorld;
 
-	//Set up the up vector
-	up.x = 0.0f;
-	up.y = 1.0f;
-	up.z = 0.0f;
+	upVect = { 0.0f, 1.0f, 0.0f, 0.0f };
+	////Set up the up vector
+	//up.x = 0.0f;
+	//up.y = 1.0f;
+	//up.z = 0.0f;
 
-	upVect = XMLoadFloat3(&up);
+	//upVect = XMLoadFloat3(&up);
 
-	//Set up the position vector 
-	position.x = myPosX;
-	position.y = myPosY;
-	position.z = myPosZ;
+	////Set up the position vector 
+	//position.x = myPosX;
+	//position.y = myPosY;
+	//position.z = myPosZ;
 
-	positionVect = XMLoadFloat3(&position);
+	//positionVect = XMLoadFloat3(&position);
 
-	//Set up the look at vector 
-	lookAt.x = 0.0f;
-	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
+	////Set up the look at vector 
+	//lookAt.x = 0.0f;
+	//lookAt.y = 0.0f;
+	//lookAt.z = 1.0f;
 
-	lookAtVect = XMLoadFloat3(&lookAt);
+	//lookAtVect = XMLoadFloat3(&lookAt);
 
-	//Convert rotation to degrees
-	pitch = myRotX * 0.0174532925f;
-	yaw = myRotY * 0.0174532925f;
-	roll = myRotZ * 0.0174532925f;
+	////Convert rotation to degrees
+	//pitch = myRotX * 0.0174532925f;
+	//yaw = myRotY * 0.0174532925f;
+	//roll = myRotZ * 0.0174532925f;
 
 	//Set the rotation matrix 
-	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	rotationMatrix = XMMatrixRotationRollPitchYaw(camPitch, camYaw, 0);
+	lookAtVect = XMVector3TransformCoord(DefaultForward, rotationMatrix);
+	lookAtVect = XMVector3Normalize(lookAtVect);
 
-	//Rotate the look at and up vectors 
-	lookAtVect = XMVector3TransformCoord(lookAtVect, rotationMatrix);
-	upVect = XMVector3TransformCoord(upVect, rotationMatrix);
+	XMMATRIX RotateYTempMatrix;
+	RotateYTempMatrix = XMMatrixRotationY(camYaw);
 
-	//Add the position and look at 
-	lookAtVect = XMVectorAdd(positionVect, lookAtVect);
+	camRight = XMVector3TransformCoord(DefaultRight, RotateYTempMatrix);
+	upVect = XMVector3TransformCoord(upVect, RotateYTempMatrix);
+	camforward = XMVector3TransformCoord(DefaultForward, RotateYTempMatrix);
 
-	//Set the view matrix 
+	positionVect += moveLeftRight * camRight;
+	positionVect += moveBackForawrd * camforward;
+
+	moveLeftRight = 0.0f;
+	moveBackForawrd = 0.0f;
+
+	lookAtVect = positionVect + lookAtVect;
+
 	myViewMatrix = XMMatrixLookAtLH(positionVect, lookAtVect, upVect);
+
+	////Rotate the look at and up vectors 
+	//lookAtVect = XMVector3TransformCoord(lookAtVect, rotationMatrix);
+	//upVect = XMVector3TransformCoord(upVect, rotationMatrix);
+
+	////Add the position and look at 
+	//lookAtVect = XMVectorAdd(positionVect, lookAtVect);
+
+	////Set the view matrix 
+	//myViewMatrix = XMMatrixLookAtLH(positionVect, lookAtVect, upVect);
 }
 
 //Pass in the view matrix data into another matrix 
 void Camera::PassInViewMatrix(XMMATRIX &other)
 {
 	other = myViewMatrix;
+}
+
+void Camera::GetInput(InputManager *myInput, float time)
+{
+	float speed = 5.0f * time;
+
+	if (myInput->GetKeyState((int)'W'))
+	{
+		moveBackForawrd += speed;
+	}
+
+	if (myInput->GetKeyState((int)'S'))
+	{
+		moveBackForawrd -= speed;
+	}
+
+	if (myInput->GetKeyState((int)'A'))
+	{
+		moveLeftRight -= speed;
+	}
+
+	if (myInput->GetKeyState((int)'D'))
+	{
+		moveLeftRight += speed;
+	}
+
+	if (myInput->GetKeyState(_ARROWLEFT))
+	{
+		camYaw -= speed * .5f;
+	}
+
+	if (myInput->GetKeyState(_ARROWRIGHT))
+	{
+		camYaw += speed * .5f;
+	}
+
+	if (myInput->GetKeyState(_ARROWUP))
+	{
+		camPitch -= speed * .5f;
+	}
+
+	if (myInput->GetKeyState(_ARROWDOWN))
+	{
+		camPitch += speed * .5f;
+	}
 }
 
 

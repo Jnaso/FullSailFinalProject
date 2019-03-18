@@ -5,12 +5,17 @@
 #include <dxgi1_2.h>
 #include <d3d11_2.h>
 #include <DirectXMath.h>
+#include <dinput.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "DXGI.lib")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 using namespace DirectX;
+
+const int NUM_LIGHTS = 2;
 
 struct float2
 {
