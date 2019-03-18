@@ -48,7 +48,6 @@ PixelInput Main(VertexInput input)
 	output.tex = input.tex;
 
 	output.norm = mul(skinnedNorm, worldMatrix);
-	output.norm = normalize(output.norm);
 	output.Tang = normalize(mul(float4(input.tan, 0), worldMatrix).xyz);
 	output.Binomial = cross(output.norm, output.Tang);
 

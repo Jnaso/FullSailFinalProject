@@ -94,7 +94,7 @@ void Animation::Update(float delta)
 	if (this)
 	{
 		frameTime += delta;
-		if (frameTime > ObjAnim.duration)
+		while (frameTime > ObjAnim.duration)
 		{
 			frameTime -= ObjAnim.duration;
 		}

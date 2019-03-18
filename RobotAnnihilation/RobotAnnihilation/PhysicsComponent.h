@@ -9,6 +9,11 @@ class PhysicsComponent
 	float RotX = 0;
 	float RotY = 0;
 	float RotZ = 0;
+	float damping;
+	float inverseMass;
+	float3 forceAccum;
+
+	void clearAccumulator();
 
 public:
 	PhysicsComponent();
@@ -20,5 +25,12 @@ public:
 	float3 GetAccel();
 	void SetAccel(float3 newAcc);
 	void Update(float delta);
+	void SetMass(float val);
+	float GetMass();
+	void SetInverseMass(float val);
+	float GetInverseMass();
+	void SetDamping(float val);
+	float GetDamping();
+	void AddForce(const float3& vec);
 };
 

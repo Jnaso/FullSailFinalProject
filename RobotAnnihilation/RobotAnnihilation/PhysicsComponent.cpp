@@ -10,6 +10,8 @@ PhysicsComponent::PhysicsComponent()
 	RotX = 0;
 	RotY = 0;
 	RotZ = 0;
+	inverseMass = 0;
+	clearAccumulator();
 }
 
 
@@ -49,23 +51,59 @@ void PhysicsComponent::SetAccel(float3 newAcc)
 
 void PhysicsComponent::Update(float delta)
 {
-	float3 velocitydelta;
-	velocitydelta.x = velocity.x * delta + acceleration.x * delta * delta * 0.5f;
-	velocitydelta.y = velocity.y * delta + acceleration.y * delta * delta * 0.5f;
-	velocitydelta.z = velocity.z * delta + acceleration.z * delta * delta * 0.5f;
-	position += velocitydelta;
-	if (velocity.x >= 0)
-	{
-		velocity.x -= delta;
-	}
-	velocity.y -= delta;
-	if (velocity.z >= 0)
-	{
-		velocity.z -= delta;
-	}
-	//velocity -= delta;
+	if (inverseMass == 0.0f) return;
+
+	position.addScaledVec(velocity, delta);
+
+	float3 resultingAcceleration = acceleration;
+	resultingAcceleration.addScaledVec(forceAccum, inverseMass);
+
+	velocity.addScaledVec(resultingAcceleration, delta);
+
+	velocity = velocity * powf(damping, delta);
+	clearAccumulator();
 	if (position.y < 0)
 	{
 		position.y = 0;
 	}
+}
+
+void PhysicsComponent::SetMass(float val)
+{
+	inverseMass = 1.0f / val;
+}
+
+float PhysicsComponent::GetMass()
+{
+	return 1.0f / inverseMass;
+}
+
+void PhysicsComponent::SetInverseMass(float val)
+{
+	inverseMass = val;
+}
+
+float PhysicsComponent::GetInverseMass()
+{
+	return inverseMass;
+}
+
+void PhysicsComponent::SetDamping(float val)
+{
+	damping = val;
+}
+
+float PhysicsComponent::GetDamping()
+{
+	return damping;
+}
+
+void PhysicsComponent::AddForce(const float3 & vec)
+{
+	forceAccum += vec;
+}
+
+void PhysicsComponent::clearAccumulator()
+{
+	forceAccum = float3{0, 0, 0};
 }

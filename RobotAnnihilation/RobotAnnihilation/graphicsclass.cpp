@@ -34,7 +34,10 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
 	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
 	Player->SetCurrentAnimation(Player->GetIdleAnimation());
-	Player->GetPhysicsComponent()->SetVelocity(float3{2.5, 2.5, 1.5});
+	Player->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
+	Player->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
+	Player->GetPhysicsComponent()->SetMass(50);
+	Player->GetPhysicsComponent()->SetDamping(.99f);
 	if (!Player)
 	{
 		return false;
@@ -283,5 +286,8 @@ void Graphics::ShootBullet(float x, float y)
 	GameObject* newBullet = new GameObject("Assets/Sphere.mesh", myDX->GetDevice());
 	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 1.0f, Player->GetPhysicsComponent()->GetPosition().z});
 	newBullet->GetPhysicsComponent()->SetVelocity(float3{ 0, 0, 30});
+	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
+	newBullet->GetPhysicsComponent()->SetMass(2.0f);
+	newBullet->GetPhysicsComponent()->SetDamping(0.99f);
 	bullets.push_back(newBullet);
 }

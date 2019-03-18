@@ -46,68 +46,6 @@ struct float3
 	inline float* data() { return &x; }
 	inline const float* data()const { return &x; }
 	inline constexpr size_t size()const { return 3; }
-	inline float3& operator+=(float3 b)
-	{
-		this->x += b.x;
-		this->y += b.y;
-		this->z += b.z;
-		return *this;
-	}
-	inline const float3& operator+=(float3 b)const
-	{
-		float3 newVal;
-		newVal.x = this->x + b.x;
-		newVal.y = this->y + b.y;
-		newVal.z = this->z + b.z;
-		return newVal;
-	}
-	inline float3& operator-=(float3 b)
-	{
-		this->x -= b.x;
-		this->y -= b.y;
-		this->z -= b.z;
-		return *this;
-	}
-	inline const float3& operator-=(float3 b)const
-	{
-		float3 newVal;
-		newVal.x = this->x - b.x;
-		newVal.y = this->y - b.y;
-		newVal.z = this->z - b.z;
-		return newVal;
-	}
-	inline float3& operator-=(float b)
-	{
-		this->x -= b;
-		this->y -= b;
-		this->z -= b;
-		return *this;
-	}
-	inline const float3& operator-=(float b)const
-	{
-		float3 newVal;
-		newVal.x = this->x - b;
-		newVal.y = this->y - b;
-		newVal.z = this->z - b;
-		return newVal;
-	}
-
-	inline float3& operator*(float val)
-	{
-		this->x *= val;
-		this->y *= val;
-		this->z *= val;
-		return *this;
-	}
-
-	inline const float3& operator*(float val)const
-	{
-		float3 newVal;
-		newVal.x = this->x *val;
-		newVal.y = this->y *val;
-		newVal.z = this->z *val;
-		return newVal;
-	}
 
 	inline float3& normalize() {
 		// compute distance
@@ -123,7 +61,115 @@ struct float3
 		z /= dist;
 		return *this;
 	}
+
+	inline float magnitude()
+	{
+		return sqrt((this->x*this->x) + (this->y*this->y) + (this->z*this->z));
+	}
+
+	inline float Squaremagnitude()const
+	{
+		float mag = sqrt((this->x*this->x) + (this->y*this->y) + (this->z*this->z));
+		return mag;
+	}
+
+	inline void operator*=(float& value)
+	{
+		this->x *= value;
+		this->y *= value;
+		this->z *= value;
+	}
+
+	inline float3& operator*(const float& value) const
+	{
+		float3 NewVal = { this->x * value, this->y * value, this->z * value };
+		return NewVal;
+	}
+
+	inline void operator+=(const float3& value)
+	{
+		this->x += value.x;
+		this->y += value.y;
+		this->z += value.z;
+	}
+
+	inline float3& operator+(const float3& value) const
+	{
+		float3 newVal = { this->x + value.x, this->y + value.y, this->z + value.z };
+		return newVal;
+	}
+
+	inline void operator-=(const float3& value)
+	{
+		this->x -= value.x;
+		this->y -= value.y;
+		this->z -= value.z;
+	}
+
+	inline float3& operator-(const float3& value) const
+	{
+		float3 newVal = { this->x - value.x, this->y - value.y, this->z - value.z };
+		return newVal;
+	}
+
+	inline void addScaledVec(const float3& vec, const float& scale)
+	{
+		this->x += vec.x * scale;
+		this->y += vec.y * scale;
+		this->z += vec.z * scale;
+	}
+
+	inline float3 componentProduct(const float3& vec) const
+	{
+		float3 newVec = { this->x * vec.x, this->y * vec.y, this->z * vec.z };
+		return newVec;
+	}
+
+	inline void updateComponentProduct(const float3& vec)
+	{
+		this->x *= vec.x;
+		this->y *= vec.y;
+		this->z *= vec.z;
+	}
+
+	inline float scalarProduct(const float3& vec)const
+	{
+		return this->x * vec.x + this->y * vec.y + this->z * vec.z;
+	}
+
+	inline float& operator*(const float3& vec)const
+	{
+		float value = this->x * vec.x + this->y * vec.y + this->z * vec.z;
+		return value;
+	}
+
+	inline float3 vectorProduct(const float3& vec) const
+	{
+		float3 newVec = { this->y*vec.z - this->z * vec.y, this->z * vec.x - this->x * vec.z, this->x*vec.y - this->y*vec.x };
+		return newVec;
+	}
+
+	inline void operator%=(const float3& vec)
+	{
+		*this = this->vectorProduct(vec);
+	}
+
+	inline float3& operator%(const float3& vec) const
+	{
+		float3 newVec = { this->y*vec.z - this->z * vec.y, this->z * vec.x - this->x * vec.z, this->x*vec.y - this->y*vec.x };
+		return newVec;
+	}
+
+	void makeOrthonormalBasis(float3& vecA, float3& vecB, float3& vecC)
+	{
+		vecA.normalize();
+		vecC = vecA % vecB;
+		if (vecC.magnitude() == 0.0f) return;
+		vecC.normalize();
+		vecB = vecC % vecA;
+	}
 };
+
 struct float4
 {
 	union
