@@ -171,7 +171,7 @@ bool Graphics::Render(InputManager *myInput)
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
 
-	myCamera->Update();
+	myCamera->Update({ Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z });
 
 	myDX->PassWorldMatrix(world);
 	myCamera->PassInViewMatrix(view);
@@ -269,7 +269,7 @@ bool Graphics::Render(InputManager *myInput)
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		world = XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z);
-		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), bullets[i]->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(),  myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	}	
 	world = XMMatrixIdentity();
 

@@ -15,6 +15,10 @@ Camera::Camera()
 	positionVect = { 0, 3, -5 };
 	upVect = { 0, 1, 0 };
 	lookAtVect = {0, 0, 1};
+	currCharDirection = { 0.0f, 0.0f, 0.0f };
+	oldCharDirection = { 0.0f, 0.0f, 0.0f };
+	charPosition = { 0.0f, 0.0f, 0.0f };
+	DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };
 }
 
 //Sets the position variables 
@@ -46,77 +50,38 @@ XMFLOAT3 Camera::GetRotation()
 }
 
 //Update the camera position and rotation with the current data 
-void Camera::Update()
+void Camera::Update(XMFLOAT3 newLookAt)
 {
-	XMVECTOR DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };
 	XMVECTOR DefaultRight = { 1.0f, 0.0f, 0.0f, 0.0f };
 	XMVECTOR camforward = { 0.0f, 0.0f, 1.0f, 0.0f };
 	XMVECTOR camRight = { 1.0f, 0.0f, 0.0f, 0.0f };
-
 
 	XMFLOAT3 up, position, lookAt;
 	//float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
 	//XMMATRIX groundWorld;
 
-	upVect = { 0.0f, 1.0f, 0.0f, 0.0f };
-	////Set up the up vector
-	//up.x = 0.0f;
-	//up.y = 1.0f;
-	//up.z = 0.0f;
+	XMVECTOR target = { newLookAt.x, newLookAt.y, newLookAt.z, 1.0f };
 
-	//upVect = XMLoadFloat3(&up);
+	lookAtVect = target;
+	lookAtVect = XMVectorSetY(lookAtVect, XMVectorGetY(lookAtVect) + 2.0f);
 
-	////Set up the position vector 
-	//position.x = myPosX;
-	//position.y = myPosY;
-	//position.z = myPosZ;
+	rotationMatrix = XMMatrixRotationRollPitchYaw(-camPitch, camYaw, 0);
+	positionVect = XMVector3TransformNormal(DefaultForward, rotationMatrix);
+	positionVect = XMVector3Normalize(positionVect);
 
-	//positionVect = XMLoadFloat3(&position);
+	positionVect = (positionVect * 7.0f) + lookAtVect;
 
-	////Set up the look at vector 
-	//lookAt.x = 0.0f;
-	//lookAt.y = 0.0f;
-	//lookAt.z = 1.0f;
+	camforward = XMVector3Normalize(lookAtVect - positionVect);
+	camforward = XMVectorSetY(camforward, 0.0f);
+	camforward = XMVector3Normalize(camforward);
 
-	//lookAtVect = XMLoadFloat3(&lookAt);
+	camRight = XMVectorSet(-XMVectorGetZ(camforward), 0.0f, XMVectorGetX(camforward), 0.0f);
 
-	////Convert rotation to degrees
-	//pitch = myRotX * 0.0174532925f;
-	//yaw = myRotY * 0.0174532925f;
-	//roll = myRotZ * 0.0174532925f;
-
-	//Set the rotation matrix 
-	rotationMatrix = XMMatrixRotationRollPitchYaw(camPitch, camYaw, 0);
-	lookAtVect = XMVector3TransformCoord(DefaultForward, rotationMatrix);
-	lookAtVect = XMVector3Normalize(lookAtVect);
-
-	XMMATRIX RotateYTempMatrix;
-	RotateYTempMatrix = XMMatrixRotationY(camYaw);
-
-	camRight = XMVector3TransformCoord(DefaultRight, RotateYTempMatrix);
-	upVect = XMVector3TransformCoord(upVect, RotateYTempMatrix);
-	camforward = XMVector3TransformCoord(DefaultForward, RotateYTempMatrix);
-
-	positionVect += moveLeftRight * camRight;
-	positionVect += moveBackForawrd * camforward;
-
-	moveLeftRight = 0.0f;
-	moveBackForawrd = 0.0f;
-
-	lookAtVect = positionVect + lookAtVect;
+	upVect = XMVector3Cross(XMVector3Normalize(positionVect - lookAtVect), camRight);
 
 	myViewMatrix = XMMatrixLookAtLH(positionVect, lookAtVect, upVect);
 
-	////Rotate the look at and up vectors 
-	//lookAtVect = XMVector3TransformCoord(lookAtVect, rotationMatrix);
-	//upVect = XMVector3TransformCoord(upVect, rotationMatrix);
-
-	////Add the position and look at 
-	//lookAtVect = XMVectorAdd(positionVect, lookAtVect);
-
-	////Set the view matrix 
-	//myViewMatrix = XMMatrixLookAtLH(positionVect, lookAtVect, upVect);
 }
 
 //Pass in the view matrix data into another matrix 
@@ -161,13 +126,56 @@ void Camera::GetInput(InputManager *myInput, float time)
 
 	if (myInput->GetKeyState(_ARROWUP))
 	{
-		camPitch -= speed * .5f;
+		if (camPitch >= -.3f)
+		{
+			camPitch -= speed * .5f;
+		}
 	}
 
 	if (myInput->GetKeyState(_ARROWDOWN))
 	{
-		camPitch += speed * .5f;
+		if (camPitch <= 0.5f)
+		{
+			camPitch += speed * .5f;
+		}
 	}
+
+	std::cout << camPitch << " " << camYaw << std::endl;
+}
+
+void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix)
+{
+	destinationDirection = XMVector3Normalize(destinationDirection);
+
+	if (XMVectorGetX(XMVector3Dot(destinationDirection, oldCharDirection)) == -1)
+	{
+		oldCharDirection += XMVectorSet(0.02f, 0.0f, -0.02f, 0.0f);
+	}
+
+	charPosition = { 0.0f, 0.0f, 0.0f, 0.0f };
+	charPosition = XMVector3TransformCoord(charPosition, worldMatrix);
+
+	float destDirLength = 10.0f;
+
+	currCharDirection = oldCharDirection + (destinationDirection * destDirLength);
+
+	float charDirAngle = XMVectorGetX(XMVector3AngleBetweenNormals(XMVector3Normalize(currCharDirection), XMVector3Normalize(DefaultForward)));
+
+	if (XMVectorGetY(XMVector3Cross(currCharDirection, DefaultForward)) > 0.0f)
+	{
+		charDirAngle = -charDirAngle;
+	}
+
+	float speed = 15.0f;
+	charPosition = charPosition + (destinationDirection * speed);
+
+	XMMATRIX rotation;
+	XMMATRIX Scale = XMMatrixScaling(0.25f, 0.25f, 0.25f);
+	XMMATRIX Translation = XMMatrixTranslation(XMVectorGetX(charPosition), 0.0f, XMVectorGetZ(charPosition));
+	rotation = XMMatrixRotationY(charDirAngle - XM_PI);
+
+	worldMatrix = Scale * rotation * Translation;
+	oldCharDirection = currCharDirection;
 }
 
 
