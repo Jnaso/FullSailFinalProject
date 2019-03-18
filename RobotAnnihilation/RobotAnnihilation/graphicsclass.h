@@ -29,9 +29,13 @@ private:
 	Lighting *myLighting;
 	Camera *myCamera;
 
+	std::vector<GameObject*> bullets;
+
 public:
 	void Update(float delta);
 	Graphics();
+
+	void ShootBullet(float x, float y);
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void Shutdown();

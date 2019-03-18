@@ -242,6 +242,12 @@ bool Graphics::Render(InputManager *myInput)
 
 	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
 
+	for (unsigned int i = 0; i < bullets.size(); i++)
+	{
+		world = XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z);
+		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), bullets[i]->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
+	}
+
 	myDX->PassWorldMatrix(world);
 
 	Ground->Render(myDX->GetDeviceContext());
@@ -262,4 +268,20 @@ bool Graphics::Render(InputManager *myInput)
 void Graphics::Update(float delta)
 {
 	Player->Update(delta);
+	for (unsigned int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->Update(delta);
+		if (bullets[i]->GetPhysicsComponent()->GetPosition().x > 10 || bullets[i]->GetPhysicsComponent()->GetPosition().z > 40)
+		{
+			bullets.erase(bullets.begin() + i);
+		}
+	}
+}
+
+void Graphics::ShootBullet(float x, float y)
+{
+	GameObject* newBullet = new GameObject("Assets/Sphere.mesh", myDX->GetDevice());
+	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 1.0f, Player->GetPhysicsComponent()->GetPosition().z});
+	newBullet->GetPhysicsComponent()->SetVelocity(float3{ 0, 0, 30});
+	bullets.push_back(newBullet);
 }

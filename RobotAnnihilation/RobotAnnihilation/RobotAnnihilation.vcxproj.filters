@@ -143,5 +143,7 @@
     <None Include="VertexShader.vs" />
     <None Include="PixelShader.ps" />
     <None Include="VertexShaderStatic.vs" />
+    <None Include="NonNormalPixelShader.ps" />
+    <None Include="NonAnimationVertexShader.vs" />
   </ItemGroup>
 </Project>

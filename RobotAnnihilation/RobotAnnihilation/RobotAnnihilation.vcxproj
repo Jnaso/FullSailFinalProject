@@ -198,6 +198,8 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NonAnimationVertexShader.vs" />
+    <None Include="NonNormalPixelShader.ps" />
     <None Include="PixelShader.ps" />
     <None Include="VertexShader.vs" />
     <None Include="VertexShaderStatic.vs" />

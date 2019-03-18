@@ -50,9 +50,9 @@ void PhysicsComponent::SetAccel(float3 newAcc)
 void PhysicsComponent::Update(float delta)
 {
 	float3 velocitydelta;
-	velocitydelta.x = velocity.x * delta;
-	velocitydelta.y = velocity.y * delta;
-	velocitydelta.z = velocity.z * delta;
+	velocitydelta.x = velocity.x * delta + acceleration.x * delta * delta * 0.5f;
+	velocitydelta.y = velocity.y * delta + acceleration.y * delta * delta * 0.5f;
+	velocitydelta.z = velocity.z * delta + acceleration.z * delta * delta * 0.5f;
 	position += velocitydelta;
 	if (velocity.x >= 0)
 	{
