@@ -91,12 +91,15 @@ void Animation::ReadAnimFile(const char* filePath, ID3D11Device* device)
 
 void Animation::Update(float delta)
 {
-	frameTime += delta;
-	if (frameTime > ObjAnim.duration)
+	if (this)
 	{
-		frameTime -= ObjAnim.duration;
+		frameTime += delta;
+		while (frameTime > ObjAnim.duration)
+		{
+			frameTime -= ObjAnim.duration;
+		}
+		SetJoints(frameTime);
 	}
-	SetJoints(frameTime);
 }
 
 std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)

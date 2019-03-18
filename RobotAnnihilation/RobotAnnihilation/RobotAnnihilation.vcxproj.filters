@@ -72,6 +72,9 @@
     <ClInclude Include="ShaderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RobotAnnihilation.cpp">
@@ -119,6 +122,9 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc">
@@ -137,5 +143,7 @@
     <None Include="VertexShader.vs" />
     <None Include="PixelShader.ps" />
     <None Include="VertexShaderStatic.vs" />
+    <None Include="NonNormalPixelShader.ps" />
+    <None Include="NonAnimationVertexShader.vs" />
   </ItemGroup>
 </Project>

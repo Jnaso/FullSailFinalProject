@@ -206,6 +206,8 @@ void MyWindow::Render()
 
 LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	float newx = 0;
+		float newy = 0;
 	switch (msg)
 	{
 	case WM_KEYDOWN:
@@ -224,6 +226,12 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	case WM_MOUSEMOVE:
 		myInput->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 		//SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
+		break;
+	case WM_LBUTTONDOWN:
+		// Call bullet function here
+		newx = myInput->GetMousePos().x;
+		newy = myInput->GetMousePos().y;
+		myGraphics->ShootBullet(newx, newy);
 		break;
 	default:
 	{

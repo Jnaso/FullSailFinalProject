@@ -34,6 +34,10 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
 	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
 	Player->SetCurrentAnimation(Player->GetIdleAnimation());
+	Player->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
+	Player->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
+	Player->GetPhysicsComponent()->SetMass(50);
+	Player->GetPhysicsComponent()->SetDamping(.99f);
 	if (!Player)
 	{
 		return false;
@@ -259,8 +263,14 @@ bool Graphics::Render(InputManager *myInput)
 
 	Player->Render(myDX->GetDeviceContext());
 
+	world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
 	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 
+	for (unsigned int i = 0; i < bullets.size(); i++)
+	{
+		world = XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z);
+		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), bullets[i]->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints());
+	}	
 	world = XMMatrixIdentity();
 
 	Ground->Render(myDX->GetDeviceContext());
@@ -282,4 +292,23 @@ void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);
 	myCamera->GetInput(myInput, delta);
+for (unsigned int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->Update(delta);
+		if (bullets[i]->GetPhysicsComponent()->GetPosition().x > 10 || bullets[i]->GetPhysicsComponent()->GetPosition().z > 40)
+		{
+			bullets.erase(bullets.begin() + i);
+		}
+	}
+}
+
+void Graphics::ShootBullet(float x, float y)
+{
+	GameObject* newBullet = new GameObject("Assets/Sphere.mesh", myDX->GetDevice());
+	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 1.0f, Player->GetPhysicsComponent()->GetPosition().z});
+	newBullet->GetPhysicsComponent()->SetVelocity(float3{ 0, 0, 30});
+	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
+	newBullet->GetPhysicsComponent()->SetMass(2.0f);
+	newBullet->GetPhysicsComponent()->SetDamping(0.99f);
+	bullets.push_back(newBullet);
 }

@@ -31,9 +31,13 @@ private:
 	XMFLOAT4 myPosition[2];
 	XMFLOAT4 myColors[2];
 
+	std::vector<GameObject*> bullets;
+
 public:
 	void Update(InputManager *, float delta);
 	Graphics();
+
+	void ShootBullet(float x, float y);
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void Shutdown();

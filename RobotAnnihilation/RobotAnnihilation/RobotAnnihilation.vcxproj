@@ -162,6 +162,7 @@
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
     <ClInclude Include="MyWindow.h" />
+    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="RobotAnnihilation.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MyWindow.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="StaticShader.cpp" />
@@ -196,6 +198,8 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NonAnimationVertexShader.vs" />
+    <None Include="NonNormalPixelShader.ps" />
     <None Include="PixelShader.ps" />
     <None Include="VertexShader.vs" />
     <None Include="VertexShaderStatic.vs" />
