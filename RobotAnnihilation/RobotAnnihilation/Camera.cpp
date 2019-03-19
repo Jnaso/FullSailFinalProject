@@ -140,7 +140,7 @@ void Camera::GetInput(InputManager *myInput, float time)
 		}
 	}
 
-	std::cout << camPitch << " " << camYaw << std::endl;
+	//std::cout << camPitch << " " << camYaw << std::endl;
 }
 
 void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix)
