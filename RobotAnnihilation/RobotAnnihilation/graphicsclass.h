@@ -31,6 +31,10 @@ private:
 	XMFLOAT4 myPosition[2];
 	XMFLOAT4 myColors[2];
 
+	ID3D11BlendState*			spriteBlendState;
+	ID3D11DepthStencilState*	spriteDepthState;
+	ID3D11RasterizerState*		spriteRasterState;
+
 	std::vector<GameObject*> bullets;
 
 public:

@@ -6,10 +6,16 @@
 #pragma comment(lib, "d3d11.lib")
 
 #include <windows.h>
+#include <memory>
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11_1.h>
 #include <DirectXMath.h>
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+#include "SimpleMath.h"
+#include "DDSTextureLoader.h"
+#include <vector>
 
 using namespace DirectX;
 
@@ -33,6 +39,27 @@ private:
 	XMMATRIX myView;
 
 public:
+
+	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> ArialFont;
+	std::unique_ptr<DirectX::SpriteFont> ComicSansFont;
+
+	struct Image
+	{
+		ID3D11ShaderResourceView* shaderRes = nullptr;
+		DirectX::SimpleMath::Vector2 pos;
+		Image(const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
+		{
+			wchar_t* temp = new wchar_t[301];
+			mbstowcs(temp, dir, 301);
+			pos = newPos;
+			HRESULT hr = DirectX::CreateDDSTextureFromFile(device, temp, nullptr, &shaderRes);
+			delete temp;
+		}
+	};
+	
+	std::vector<Image> ImagesToRender;
+
 	DX();
 	DX(const DX &other);
 	~DX();
@@ -49,6 +76,11 @@ public:
 	void PassProjectionMatrix(XMMATRIX &proj);
 	void PassWorldMatrix(XMMATRIX &world);
 	void PassViewdMatrix(XMMATRIX &view);
+
+	void CreateImage(const char* dir, DirectX::SimpleMath::Vector2 pos);
+	void CreateImage(char* dir, DirectX::SimpleMath::Vector2 pos);
+	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char* text, DirectX::SimpleMath::Vector2 pos);
+	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
 
 	void SetViewMatrix(XMMATRIX);
 	void SetWorldMatrix(XMMATRIX);

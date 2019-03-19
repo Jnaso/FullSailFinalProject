@@ -29,6 +29,9 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	//Create Turtle Image
+	myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
+
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
 	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
@@ -99,6 +102,16 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myColors[0] = {0.0f, 1.0f, 0.0f, 1.0f};
 	myColors[1] = {0.0f, 1.0f, 1.0f, 1.0f};
 
+	CD3D11_RASTERIZER_DESC rdesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+	myDX->GetDevice()->CreateRasterizerState(&rdesc, &spriteRasterState);
+
+	CD3D11_BLEND_DESC bdesc = CD3D11_BLEND_DESC(CD3D11_DEFAULT());
+	bdesc.AlphaToCoverageEnable = true;
+	myDX->GetDevice()->CreateBlendState(&bdesc, &spriteBlendState);
+
+	CD3D11_DEPTH_STENCIL_DESC sdesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
+	myDX->GetDevice()->CreateDepthStencilState(&sdesc, &spriteDepthState);
+
 	return true;
 }
 
@@ -145,6 +158,12 @@ void Graphics::Shutdown()
 		myCamera = nullptr;
 	}
 
+	if (spriteRasterState)
+	{
+		spriteRasterState->Release();
+		spriteRasterState = nullptr;
+	}
+
 }
 
 //Called each frame 
@@ -167,6 +186,7 @@ bool Graphics::Render(InputManager *myInput)
 	bool result;
 
 	HRESULT hr;
+
 
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
@@ -261,10 +281,6 @@ bool Graphics::Render(InputManager *myInput)
 	//	myDX->SetViewMatrix(view * myDX->GetViewMatrix());
 	//}
 
-	Player->Render(myDX->GetDeviceContext());
-
-	world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
-	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
@@ -278,13 +294,38 @@ bool Graphics::Render(InputManager *myInput)
 
 	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 
+	Player->Render(myDX->GetDeviceContext());
+
+	world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
+	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
+
+
 	if (!result)
 	{
 		return false;
 	}
 
+	myDX->GetDeviceContext()->RSSetState(spriteRasterState);
+
+	myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+
+	//Create Test Text (Multiple Fonts)
+	myDX->CreateText(myDX->ArialFont, "This is a Arial Font test", DirectX::SimpleMath::Vector2(100, 100));
+	myDX->CreateText(myDX->ComicSansFont, "This is a Comic Sans test", DirectX::SimpleMath::Vector2(100, 150));
+	
+	for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
+	{
+		myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
+	}
+
+
+	myDX->spriteBatch->End();
+
+
 	//Present the swap chain 
 	myDX->PresentScreen();
+
+	
 
 	return true;
 }
