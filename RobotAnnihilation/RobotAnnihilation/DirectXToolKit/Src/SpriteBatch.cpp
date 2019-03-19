@@ -801,6 +801,7 @@ void SpriteBatch::Impl::RenderBatch(ID3D11ShaderResourceView* texture, SpriteInf
         sprites += batchSize;
         count -= batchSize;
     }
+
 }
 
 
