@@ -30,6 +30,7 @@ private:
 	Camera *myCamera;
 	XMFLOAT4 myPosition[2];
 	XMFLOAT4 myColors[2];
+	XMMATRIX playerWorld;
 
 	std::vector<GameObject*> bullets;
 

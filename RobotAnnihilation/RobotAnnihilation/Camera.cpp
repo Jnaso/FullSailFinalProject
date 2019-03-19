@@ -19,6 +19,8 @@ Camera::Camera()
 	oldCharDirection = { 0.0f, 0.0f, 0.0f };
 	charPosition = { 0.0f, 0.0f, 0.0f };
 	DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };
+	camforward = { 0.0f, 0.0f, 1.0f, 0.0f };
+	camRight = { 1.0f, 0.0f, 0.0f, 0.0f };
 }
 
 //Sets the position variables 
@@ -53,8 +55,6 @@ XMFLOAT3 Camera::GetRotation()
 void Camera::Update(XMFLOAT3 newLookAt)
 {
 	XMVECTOR DefaultRight = { 1.0f, 0.0f, 0.0f, 0.0f };
-	XMVECTOR camforward = { 0.0f, 0.0f, 1.0f, 0.0f };
-	XMVECTOR camRight = { 1.0f, 0.0f, 0.0f, 0.0f };
 
 	XMFLOAT3 up, position, lookAt;
 	//float yaw, pitch, roll;
@@ -90,38 +90,50 @@ void Camera::PassInViewMatrix(XMMATRIX &other)
 	other = myViewMatrix;
 }
 
-void Camera::GetInput(InputManager *myInput, float time)
+void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 {
+	//Speed of movement
 	float speed = 5.0f * time;
+	bool moveChar = false;
+	XMVECTOR desiredCharDir = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
+	//Update the chracter's direction and the camera's movement on each press 
 	if (myInput->GetKeyState((int)'W'))
 	{
-		moveBackForawrd += speed;
+		desiredCharDir = camforward;
+		moveChar = true;
+		moveBackForawrd -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'S'))
 	{
-		moveBackForawrd -= speed;
+		desiredCharDir = -camforward;
+		moveChar = true;
+		moveBackForawrd += speed;
 	}
 
 	if (myInput->GetKeyState((int)'A'))
 	{
+		desiredCharDir = camRight;
+		moveChar = true;
 		moveLeftRight -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'D'))
 	{
+		desiredCharDir = -camRight;
+		moveChar = true;
 		moveLeftRight += speed;
 	}
 
 	if (myInput->GetKeyState(_ARROWLEFT))
 	{
-		camYaw -= speed * .5f;
+		camYaw += speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWRIGHT))
 	{
-		camYaw += speed * .5f;
+		camYaw -= speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWUP))
@@ -140,6 +152,11 @@ void Camera::GetInput(InputManager *myInput, float time)
 		}
 	}
 
+	if (moveChar)
+	{
+		SetCharacterRotation(time, desiredCharDir, player);
+	}
+
 	std::cout << camPitch << " " << camYaw << std::endl;
 }
 
@@ -155,9 +172,9 @@ void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, X
 	charPosition = { 0.0f, 0.0f, 0.0f, 0.0f };
 	charPosition = XMVector3TransformCoord(charPosition, worldMatrix);
 
-	float destDirLength = 10.0f;
+	float destDirLength = 15.0f;
 
-	currCharDirection = oldCharDirection + (destinationDirection * destDirLength);
+	currCharDirection = -destinationDirection * destDirLength;
 
 	float charDirAngle = XMVectorGetX(XMVector3AngleBetweenNormals(XMVector3Normalize(currCharDirection), XMVector3Normalize(DefaultForward)));
 
@@ -166,15 +183,14 @@ void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, X
 		charDirAngle = -charDirAngle;
 	}
 
-	float speed = 15.0f;
+	float speed = .3f;
 	charPosition = charPosition + (destinationDirection * speed);
 
 	XMMATRIX rotation;
-	XMMATRIX Scale = XMMatrixScaling(0.25f, 0.25f, 0.25f);
 	XMMATRIX Translation = XMMatrixTranslation(XMVectorGetX(charPosition), 0.0f, XMVectorGetZ(charPosition));
-	rotation = XMMatrixRotationY(charDirAngle - XM_PI);
+	rotation = XMMatrixRotationY(charDirAngle - 3.14159265f);
 
-	worldMatrix = Scale * rotation * Translation;
+	worldMatrix = rotation * Translation;
 	oldCharDirection = currCharDirection;
 }
 
