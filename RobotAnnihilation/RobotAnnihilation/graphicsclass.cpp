@@ -274,11 +274,16 @@ bool Graphics::Render(InputManager *myInput)
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 
 		myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+
+		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
+		for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
+		{
+			myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
+		}
+
+		myDX->spriteBatch->End();
 	}
-	myDX->GetDeviceContext()->RSSetState(spriteRasterState);
-	myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
-		myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
-	}
+	
 	//Present the swap chain 
 	myDX->PresentScreen();
 
