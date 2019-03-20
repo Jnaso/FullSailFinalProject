@@ -1,12 +1,12 @@
 #pragma once
-#ifndef _CAMERA_H
-#define _CAMERA_H_
+#ifndef _DEBUGCAMERA_H
+#define _DEBUGCAMERA_H_
 
 #include <DirectXMath.h>
 #include "InputManager.h"
 using namespace DirectX;
 
-class Camera
+class DebugCamera
 {
 private:
 	float myPosX, myPosY, myPosZ;
@@ -14,27 +14,26 @@ private:
 	XMMATRIX myViewMatrix;
 	float moveLeftRight = 0.0f;
 	float moveBackForawrd = 0.0f;
+	float moveUpDown = 0.0f;
 	float camYaw = 0.0f;
 	float camPitch = 0.0f;
 	XMVECTOR upVect, positionVect, lookAtVect, DefaultForward;
 	XMVECTOR currCharDirection, oldCharDirection, charPosition, camRight, camforward;
 
 public:
-	Camera();
+	DebugCamera();
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
-	void GetInput(InputManager *manager, float speed, XMMATRIX &);
+	void GetInput(InputManager *manager, float speed);
 
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
-	XMVECTOR GetDirection();
 
-	void Update(XMFLOAT3 newLookAt);
+	void Update();
 	void PassInViewMatrix(XMMATRIX&);
 
-	void SetCharacterRotation(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix);
 };
 
-#endif // !_CAMERA_H
+#endif // !_DEBUGCAMERA_H
