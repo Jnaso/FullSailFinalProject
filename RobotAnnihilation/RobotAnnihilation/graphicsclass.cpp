@@ -284,8 +284,9 @@ bool Graphics::Render(InputManager *myInput)
 
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
+		XMMATRIX rotation = XMMatrixRotationRollPitchYawFromVector(float3toXMVector(bullets[i]->GetPhysicsComponent()->GetForward()));
 		bullets[i]->Render(myDX->GetDeviceContext());
-		world = XMMatrixMultiply(XMMatrixScaling(.5, .5, .5), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
+		world = XMMatrixMultiply(XMMatrixScaling(.5, .5, .5), XMMatrixMultiply(rotation, XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z)));
 		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	}	
 	world = XMMatrixIdentity();
@@ -333,6 +334,7 @@ bool Graphics::Render(InputManager *myInput)
 void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);
+	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] });
 	myCamera->GetInput(myInput, delta);
 for (unsigned int i = 0; i < bullets.size(); i++)
 	{
@@ -354,5 +356,6 @@ void Graphics::ShootBullet(float x, float y)
 	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
 	newBullet->GetPhysicsComponent()->SetMass(2.0f);
 	newBullet->GetPhysicsComponent()->SetDamping(0.99f);
+	newBullet->GetPhysicsComponent()->SetForward(float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] });
 	bullets.push_back(newBullet);
 }

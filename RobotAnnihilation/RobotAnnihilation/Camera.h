@@ -29,6 +29,7 @@ public:
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
+	XMVECTOR GetDirection();
 
 	void Update(XMFLOAT3 newLookAt);
 	void PassInViewMatrix(XMMATRIX&);

@@ -12,6 +12,7 @@ class PhysicsComponent
 	float damping;
 	float inverseMass;
 	float3 forceAccum;
+	float3 forward;
 
 	void clearAccumulator();
 
@@ -22,6 +23,8 @@ public:
 	void SetPosition(float3 newPos);
 	float3 GetVelocity();
 	void SetVelocity(float3 newVel);
+	float3 GetForward();
+	void SetForward(float3 newFor);
 	float3 GetAccel();
 	void SetAccel(float3 newAcc);
 	void Update(float delta);

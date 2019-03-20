@@ -49,6 +49,12 @@ XMFLOAT3 Camera::GetRotation()
 	return XMFLOAT3(myRotX, myRotY, myRotZ);
 }
 
+//Camera Direction getter
+XMVECTOR Camera::GetDirection()
+{
+	return currCharDirection;
+}
+
 //Update the camera position and rotation with the current data 
 void Camera::Update(XMFLOAT3 newLookAt)
 {

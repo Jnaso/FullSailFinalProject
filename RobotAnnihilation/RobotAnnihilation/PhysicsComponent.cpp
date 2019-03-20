@@ -7,6 +7,7 @@ PhysicsComponent::PhysicsComponent()
 	position = float3{ 0, 0, 0 };
 	velocity = float3{ 0, 0, 0 };
 	acceleration = float3{ 0, 0, 0 };
+	forward = float3{ 0, 0, 0 };
 	RotX = 0;
 	RotY = 0;
 	RotZ = 0;
@@ -39,6 +40,16 @@ void PhysicsComponent::SetVelocity(float3 newVel)
 	velocity = newVel;
 }
 
+float3 PhysicsComponent::GetForward()
+{
+	return forward;
+}
+
+void PhysicsComponent::SetForward(float3 newFor)
+{
+	forward = newFor;
+}
+
 float3 PhysicsComponent::GetAccel()
 {
 	return acceleration;
@@ -66,6 +77,8 @@ void PhysicsComponent::Update(float delta)
 	{
 		position.y = 0;
 	}
+
+	//forward = float3{ cos(RotX)*cos(RotZ), cos(RotX)*sin(RotZ), sin(RotX) };
 }
 
 void PhysicsComponent::SetMass(float val)
