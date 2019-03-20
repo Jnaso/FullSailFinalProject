@@ -133,6 +133,8 @@ void GameObject::Update(float delta)
 	frametime += delta;
 	CurrentAnimation->Update(delta);
 	ObjectPhysics->Update(delta);
+
+
 }
 
 Animation* GameObject::GetRunAnimation()

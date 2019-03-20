@@ -17,14 +17,14 @@ private:
 	float camYaw = 0.0f;
 	float camPitch = 0.0f;
 	XMVECTOR upVect, positionVect, lookAtVect, DefaultForward;
-	XMVECTOR currCharDirection, oldCharDirection, charPosition;
+	XMVECTOR currCharDirection, oldCharDirection, charPosition, camRight, camforward;
 
 public:
 	Camera();
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
-	void GetInput(InputManager *manager, float speed);
+	void GetInput(InputManager *manager, float speed, XMMATRIX &);
 
 
 	XMFLOAT3 GetPosition();
