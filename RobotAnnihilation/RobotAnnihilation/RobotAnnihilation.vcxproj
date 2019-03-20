@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
     <ClInclude Include="dxstuff.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="shaderstuff.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="StaticShader.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WICTextureLoader.h" />
@@ -182,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="allofthelights.cpp" />
@@ -193,6 +196,7 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StaticShader.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />

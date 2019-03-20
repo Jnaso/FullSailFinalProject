@@ -15,6 +15,7 @@ Camera::Camera()
 	positionVect = { 0, 3, -5 };
 	upVect = { 0, 1, 0 };
 	lookAtVect = {0, 0, 1};
+
 	currCharDirection = { 0.0f, 0.0f, -10.0f };
 	oldCharDirection = { 0.0f, 0.0f, 0.0f };
 	charPosition = { 0.0f, 0.0f, 0.0f };
@@ -69,23 +70,32 @@ void Camera::Update(XMFLOAT3 newLookAt)
 
 	XMVECTOR target = { newLookAt.x, newLookAt.y, newLookAt.z, 1.0f };
 
+	//Make the camera look at the target(player)
 	lookAtVect = target;
+	//Make the camera loom over the player 
 	lookAtVect = XMVectorSetY(lookAtVect, XMVectorGetY(lookAtVect) + 2.0f);
 
+	//Rotate the camera by desired rotation 
 	rotationMatrix = XMMatrixRotationRollPitchYaw(-camPitch, camYaw, 0);
+	//Move the camer by its forward 
 	positionVect = XMVector3TransformNormal(DefaultForward, rotationMatrix);
 	positionVect = XMVector3Normalize(positionVect);
 
+	//Distance the camera from the target 
 	positionVect = (positionVect * 7.0f) + lookAtVect;
 
+	//Constantly update the camera forward to be in local space 
 	camforward = XMVector3Normalize(lookAtVect - positionVect);
 	camforward = XMVectorSetY(camforward, 0.0f);
 	camforward = XMVector3Normalize(camforward);
 
+	//Constantly update the camera right to be in local space 
 	camRight = XMVectorSet(-XMVectorGetZ(camforward), 0.0f, XMVectorGetX(camforward), 0.0f);
 
+	//Constantly update the camera up to be in local space 
 	upVect = XMVector3Cross(XMVector3Normalize(positionVect - lookAtVect), camRight);
 
+	//Set the view 
 	myViewMatrix = XMMatrixLookAtLH(positionVect, lookAtVect, upVect);
 
 }
@@ -96,50 +106,47 @@ void Camera::PassInViewMatrix(XMMATRIX &other)
 	other = myViewMatrix;
 }
 
+//Move the camera based on input 
 void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 {
 	//Speed of movement
 	float speed = 5.0f * time;
 	bool moveChar = false;
-	XMVECTOR desiredCharDir = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR desiredCharDir; 
 
 	//Update the chracter's direction and the camera's movement on each press 
 	if (myInput->GetKeyState((int)'W'))
 	{
 		desiredCharDir = camforward;
 		moveChar = true;
-		moveBackForawrd -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'S'))
 	{
 		desiredCharDir = -camforward;
 		moveChar = true;
-		moveBackForawrd += speed;
 	}
 
 	if (myInput->GetKeyState((int)'A'))
 	{
 		desiredCharDir = camRight;
 		moveChar = true;
-		moveLeftRight -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'D'))
 	{
 		desiredCharDir = -camRight;
 		moveChar = true;
-		moveLeftRight += speed;
 	}
 
 	if (myInput->GetKeyState(_ARROWLEFT))
 	{
-		camYaw += speed * .5f;
+		camYaw -= speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWRIGHT))
 	{
-		camYaw -= speed * .5f;
+		camYaw += speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWUP))
@@ -160,44 +167,41 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 
 	if (moveChar)
 	{
+		//Only move the player if they've moved 
 		SetCharacterRotation(time, desiredCharDir, player);
 	}
-
-	std::cout << camPitch << " " << camYaw << std::endl;
 }
 
+//Move the player's based 
 void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix)
 {
-	destinationDirection = XMVector3Normalize(destinationDirection);
-
-	if (XMVectorGetX(XMVector3Dot(destinationDirection, oldCharDirection)) == -1)
-	{
-		oldCharDirection += XMVectorSet(0.02f, 0.0f, -0.02f, 0.0f);
-	}
-
+	//Translate the chracter 
 	charPosition = { 0.0f, 0.0f, 0.0f, 0.0f };
 	charPosition = XMVector3TransformCoord(charPosition, worldMatrix);
 
-	float destDirLength = 10.0f;
+	//Set the desired direction to the direction of movement 
+	currCharDirection = -destinationDirection;
 
-	currCharDirection = -destinationDirection * destDirLength;
-
+	//Calculate the angle the character needs to rotate 
 	float charDirAngle = XMVectorGetX(XMVector3AngleBetweenNormals(XMVector3Normalize(currCharDirection), XMVector3Normalize(DefaultForward)));
 
+	//Negate the character's direction if their y vector is positive 
 	if (XMVectorGetY(XMVector3Cross(currCharDirection, DefaultForward)) > 0.0f)
 	{
 		charDirAngle = -charDirAngle;
 	}
 
-	float speed = .3f;
+	//Move the character by a speed 
+	float speed = .4f;
 	charPosition = charPosition + (destinationDirection * speed);
 
-	XMMATRIX rotation;
+	//Translate the character 
 	XMMATRIX Translation = XMMatrixTranslation(XMVectorGetX(charPosition), 0.0f, XMVectorGetZ(charPosition));
-	rotation = XMMatrixRotationY(charDirAngle - 3.14159265f);
+	//Rotate the character(subtract by pi so player doesn't run backwards)
+	XMMATRIX rotation = XMMatrixRotationY(charDirAngle - 3.14159265f);
 
+	//Update player's world matrix
 	worldMatrix = rotation * Translation;
-	oldCharDirection = currCharDirection;
 }
 
 
