@@ -291,11 +291,10 @@ bool Graphics::Render(InputManager *myInput)
 void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);
-{
+
 	myCamera->GetInput(myInput, delta, playerWorld);
 	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] });
-	for (unsigned int i = 0; i < bullets.size(); i++)
-}
+
 	if(debugCam)	{
 		myDebug->GetInput(myInput, delta);
 	}
@@ -331,7 +330,7 @@ void Graphics::ShootBullet(float x, float y, HWND hwnd)
 	float3 forward = float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] };
 	newBullet->GetPhysicsComponent()->SetForward(forward);
 	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
-	float3 velocity = forward * -5.0f;
+	float3 velocity = forward * -50.0f;
 	newBullet->GetPhysicsComponent()->SetLifeTime(5.0f);
 	//velocity = velocity.componentProduct(forward);
 	newBullet->GetPhysicsComponent()->SetVelocity(velocity);
