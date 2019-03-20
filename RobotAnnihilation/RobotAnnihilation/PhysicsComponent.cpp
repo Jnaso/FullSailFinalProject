@@ -8,10 +8,8 @@ PhysicsComponent::PhysicsComponent()
 	velocity = float3{ 0, 0, 0 };
 	acceleration = float3{ 0, 0, 0 };
 	forward = float3{ 0, 0, 0 };
-	RotX = 0;
-	RotY = 0;
-	RotZ = 0;
 	inverseMass = 0;
+	lifeTime = 0;
 	clearAccumulator();
 }
 
@@ -77,7 +75,7 @@ void PhysicsComponent::Update(float delta)
 	{
 		position.y = 0;
 	}
-
+	lifeTime -= delta;
 	//forward = float3{ cos(RotX)*cos(RotZ), cos(RotX)*sin(RotZ), sin(RotX) };
 }
 
@@ -99,6 +97,16 @@ void PhysicsComponent::SetInverseMass(float val)
 float PhysicsComponent::GetInverseMass()
 {
 	return inverseMass;
+}
+
+void PhysicsComponent::SetLifeTime(float val)
+{
+	lifeTime = val;
+}
+
+float PhysicsComponent::GetLifeTime()
+{
+	return lifeTime;
 }
 
 void PhysicsComponent::SetDamping(float val)
