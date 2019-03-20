@@ -302,6 +302,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 		if (timeGetTime() >= timeBetween + 300)
 		{
 			debugCam = !debugCam;
+			timeBetween = timeGetTime();
 		}
 	}
 
