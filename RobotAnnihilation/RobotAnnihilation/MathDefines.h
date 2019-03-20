@@ -313,3 +313,13 @@ inline XMVECTOR float3toXMVector(float3 input)
 	return output;
 }
 
+
+inline float3 XMVectortofloat3(XMVECTOR input)
+{
+	float3 output;
+	output.x = input.m128_f32[0];
+	output.y = input.m128_f32[1];
+	output.z = input.m128_f32[2];
+	return output;
+}
+

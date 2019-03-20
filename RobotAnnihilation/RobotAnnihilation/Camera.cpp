@@ -132,7 +132,7 @@ void Camera::GetInput(InputManager *myInput, float time)
 
 	if (myInput->GetKeyState(_ARROWUP))
 	{
-		if (camPitch >= -.3f)
+		if (camPitch >= -.25f)
 		{
 			camPitch -= speed * .5f;
 		}
