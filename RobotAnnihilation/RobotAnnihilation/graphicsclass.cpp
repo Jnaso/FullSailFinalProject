@@ -30,7 +30,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Create Turtle Image
-	myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
+	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
@@ -113,6 +113,17 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myDX->GetDevice()->CreateDepthStencilState(&sdesc, &spriteDepthState);
 
 	return true;
+}
+
+void Graphics::CreateImage(RECT dimensions, const char * filePath, float2 pos)
+{
+	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
+	myDX->CreateImage(dimensions, filePath, temp);
+}
+void Graphics::CreateImage(const char * filePath, float2 pos)
+{
+	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
+	myDX->CreateImage(filePath, temp);
 }
 
 //Pointer clean up 
@@ -310,12 +321,15 @@ bool Graphics::Render(InputManager *myInput)
 	myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 
 	//Create Test Text (Multiple Fonts)
-	myDX->CreateText(myDX->ArialFont, "This is a Arial Font test", DirectX::SimpleMath::Vector2(100, 100));
-	myDX->CreateText(myDX->ComicSansFont, "This is a Comic Sans test", DirectX::SimpleMath::Vector2(100, 150));
+	//myDX->CreateText(myDX->ArialFont, "This is a Arial Font test", DirectX::SimpleMath::Vector2(100, 100));
+	//myDX->CreateText(myDX->ComicSansFont, "This is a Comic Sans test", DirectX::SimpleMath::Vector2(100, 150));
 	
 	for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
 	{
+		
 		myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
+		
+	
 	}
 
 

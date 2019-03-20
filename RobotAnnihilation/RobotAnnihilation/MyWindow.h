@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include "graphicsclass.h"
 #include "InputManager.h"
+#include "UIManager.h"
 #include "XTime.h"
 #include <windowsx.h>
 
@@ -15,8 +16,10 @@ private:
 	HINSTANCE myInstance;
 	HWND myWindow;
 
+	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
+	UI::UIManager* myUiManager;
 	XTime timer;
 	
 	void Update(float delta);

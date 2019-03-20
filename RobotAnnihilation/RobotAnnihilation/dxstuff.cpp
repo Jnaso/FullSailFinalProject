@@ -483,9 +483,9 @@ void DX::CreateImage(const char * dir, DirectX::SimpleMath::Vector2 pos)
 	Image temp(dir, myDevice, pos);
 	ImagesToRender.push_back(temp);
 }
-void DX::CreateImage(char * dir, DirectX::SimpleMath::Vector2 pos)
+void DX::CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos)
 {
-	Image temp((const char*)dir, myDevice, pos);
+	Image temp(r, dir, myDevice, pos);
 	ImagesToRender.push_back(temp);
 }
 

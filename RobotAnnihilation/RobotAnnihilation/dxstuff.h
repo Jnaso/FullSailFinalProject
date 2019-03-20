@@ -17,6 +17,9 @@
 #include "DDSTextureLoader.h"
 #include <vector>
 
+#define F_ARIAL 0
+#define F_COMICSANS 1
+
 using namespace DirectX;
 
 class DX
@@ -48,8 +51,19 @@ public:
 	{
 		ID3D11ShaderResourceView* shaderRes = nullptr;
 		DirectX::SimpleMath::Vector2 pos;
+		RECT myRect;
 		Image(const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
 		{
+			wchar_t* temp = new wchar_t[301];
+			mbstowcs(temp, dir, 301);
+			pos = newPos;
+			HRESULT hr = DirectX::CreateDDSTextureFromFile(device, temp, nullptr, &shaderRes);
+			delete temp;
+		}
+
+		Image(RECT r, const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
+		{
+			myRect = r;
 			wchar_t* temp = new wchar_t[301];
 			mbstowcs(temp, dir, 301);
 			pos = newPos;
@@ -79,6 +93,8 @@ public:
 
 	void CreateImage(const char* dir, DirectX::SimpleMath::Vector2 pos);
 	void CreateImage(char* dir, DirectX::SimpleMath::Vector2 pos);
+	void CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos);
+
 	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char* text, DirectX::SimpleMath::Vector2 pos);
 	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
 
