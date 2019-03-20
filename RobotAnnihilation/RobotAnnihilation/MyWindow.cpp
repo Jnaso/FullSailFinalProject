@@ -232,7 +232,7 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		myInput->SetKeyState(_LMOUSE, true);
 		newx = myInput->GetMousePos().x;
 		newy = myInput->GetMousePos().y;
-		myGraphics->ShootBullet(newx, newy);
+		myGraphics->ShootBullet(newx, newy, myWindow);
 		break;
 	case WM_LBUTTONUP:
 		myInput->SetKeyState(_LMOUSE, false);

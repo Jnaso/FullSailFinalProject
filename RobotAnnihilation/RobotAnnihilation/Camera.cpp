@@ -105,45 +105,41 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 	//Speed of movement
 	float speed = 5.0f * time;
 	bool moveChar = false;
-	XMVECTOR desiredCharDir = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR desiredCharDir; 
 
 	//Update the chracter's direction and the camera's movement on each press 
 	if (myInput->GetKeyState((int)'W'))
 	{
 		desiredCharDir = camforward;
 		moveChar = true;
-		//moveBackForawrd -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'S'))
 	{
 		desiredCharDir = -camforward;
 		moveChar = true;
-		//moveBackForawrd += speed;
 	}
 
 	if (myInput->GetKeyState((int)'A'))
 	{
 		desiredCharDir = camRight;
 		moveChar = true;
-		//moveLeftRight -= speed;
 	}
 
 	if (myInput->GetKeyState((int)'D'))
 	{
 		desiredCharDir = -camRight;
 		moveChar = true;
-		//moveLeftRight += speed;
 	}
 
 	if (myInput->GetKeyState(_ARROWLEFT))
 	{
-		camYaw += speed * .5f;
+		camYaw -= speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWRIGHT))
 	{
-		camYaw -= speed * .5f;
+		camYaw += speed * .5f;
 	}
 
 	if (myInput->GetKeyState(_ARROWUP))
