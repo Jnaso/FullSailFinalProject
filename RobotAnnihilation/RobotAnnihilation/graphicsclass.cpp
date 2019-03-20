@@ -292,10 +292,10 @@ void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);
 
-	myCamera->GetInput(myInput, delta, playerWorld);
 	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] });
 
-	if(debugCam)	{
+	if(debugCam)	
+	{
 		myDebug->GetInput(myInput, delta);
 	}
 	else
