@@ -248,8 +248,6 @@ bool Graphics::Render(InputManager *myInput)
 	myDX->PassWorldMatrix(world);
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
-		XMMATRIX rotation = XMMatrixRotationRollPitchYawFromVector(float3toXMVector(bullets[i]->GetPhysicsComponent()->GetForward()));
-		rotation.r[3] = float3toXMVector(bullets[i]->GetPhysicsComponent()->GetPosition());
 		bullets[i]->Render(myDX->GetDeviceContext());
 		world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
 		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
@@ -330,8 +328,8 @@ void Graphics::ShootBullet(float x, float y, HWND hwnd)
 	float3 forward = float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] };
 	newBullet->GetPhysicsComponent()->SetForward(forward);
 	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
-	float3 velocity = forward * -50.0f;
-	newBullet->GetPhysicsComponent()->SetLifeTime(5.0f);
+	float3 velocity = forward * -100.0f;
+	newBullet->GetPhysicsComponent()->SetLifeTime(2.0f);
 	//velocity = velocity.componentProduct(forward);
 	newBullet->GetPhysicsComponent()->SetVelocity(velocity);
 	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
