@@ -40,6 +40,9 @@
 #define _COMMA 188
 #define _PERIOD 190  
 
+#define _LMOUSE 256
+#define _RMOUSE 257
+
 #pragma endregion
 
 class InputManager

@@ -4,9 +4,9 @@
 
 InputManager::InputManager()
 {
-	m_keys = new bool[256];
+	m_keys = new bool[258];
 
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < 258; i++)
 	{
 		m_keys[i] = false;
 	}
@@ -54,6 +54,14 @@ void InputManager::SetKeyState(int keyCode, bool isPress)
 	else if (keyCode == _ARROWDOWN)
 	{
 		std::cout << "Down";
+	}
+	else if (keyCode == _LMOUSE)
+	{
+		std::cout << "Left Mouse";
+	}
+	else if (keyCode == _RMOUSE)
+	{
+		std::cout << "Right Mouse";
 	}
 	else
 	{

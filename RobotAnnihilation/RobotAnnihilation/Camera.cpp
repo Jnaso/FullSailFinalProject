@@ -172,7 +172,7 @@ void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, X
 	charPosition = { 0.0f, 0.0f, 0.0f, 0.0f };
 	charPosition = XMVector3TransformCoord(charPosition, worldMatrix);
 
-	float destDirLength = 15.0f;
+	float destDirLength = 10.0f;
 
 	currCharDirection = -destinationDirection * destDirLength;
 

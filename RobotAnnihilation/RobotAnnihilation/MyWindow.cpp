@@ -216,7 +216,6 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		myInput->SetKeyState(wparam, true);
 		return 0;
 	}
-
 	case WM_KEYUP:
 	{
 		//Update the input object on every key release
@@ -226,12 +225,34 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	case WM_MOUSEMOVE:
 		myInput->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 		//SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
+		
 		break;
 	case WM_LBUTTONDOWN:
 		// Call bullet function here
+		myInput->SetKeyState(_LMOUSE, true);
 		newx = myInput->GetMousePos().x;
 		newy = myInput->GetMousePos().y;
 		myGraphics->ShootBullet(newx, newy);
+		break;
+	case WM_LBUTTONUP:
+		myInput->SetKeyState(_LMOUSE, false);
+		break;
+	case WM_RBUTTONDOWN:
+		myInput->SetKeyState(_RMOUSE, true);
+		break;
+	case WM_RBUTTONUP:
+		myInput->SetKeyState(_RMOUSE, false);
+		break;
+	case WM_MOUSEWHEEL:
+		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
+		{
+			std::cout << "Scroll Up" << std::endl;
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
+		{
+			std::cout << "Scroll Down" << std::endl;
+		}
+		// Negative = Scroll Down | Positive = Scroll Up
 		break;
 	default:
 	{
