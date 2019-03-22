@@ -20,6 +20,8 @@
 #define F_ARIAL 0
 #define F_COMICSANS 1
 
+#define IMAGEVEC myDX->ImagesToRender[i]
+
 using namespace DirectX;
 
 class DX
@@ -51,7 +53,7 @@ public:
 	{
 		ID3D11ShaderResourceView* shaderRes = nullptr;
 		DirectX::SimpleMath::Vector2 pos;
-		RECT myRect;
+		RECT myRect = RECT{ 1,1,1,1 };
 		Image(const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
 		{
 			wchar_t* temp = new wchar_t[301];
@@ -71,8 +73,22 @@ public:
 			delete temp;
 		}
 	};
+
+	struct Text
+	{
+		DirectX::SimpleMath::Vector2 m_pos;
+		const char* m_text;
+		int m_font;
+		Text(char* text, int font, DirectX::SimpleMath::Vector2 pos)
+		{
+			m_text = text;
+			m_font = font;
+			m_pos = pos;
+		}
+	};
 	
 	std::vector<Image> ImagesToRender;
+	std::vector<Text> TextToRender;
 
 	DX();
 	DX(const DX &other);
@@ -95,8 +111,7 @@ public:
 	void CreateImage(char* dir, DirectX::SimpleMath::Vector2 pos);
 	void CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos);
 
-	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char* text, DirectX::SimpleMath::Vector2 pos);
-	void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
+	void CreateText(const char* text, int font, DirectX::SimpleMath::Vector2 pos);
 
 	void SetViewMatrix(XMMATRIX);
 	void SetWorldMatrix(XMMATRIX);

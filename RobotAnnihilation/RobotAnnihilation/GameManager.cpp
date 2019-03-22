@@ -97,7 +97,7 @@ void GameManager::ShutDown()
 		myUiManager = 0;
 	}
 }
-void GameManager::CreateImage(RECT dimensions, bool interact, const char* filePath, UI::UIType::TYPE dataType, float2 pos)
+void GameManager::CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos)
 {
-	myUiManager->CreateImage(dimensions, interact, filePath, dataType, pos);
+	myUiManager->CreateImage(dimensions, interact, filePath, pos);
 }

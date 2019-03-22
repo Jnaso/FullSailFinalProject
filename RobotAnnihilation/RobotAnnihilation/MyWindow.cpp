@@ -151,46 +151,22 @@ bool MyWindow::Initialize()
 		return false;
 	}
 
-	RECT tempR;
-	tempR.bottom = tempR.left = tempR.right = tempR.top = 1;
+	RECT tempR = RECT{ 1,1,1,1 };
 
 	float2 tempPos;
 	tempPos.x = 0;
 	tempPos.y = 0;
 
-	gameManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
-
+	//myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
+	gameManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", tempPos);
+	//myUiManager->CreateText("Hello World", false, F_ARIAL, tempPos);
 	return true;
 }
 
 void MyWindow::Shutdown()
 {
 	//Clean up the graphics object
-	//if (gameManager)
-	//{
-	//	myGraphics->Shutdown();
-	//	delete myGraphics;
-	//	myGraphics = 0;
-	//}
-
-	////Cleans up the input object
-	//if (myInput)
-	//{
-	//	delete myInput;
-	//	myInput = 0;
-	//}
-
-	//if (myUiManager)
-	//{
-	//	delete myUiManager;
-	//	myUiManager = 0;
-	//}
-	if (gameManager)
-	{
-		gameManager->ShutDown();
-		delete gameManager;
-		gameManager = 0;
-	}
+	gameManager->ShutDown();
 
 	//Cleans up the window
 	ShutdownWindows();

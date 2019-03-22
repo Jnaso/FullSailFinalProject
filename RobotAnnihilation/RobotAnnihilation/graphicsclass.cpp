@@ -138,6 +138,12 @@ void Graphics::CreateImage(const char * filePath, float2 pos)
 	myDX->CreateImage(filePath, temp);
 }
 
+void Graphics::CreateText(const char * text, int font, float2 pos)
+{
+	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
+	myDX->CreateText(text, font, temp);
+}
+
 //Pointer clean up 
 void Graphics::Shutdown()
 {
@@ -274,12 +280,33 @@ bool Graphics::Render(InputManager *myInput)
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 
 		myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
-
+		 
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
+
+		unsigned int imageCount = myDX->ImagesToRender.size();
+
+		unsigned int textCount = myDX->TextToRender.size();
+		for (unsigned int i = 0; i < textCount; i++)
+		{
+			int font = myDX->TextToRender[i].m_font;
+			const char* text = myDX->TextToRender[i].m_text;
+			DirectX::SimpleMath::Vector2 pos = myDX->TextToRender[i].m_pos;
+			if (font == F_ARIAL)
+			{
+				myDX->ArialFont->DrawString(myDX->spriteBatch.get(), text, pos);
+			}
+			else if (font == F_COMICSANS)
+			{
+				myDX->ComicSansFont->DrawString(myDX->spriteBatch.get(), text, pos);
+			}
+		}
+
 		for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
 		{
 			myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
 		}
+
+
 
 		myDX->spriteBatch->End();
 	}

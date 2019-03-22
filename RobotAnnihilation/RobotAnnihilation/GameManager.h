@@ -34,7 +34,7 @@ public:
 	Graphics* GetGraphicsManager();
 	UI::UIManager* GetUIManager();
 
-	void CreateImage(RECT dimensions, bool interact, const char* filePath, UI::UIType::TYPE dataType, float2 pos);
+	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
 
 	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char * text, DirectX::SimpleMath::Vector2 pos);
 	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
