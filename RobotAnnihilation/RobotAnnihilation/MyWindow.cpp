@@ -4,6 +4,7 @@ MyWindow::MyWindow()
 {
 	myGraphics = nullptr;
 	myInput = nullptr;
+	myUiManager = nullptr;
 }
 
 bool MyWindow::Run()
@@ -141,6 +142,22 @@ bool MyWindow::Initialize()
 		return false;
 	}
 
+
+	myUiManager = new UI::UIManager(myGraphics, myInput);
+	if (!myUiManager)
+	{
+		return false;
+	}
+
+	RECT tempR;
+	tempR.bottom = tempR.left = tempR.right = tempR.top = 1;
+
+	float2 tempPos;
+	tempPos.x = 0;
+	tempPos.y = 0;
+
+	myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
+
 	return true;
 }
 
@@ -159,6 +176,12 @@ void MyWindow::Shutdown()
 	{
 		delete myInput;
 		myInput = 0;
+	}
+
+	if (myUiManager)
+	{
+		delete myUiManager;
+		myUiManager = 0;
 	}
 
 	//Cleans up the window

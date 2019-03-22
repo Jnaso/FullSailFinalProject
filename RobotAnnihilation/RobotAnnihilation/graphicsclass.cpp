@@ -34,7 +34,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Create Turtle Image
-	myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
+	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
 	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
@@ -108,8 +108,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myLighting->SetSpotlightDirection(0, -1, 0, 1);
 	myLighting->SetSpotlightPosition(0, 25, 0, 1);
 	myLighting->SetSpotlightExtra(0.988f, 0.986f, 100, 1);
-	myLighting->SetSpecularColor(1, 0, 1, 1);
-	myLighting->SetSpecularExtra(50, 1.0f, 0, 0);
+	//myLighting->SetSpecularColor(1, 0, 1, 1);
+	//myLighting->SetSpecularExtra(50, 1.0f, 0, 0);
 
 	myPosition[0] = { 0.0f, 3.0f, 10.0f, 10.0f };
 	myPosition[1] = { 0.0f, 3.0f, -10.0f, 20.0f };
@@ -127,6 +127,17 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myDX->GetDevice()->CreateDepthStencilState(&sdesc, &spriteDepthState);
 
 	return true;
+}
+
+void Graphics::CreateImage(RECT dimensions, const char * filePath, float2 pos)
+{
+	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
+	myDX->CreateImage(dimensions, filePath, temp);
+}
+void Graphics::CreateImage(const char * filePath, float2 pos)
+{
+	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
+	myDX->CreateImage(filePath, temp);
 }
 
 //Pointer clean up 
@@ -246,6 +257,7 @@ bool Graphics::Render(InputManager *myInput)
 	}
 	Player->Render(myDX->GetDeviceContext());
 	Player->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
+	//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
 	myDX->PassWorldMatrix(world);
@@ -253,12 +265,14 @@ bool Graphics::Render(InputManager *myInput)
 	{
 		bullets[i]->Render(myDX->GetDeviceContext());
 		world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
+		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 	}	
 	world = XMMatrixIdentity();
 
 	Ground->Render(myDX->GetDeviceContext());
 
+	//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
 	if (!debugCam)
@@ -267,20 +281,15 @@ bool Graphics::Render(InputManager *myInput)
 
 		myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 
-		//Create Test Text (Multiple Fonts)
-		myDX->CreateText(myDX->ArialFont, "This is a Arial Font test", DirectX::SimpleMath::Vector2(100, 100));
-		myDX->CreateText(myDX->ComicSansFont, "This is a Comic Sans test", DirectX::SimpleMath::Vector2(100, 150));
-
+		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 		for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
 		{
 			myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
 		}
 
-
 		myDX->spriteBatch->End();
 	}
-
-
+	
 	//Present the swap chain 
 	myDX->PresentScreen();
 

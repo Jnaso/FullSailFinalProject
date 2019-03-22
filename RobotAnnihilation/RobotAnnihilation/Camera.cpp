@@ -16,7 +16,7 @@ Camera::Camera()
 	upVect = { 0, 1, 0 };
 	lookAtVect = {0, 0, 1};
 
-	currCharDirection = { 0.0f, 0.0f, -10.0f };
+	currCharDirection = { 0.0f, 0.0f, -1.0f };
 	oldCharDirection = { 0.0f, 0.0f, 0.0f };
 	charPosition = { 0.0f, 0.0f, 0.0f };
 	DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };

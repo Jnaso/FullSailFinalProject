@@ -55,6 +55,11 @@ public:
 	void ShootBullet(float x, float y, HWND hwnd);
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
+
+	//Image Creation
+	void CreateImage(RECT dimensions, const char* filePath, float2 pos);
+	void CreateImage(const char* filePath, float2 pos);
+
 	void Shutdown();
 	bool Render(InputManager *);
 };
