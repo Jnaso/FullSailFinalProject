@@ -17,6 +17,8 @@ using namespace DirectX;
 
 const int NUM_LIGHTS = 2;
 
+enum KEYSTATE { UP, DOWN };
+
 struct float2
 {
 	float x;

@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "UIManager.h"
 #include "XTime.h"
+#include "GameManager.h"
 #include <windowsx.h>
 
 class MyWindow
@@ -15,11 +16,8 @@ private:
 	LPCWSTR myAppName;
 	HINSTANCE myInstance;
 	HWND myWindow;
-
-	//Game Classes
-	Graphics *myGraphics;
-	InputManager *myInput;
-	UI::UIManager* myUiManager;
+	
+	GameManager* gameManager;
 	XTime timer;
 	
 	void Update(float delta);

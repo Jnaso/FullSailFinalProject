@@ -334,10 +334,10 @@ void Graphics::ShootBullet(float x, float y, HWND hwnd)
 	float3 forward = float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] };
 	newBullet->GetPhysicsComponent()->SetForward(forward);
 	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
-	float3 velocity = forward * -100.0f;
+	//float3 velocity = forward * -100.0f;
 	newBullet->GetPhysicsComponent()->SetLifeTime(2.0f);
 	//velocity = velocity.componentProduct(forward);
-	newBullet->GetPhysicsComponent()->SetVelocity(velocity);
+	newBullet->GetPhysicsComponent()->SetVelocity(forward * -100.0f);
 	newBullet->GetPhysicsComponent()->SetAccel(float3{ 0, -1.0, 0});
 	newBullet->GetPhysicsComponent()->SetMass(2.0f);
 	newBullet->GetPhysicsComponent()->SetDamping(0.99f);

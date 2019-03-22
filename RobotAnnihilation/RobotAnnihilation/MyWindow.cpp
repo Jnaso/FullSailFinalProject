@@ -2,9 +2,7 @@
 
 MyWindow::MyWindow()
 {
-	myGraphics = nullptr;
-	myInput = nullptr;
-	myUiManager = nullptr;
+	gameManager = nullptr;
 }
 
 bool MyWindow::Run()
@@ -12,13 +10,13 @@ bool MyWindow::Run()
 	bool result;
 
 	//If user presses escape, close the window 
-	if (myInput->GetKeyState(_ESCAPE))
+	if (gameManager->GetKeyState(_ESCAPE))
 	{
 		return false;
 	}
 
 	//Render every frame and stop if anything goes wrong 
-	result = myGraphics->Render(myInput);
+	result = gameManager->Render();
 	if (!result)
 	{
 		return false;
@@ -123,28 +121,32 @@ bool MyWindow::Initialize()
 	//Set up the window and the dimensions 
 	CreateWindows(screenW, screenH);
 
-	myInput = new InputManager();
-	if (!myInput)
+	gameManager = new GameManager();
+	if (!gameManager)
 	{
 		return false;
 	}
 
-	//Set up for graphics object
-	myGraphics = new Graphics();
-	if (!myGraphics)
+	//myInput = new InputManager();
+	if (!gameManager->GetInputManager())
 	{
 		return false;
 	}
 
-	result = myGraphics->Initialize(screenW, screenH, myWindow);
+	////Set up for graphics object
+	//myGraphics = new Graphics();
+	if (!gameManager->GetGraphicsManager())
+	{
+		return false;
+	}
+
+	result = gameManager->Initialize(screenW, screenH, myWindow);
 	if (!result)
 	{
 		return false;
 	}
-
-
-	myUiManager = new UI::UIManager(myGraphics, myInput);
-	if (!myUiManager)
+	
+	if (!gameManager->GetUIManager())
 	{
 		return false;
 	}
@@ -156,7 +158,7 @@ bool MyWindow::Initialize()
 	tempPos.x = 0;
 	tempPos.y = 0;
 
-	myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
+	gameManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
 
 	return true;
 }
@@ -164,24 +166,30 @@ bool MyWindow::Initialize()
 void MyWindow::Shutdown()
 {
 	//Clean up the graphics object
-	if (myGraphics)
-	{
-		myGraphics->Shutdown();
-		delete myGraphics;
-		myGraphics = 0;
-	}
+	//if (gameManager)
+	//{
+	//	myGraphics->Shutdown();
+	//	delete myGraphics;
+	//	myGraphics = 0;
+	//}
 
-	//Cleans up the input object
-	if (myInput)
-	{
-		delete myInput;
-		myInput = 0;
-	}
+	////Cleans up the input object
+	//if (myInput)
+	//{
+	//	delete myInput;
+	//	myInput = 0;
+	//}
 
-	if (myUiManager)
+	//if (myUiManager)
+	//{
+	//	delete myUiManager;
+	//	myUiManager = 0;
+	//}
+	if (gameManager)
 	{
-		delete myUiManager;
-		myUiManager = 0;
+		gameManager->ShutDown();
+		delete gameManager;
+		gameManager = 0;
 	}
 
 	//Cleans up the window
@@ -236,35 +244,35 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	case WM_KEYDOWN:
 	{
 		//Update the input object on every key press
-		myInput->SetKeyState(wparam, true);
+		gameManager->SetKeyState(wparam, true);
 		return 0;
 	}
 	case WM_KEYUP:
 	{
 		//Update the input object on every key release
-		myInput->SetKeyState(wparam, false);
+		gameManager->SetKeyState(wparam, false);
 		return 0;
 	}
 	case WM_MOUSEMOVE:
-		myInput->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+		gameManager->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 		//SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 		
 		break;
 	case WM_LBUTTONDOWN:
 		// Call bullet function here
-		myInput->SetKeyState(_LMOUSE, true);
-		newx = myInput->GetMousePos().x;
-		newy = myInput->GetMousePos().y;
-		myGraphics->ShootBullet(newx, newy, myWindow);
+		gameManager->SetKeyState(_LMOUSE, true);
+		newx = gameManager->GetMousePos().x;
+		newy = gameManager->GetMousePos().y;
+		gameManager->GetGraphicsManager()->ShootBullet(newx, newy, myWindow);
 		break;
 	case WM_LBUTTONUP:
-		myInput->SetKeyState(_LMOUSE, false);
+		gameManager->SetKeyState(_LMOUSE, false);
 		break;
 	case WM_RBUTTONDOWN:
-		myInput->SetKeyState(_RMOUSE, true);
+		gameManager->SetKeyState(_RMOUSE, true);
 		break;
 	case WM_RBUTTONUP:
-		myInput->SetKeyState(_RMOUSE, false);
+		gameManager->SetKeyState(_RMOUSE, false);
 		break;
 	case WM_MOUSEWHEEL:
 		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
@@ -313,5 +321,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 void MyWindow::Update(float delta)
 {
-	myGraphics->Update(myInput, delta);
+	gameManager->Update(delta);
 }
