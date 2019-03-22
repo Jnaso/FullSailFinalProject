@@ -41,6 +41,16 @@ void Lighting::SetSpotlightExtra(float a, float b, float c, float d)
 	SpotlightExtra = { a, b, c, d };
 }
 
+void Lighting::SetSpecularColor(float r, float g, float b, float a)
+{
+	SpecularColor = { r, g, b, a };
+}
+
+void Lighting::SetSpecularExtra(float a, float b, float c, float d)
+{
+	SpecularExtra = { a, b, c, d };
+}
+
 //Directional light color getter 
 XMFLOAT4 Lighting::GetDirectionalColor()
 {
@@ -75,4 +85,14 @@ XMFLOAT4 Lighting::GetSpotlightPosition()
 XMFLOAT4 Lighting::GetSpotlightExtra()
 {
 	return SpotlightExtra;
+}
+
+XMFLOAT4 Lighting::GetSpecularColor()
+{
+	return SpecularColor;
+}
+
+XMFLOAT4 Lighting::GetSpecularExtra()
+{
+	return SpecularExtra;
 }

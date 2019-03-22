@@ -15,6 +15,9 @@ cbuffer LightBuffer
 	float4 SpotDir;
 	float4 SpotPos;
 	float4 SpotEx;
+	float4 cameraPos;
+	float4 specColor;
+	float4 specEx;
 };
 
 
@@ -35,6 +38,7 @@ float4 Main(PixelInput input) : SV_TARGET
 	float lightIntensity;
 	float4 finalColor;
 	float3 sampNorm;
+	float4 reflection;
 	float3 normal = normalize(input.norm);
 
 	textureColor = shaderTexture.Sample(Sampler, input.tex);
@@ -51,6 +55,10 @@ float4 Main(PixelInput input) : SV_TARGET
 	if (lightIntensity > 0)
 	{
 		direct = directionColor.rgb * lightIntensity * textureColor.rgb;
+
+		//reflection = normalize(2 * lightIntensity * input.norm - lightDir);
+
+		//specular = specColor * pow(saturate(dot(reflection, input.)))
 	}
 
 	float3 pLightDir1 = normalize(lightPosition[0].xyz - input.PixelPos);
@@ -71,6 +79,11 @@ float4 Main(PixelInput input) : SV_TARGET
 	float att2 = 1.0 - saturate((SpotEx.x - surfaceRatio) / (SpotEx.x - SpotEx.y));
 	float finalAtt = att1 * att2;
 	float3 Spot = spotFactor * lightRatio * SpotCol.rgb * textureColor.rgb * finalAtt;
+
+	//float3 viewDir = normalize(cameraPos - input.PixelPos);
+	//float3 halfVect = normalize((lightDir) + viewDir);
+	//float intensity = max(pow(saturate(dot(normal, normalize(halfVect))), specEx.x), 0);
+	//float3 specular = specColor.rgb * specEx.y * intensity;
 
 	finalColor.rgb = ambient + direct + Point1 + Point2 + Spot;
 	finalColor.a = textureColor.a;
