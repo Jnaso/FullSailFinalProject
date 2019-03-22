@@ -149,15 +149,15 @@ bool MyWindow::Initialize()
 		return false;
 	}
 
-	RECT tempR;
-	tempR.bottom = tempR.left = tempR.right = tempR.top = 1;
+	RECT tempR = RECT{ 1,1,1,1 };
 
 	float2 tempPos;
 	tempPos.x = 0;
 	tempPos.y = 0;
 
-	myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
+	myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds",  tempPos);
 
+	myUiManager->CreateText("Hello World", false, F_ARIAL, tempPos);
 	return true;
 }
 

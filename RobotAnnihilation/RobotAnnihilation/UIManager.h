@@ -29,6 +29,7 @@ namespace UI
 			bool m_isMouseOver;		//Is True If Mouse Is Over (If isInteractable Is Enabled)
 			const char* m_dir;		//Files Directory
 			float2 m_position;		//Where the top left of the Image/Text will be(pixel based)
+			const char* m_text;
 
 		public:
 
@@ -53,11 +54,11 @@ namespace UI
 			}
 			#pragma endregion
 
-			UIComponent(Graphics* graphics, RECT dimensions, bool isInteractible, const char* filePath, UIType::TYPE objectType, float2 pos)
+			UIComponent(Graphics* graphics, RECT dimensions, bool isInteractable, const char* filePath, float2 pos)
 			{
 				m_myGraphics =		graphics;			//Graphics Class Refrence
 				m_dimensions =		dimensions;			//RECT refrence
-				m_isInteractable =	isInteractible;		//Interactable UI Refrence
+				m_isInteractable = isInteractable;		//Interactable UI Refrence
 				m_dir =				filePath;			//File Path Refrence
 				m_position =		pos;				//Position Reference
 
@@ -67,23 +68,29 @@ namespace UI
 				defaultRect.right = 1;
 				defaultRect.bottom = 1;
 
-				
-				if (objectType == UIType::IMAGE)
+				if (dimensions == defaultRect)
 				{
-					if (dimensions == defaultRect)
-					{
-						m_myGraphics->CreateImage(m_dir, pos);
-					}
-					else
-					{
-						m_myGraphics->CreateImage(dimensions, m_dir, pos);
-					}
+					m_myGraphics->CreateImage(m_dir, pos);
 				}
-				else if (objectType == UIType::TEXT)
+				else
 				{
-					//m_myGraphics->CreateText();
+					m_myGraphics->CreateImage(dimensions, m_dir, pos);
 				}
 			}
+
+			UIComponent(Graphics* graphics, bool isInteractable, int font, const char* text, float2 pos)
+			{
+				m_myGraphics =			graphics;			//Graphics Class Refrence
+				m_dimensions =			RECT{ 1,1,1,1 };	//RECT refrence
+				m_isInteractable =		isInteractable;		//Interactable UI Refrence
+				m_dir =					nullptr;			//File Path Refrence
+				m_position =			pos;				//Position Reference
+				m_text =				text;				//Text Refrence
+				
+				m_myGraphics->CreateText(text, font, pos);
+			}
+
+
 			~UIComponent()
 			{
 
@@ -97,8 +104,9 @@ namespace UI
 
 		UIManager(Graphics* graphics, InputManager* input);
 
-		void CreateImage(RECT dimensions, bool interact, const char* filePath,
-			UI::UIType::TYPE dataType, float2 pos);
+		void CreateImage(RECT dimensions, bool interact, const char* filePath, float2 pos);
+
+		void CreateText(const char* text, bool interact, int font, float2 pos);
 
 		void Update();
 
