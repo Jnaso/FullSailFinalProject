@@ -24,21 +24,6 @@ KEYSTATE GameManager::GetKeyState(int keyCode)
 	return myInput->GetKeyState(keyCode);
 }
 
-void GameManager::SetMousePos(float x, float y)
-{
-	myInput->SetMousePos(x, y);
-}
-
-float2 GameManager::GetMousePos()
-{
-	return myInput->GetMousePos();
-}
-
-float2 GameManager::GetPrevMousePos()
-{
-	return myInput->GetPrevMousePos();
-}
-
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;

@@ -51,7 +51,7 @@ public:
 	void Update(InputManager *, float delta);
 	Graphics();
 
-	void ShootBullet(float x, float y, HWND hwnd);
+	void ShootBullet(HWND hwnd);
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 

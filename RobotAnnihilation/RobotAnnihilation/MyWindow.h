@@ -25,6 +25,8 @@ private:
 	void CreateWindows(int&, int&);
 	void ShutdownWindows();
 
+	bool paused = false;
+
 public:
 	MyWindow();
 

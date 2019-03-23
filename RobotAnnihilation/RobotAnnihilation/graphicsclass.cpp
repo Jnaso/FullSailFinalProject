@@ -323,7 +323,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);
 
-	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] });
+	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
 
 	if(debugCam)	
 	{
@@ -354,11 +354,11 @@ void Graphics::Update(InputManager *myInput, float delta)
 	}
 }
 
-void Graphics::ShootBullet(float x, float y, HWND hwnd)
+void Graphics::ShootBullet(HWND hwnd)
 {
 	GameObject* newBullet = new GameObject("Assets/Sphere.mesh", myDX->GetDevice());
 	newBullet->Initialize(myDX->GetDevice());
-	float3 forward = float3{ myCamera->GetDirection().m128_f32[0], myCamera->GetDirection().m128_f32[1], myCamera->GetDirection().m128_f32[2] };
+	float3 forward = float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] };
 	newBullet->GetPhysicsComponent()->SetForward(forward);
 	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
 	//float3 velocity = forward * -100.0f;

@@ -7,12 +7,27 @@ MyWindow::MyWindow()
 
 bool MyWindow::Run()
 {
+	DIMOUSESTATE mouse;
+
 	bool result;
 
 	//If user presses escape, close the window 
 	if (gameManager->GetKeyState(_ESCAPE))
 	{
 		return false;
+	}
+
+	if (gameManager->GetKeyState((int)'P'))
+	{
+		paused = !paused;
+	}
+
+	gameManager->GetInputManager()->GetMouseInput()->Acquire();
+	gameManager->GetInputManager()->GetMouseInput()->GetDeviceState(sizeof(DIMOUSESTATE), &mouse);
+
+	if (mouse.rgbButtons[0])
+	{
+		gameManager->GetGraphicsManager()->ShootBullet(myWindow);
 	}
 
 	//Render every frame and stop if anything goes wrong 
@@ -73,8 +88,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1280;
-		screenH = 720;
+		screenW = 1920;
+		screenH = 1080;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
@@ -129,6 +144,12 @@ bool MyWindow::Initialize()
 
 	//myInput = new InputManager();
 	if (!gameManager->GetInputManager())
+	{
+		return false;
+	}
+
+	//myInput = new InputManager();
+	if (!gameManager->GetInputManager()->Initialize(myInstance, myWindow))
 	{
 		return false;
 	}
@@ -199,7 +220,10 @@ void MyWindow::Render()
 		else
 		{
 			timer.Signal();
-			Update(timer.Delta());
+			if (!paused)
+			{
+				Update(timer.Delta());
+			}
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
@@ -230,16 +254,15 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		return 0;
 	}
 	case WM_MOUSEMOVE:
-		gameManager->SetMousePos(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
-		//SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 		
 		break;
 	case WM_LBUTTONDOWN:
 		// Call bullet function here
 		gameManager->SetKeyState(_LMOUSE, true);
-		newx = gameManager->GetMousePos().x;
-		newy = gameManager->GetMousePos().y;
-		gameManager->GetGraphicsManager()->ShootBullet(newx, newy, myWindow);
+		if (!paused)
+		{
+			gameManager->GetGraphicsManager()->ShootBullet(myWindow);
+		}
 		break;
 	case WM_LBUTTONUP:
 		gameManager->SetKeyState(_LMOUSE, false);
