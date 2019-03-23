@@ -4,7 +4,7 @@ Graphics::Graphics()
 {
 	//Zero memory 
 	myDX = nullptr;
-	Player = nullptr;
+	myPlayer = nullptr;
 	Ground = nullptr;
 	myLighting = nullptr;
 	myShaderManager = nullptr;
@@ -37,15 +37,15 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
-	Player = new GameObject("Assets/Run.mesh", myDX->GetDevice());
-	Player->SetRunAnimation(Player->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
-	Player->SetIdleAnimation(Player->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
-	Player->SetCurrentAnimation(Player->GetIdleAnimation());
-	Player->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
-	Player->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
-	Player->GetPhysicsComponent()->SetMass(50);
-	Player->GetPhysicsComponent()->SetDamping(.99f);
-	if (!Player)
+	myPlayer = new Player("Assets/Run.mesh", myDX->GetDevice());
+	myPlayer->SetRunAnimation(myPlayer->AddAninimation("Assets/Run.anim", myDX->GetDevice()));
+	myPlayer->SetIdleAnimation(myPlayer->AddAninimation("Assets/Idle.anim", myDX->GetDevice()));
+	myPlayer->SetCurrentAnimation(myPlayer->GetIdleAnimation());
+	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
+	myPlayer->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
+	myPlayer->GetPhysicsComponent()->SetMass(50);
+	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
+	if (!myPlayer)
 	{
 		return false;
 	}
@@ -56,7 +56,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	//Make sure the object initializes with no problem 
-	result = Player->Initialize(myDX->GetDevice());
+	result = myPlayer->Initialize(myDX->GetDevice());
 	if (!result)
 	{
 		return false;
@@ -167,11 +167,11 @@ void Graphics::Shutdown()
 		myShaderManager = nullptr;
 	}
 
-	if (Player)
+	if (myPlayer)
 	{
-		Player->Shutdown();
-		delete Player;
-		Player = nullptr;
+		myPlayer->Shutdown();
+		delete myPlayer;
+		myPlayer = nullptr;
 	}
 
 	if (Ground)
@@ -218,11 +218,11 @@ bool Graphics::Render(InputManager *myInput)
 	}
 	if (moving)
 	{
-		Player->SetCurrentAnimation(Player->GetRunAnimation());
+		myPlayer->SetCurrentAnimation(myPlayer->GetRunAnimation());
 	}
 	else
 	{
-		Player->SetCurrentAnimation(Player->GetIdleAnimation());
+		myPlayer->SetCurrentAnimation(myPlayer->GetIdleAnimation());
 	}
 	XMMATRIX world, view, projection;
 	bool result;
@@ -249,7 +249,7 @@ bool Graphics::Render(InputManager *myInput)
 
 
 	//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
-	Player->Render(myDX->GetDeviceContext());
+	myPlayer->Render(myDX->GetDeviceContext());
 	if (debugCam)
 	{
 		myDebug->Update();
@@ -258,9 +258,9 @@ bool Graphics::Render(InputManager *myInput)
 	{
 		myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 	}
-	Player->Render(myDX->GetDeviceContext());
-	Player->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
-	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
+	myPlayer->Render(myDX->GetDeviceContext());
+	myPlayer->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
+	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetObjectIndices().size(), world, view, projection, myPlayer->GetDiffuseTexture(), myPlayer->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 
 	myDX->PassWorldMatrix(world);
 	for (unsigned int i = 0; i < bullets.size(); i++)
@@ -321,9 +321,9 @@ bool Graphics::Render(InputManager *myInput)
 
 void Graphics::Update(InputManager *myInput, float delta)
 {
-	Player->Update(delta);
+	myPlayer->Update(delta);
 
-	Player->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
+	myPlayer->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
 
 	if(debugCam)	
 	{
@@ -360,7 +360,7 @@ void Graphics::ShootBullet(HWND hwnd)
 	newBullet->Initialize(myDX->GetDevice());
 	float3 forward = float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] };
 	newBullet->GetPhysicsComponent()->SetForward(forward);
-	newBullet->GetPhysicsComponent()->SetPosition(float3{Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y + 2.0f, Player->GetPhysicsComponent()->GetPosition().z});
+	newBullet->GetPhysicsComponent()->SetPosition(float3{myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f, myPlayer->GetPhysicsComponent()->GetPosition().z});
 	//float3 velocity = forward * -100.0f;
 	newBullet->GetPhysicsComponent()->SetLifeTime(2.0f);
 	//velocity = velocity.componentProduct(forward);

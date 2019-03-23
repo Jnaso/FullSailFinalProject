@@ -9,6 +9,7 @@
 #include "dxstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
+#include "Player.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
@@ -28,7 +29,7 @@ class Graphics
 {
 private:
 	DX *myDX;
-	GameObject *Player;
+	Player *myPlayer;
 	GameObject *Ground;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;

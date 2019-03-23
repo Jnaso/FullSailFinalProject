@@ -130,39 +130,7 @@ void GameObject::ReadMeshFile(const char * filePath, ID3D11Device* device)
 
 void GameObject::Update(float delta)
 {
-	frametime += delta;
-	CurrentAnimation->Update(delta);
 	ObjectPhysics->Update(delta);
-}
-
-Animation* GameObject::GetRunAnimation()
-{
-	return RunAnimation;
-}
-
-void GameObject::SetRunAnimation(Animation* anim)
-{
-	RunAnimation = anim;
-}
-
-Animation* GameObject::GetIdleAnimation()
-{
-	return IdleAnimation;
-}
-
-void GameObject::SetIdleAnimation(Animation* anim)
-{
-	IdleAnimation = anim;
-}
-
-Animation* GameObject::GetCurrentAnimation()
-{
-	return CurrentAnimation;
-}
-
-void GameObject::SetCurrentAnimation(Animation* anim)
-{
-	CurrentAnimation = anim;
 }
 
 Animation* GameObject::AddAninimation(const char * filePath, ID3D11Device * device)

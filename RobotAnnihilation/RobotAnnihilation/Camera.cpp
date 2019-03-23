@@ -84,7 +84,7 @@ void Camera::Update(XMFLOAT3 newLookAt)
 	//Rotate the camera by desired rotation 
 	rotationMatrix = XMMatrixRotationRollPitchYaw(-camPitch, camYaw, 0);
 	
-	//Move the camer by its forward 
+	//Move the camera by its forward 
 	positionVect = XMVector3TransformNormal(DefaultForward, rotationMatrix);
 	positionVect = XMVector3Normalize(positionVect);
 
