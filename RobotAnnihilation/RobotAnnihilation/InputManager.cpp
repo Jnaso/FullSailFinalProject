@@ -22,7 +22,7 @@ void InputManager::SetKeyState(int keyCode, bool isPress)
 {
 	m_keys[keyCode] = isPress;
 
-	std::cout << "Key: " << keyCode << std::endl;
+	/*std::cout << "Key: " << keyCode << std::endl;
 	if (keyCode == _SPACE)
 	{
 		std::cout << "Space";
@@ -76,7 +76,7 @@ void InputManager::SetKeyState(int keyCode, bool isPress)
 	else
 	{
 		std::cout << " is Released" << std::endl;
-	}
+	}*/
 }
 
 InputManager::KEYSTATE InputManager::GetKeyState(int keyCode)

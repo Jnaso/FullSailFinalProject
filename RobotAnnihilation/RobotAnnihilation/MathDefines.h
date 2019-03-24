@@ -323,3 +323,104 @@ inline float3 XMVectortofloat3(XMVECTOR input)
 	return output;
 }
 
+inline float DotProduct(float3 a, float3 b)
+{
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+//struct Ray
+//{
+//
+//};
+
+struct Ray
+{
+	float3 dir;
+	float3 start;
+};
+
+struct Sphere
+{
+	float radius;
+	float3 center;
+};
+
+inline bool SpheresCollide(Sphere a, Sphere b)
+{
+	float3 dist;
+	dist.x = a.center.x - b.center.x;
+	dist.y = a.center.y - b.center.y;
+	dist.z = a.center.z - b.center.z;
+
+	float length = sqrtf(dist.x * dist.x + dist.y * dist.y + dist.z * dist.z);
+
+	float sum = a.radius + b.radius;
+
+	if (length <= sum)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+inline bool RayToSphere(const Ray &ray, const Sphere &sphere, float &ft)
+{
+	float3 vecV1 = ray.start - sphere.center;
+
+	float fb = DotProduct(vecV1, ray.dir);
+
+	float fc = DotProduct(vecV1, vecV1) - (sphere.radius * sphere.radius);
+
+	if (fc > 0.0f && fb > 0.0f)
+	{
+		return false;
+	}
+
+	float fDisc = fb * fb - fc;
+
+	if (fDisc < 0.0f)
+	{
+		return false;
+	}
+
+	ft = -fb - sqrtf(fDisc);
+
+	if (ft < 0.0f)
+	{
+		ft = 0.0f;
+	}
+
+	return true;
+}
+
+inline bool MovingSphereToSphere(const Sphere &moving, const float3 &velocity, const Sphere &Static, float &ft)
+{
+	Sphere temp = Static;
+	temp.radius += moving.radius;
+
+	float vecLength = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
+
+	Ray tempR;
+	tempR.start = moving.center;
+	tempR.dir.x = velocity.x / vecLength;
+	tempR.dir.y = velocity.y / vecLength;
+	tempR.dir.z = velocity.z / vecLength;
+
+	if (RayToSphere(tempR, temp, ft))
+	{
+		if (ft <= vecLength)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//bool AdvancedSphereCollide(Sphere moving, Sphere staticS, float &t)
+//{
+//	
+//
+//}
+

@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
