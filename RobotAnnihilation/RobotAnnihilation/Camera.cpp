@@ -182,7 +182,7 @@ void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, X
 	charPosition = XMVector3TransformCoord(charPosition, worldMatrix);
 
 	//Set the desired direction to the direction of movement 
-	currCharDirection = -destinationDirection;
+	currCharDirection = -camforward;
 
 	//Calculate the angle the character needs to rotate 
 	float charDirAngle = XMVectorGetX(XMVector3AngleBetweenNormals(XMVector3Normalize(currCharDirection), XMVector3Normalize(DefaultForward)));
@@ -194,7 +194,7 @@ void Camera::SetCharacterRotation(double time, XMVECTOR& destinationDirection, X
 	}
 
 	//Move the character by a speed 
-	float speed = .4f;
+	float speed = 5.0f;
 	charPosition = charPosition + (destinationDirection * speed);
 
 	//Translate the character 
