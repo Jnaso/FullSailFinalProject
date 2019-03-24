@@ -90,6 +90,9 @@
     <ClInclude Include="Sound.h">
       <Filter>GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RobotAnnihilation.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

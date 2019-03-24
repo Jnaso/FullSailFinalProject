@@ -44,6 +44,7 @@
 #define _RMOUSE 257
 
 #pragma endregion
+#include "MathDefines.h"
 
 class InputManager
 {
@@ -51,20 +52,24 @@ private:
 
 	bool *m_keys;
 
-	float2 mousePos;
-	float2 prevMousePos;
+	IDirectInputDevice8* mouseinput;
+	DIMOUSESTATE lastMouseState;
+	LPDIRECTINPUT8 DirectInput;
 
 public:
 
 	InputManager();
 	~InputManager();
 
+	bool Initialize(HINSTANCE instance, HWND wind);
+
 	void SetKeyState(int keyCode, bool isPress);
 	KEYSTATE GetKeyState(int keyCode);
 
-	void SetMousePos(float x, float y);
-	float2 GetMousePos();
-	float2 GetPrevMousePos();
+	//void SetMousePos(float x, float y);
+	IDirectInputDevice8* GetMouseInput();
+	DIMOUSESTATE GetPrevMouseState();
+	void SetPrevMouseState(DIMOUSESTATE state);
 	
 };
 

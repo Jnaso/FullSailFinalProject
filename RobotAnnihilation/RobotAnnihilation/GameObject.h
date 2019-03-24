@@ -24,6 +24,7 @@ using namespace DirectX;
 
 class GameObject
 {
+protected:
 	PhysicsComponent* ObjectPhysics;
 
 	Animation** objectAnimations;

@@ -18,6 +18,25 @@ InputManager::~InputManager()
 	delete[] m_keys;
 }
 
+bool InputManager::Initialize(HINSTANCE instance, HWND wind)
+{
+	HRESULT hr;
+	hr = DirectInput8Create(instance,
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&DirectInput,
+		NULL);
+
+	hr = DirectInput->CreateDevice(GUID_SysMouse,
+		&mouseinput,
+		NULL);
+
+	hr = mouseinput->SetDataFormat(&c_dfDIMouse);
+	hr = mouseinput->SetCooperativeLevel(wind, DISCL_EXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND);
+
+	return true;
+}
+
 void InputManager::SetKeyState(int keyCode, bool isPress)
 {
 	m_keys[keyCode] = isPress;
@@ -92,23 +111,28 @@ KEYSTATE InputManager::GetKeyState(int keyCode)
 	}
 }
 
-void InputManager::SetMousePos(float x, float y)
-{
-	prevMousePos = { mousePos.x, mousePos.y };
-	mousePos.x = x;
-	mousePos.y = y;
+//void InputManager::SetMousePos(float x, float y)
+//{
+//	prevMousePos = { mousePos.x, mousePos.y };
+//	mousePos.x = x;
+//	mousePos.y = y;
+//
+//	//std::cout << "MousePOS: " << "( " << mousePos.x << ", " << mousePos.y << " )" << std::endl;
+//}
 
-	//std::cout << "MousePOS: " << "( " << mousePos.x << ", " << mousePos.y << " )" << std::endl;
+IDirectInputDevice8* InputManager::GetMouseInput()
+{
+	return mouseinput;
 }
 
-float2 InputManager::GetPrevMousePos()
+DIMOUSESTATE InputManager::GetPrevMouseState()
 {
-	return prevMousePos;
+	return lastMouseState;
 }
 
-float2 InputManager::GetMousePos()
+void InputManager::SetPrevMouseState(DIMOUSESTATE state)
 {
-	return mousePos;
+	lastMouseState = state;
 }
 
 

@@ -13,12 +13,15 @@ private:
 	float myPosX, myPosY, myPosZ;
 	float myRotX, myRotY, myRotZ;
 	XMMATRIX myViewMatrix;
+	XMMATRIX rotationMatrix;
 	float moveLeftRight = 0.0f;
 	float moveBackForawrd = 0.0f;
 	float camYaw = 0.0f;
 	float camPitch = 0.0f;
 	XMVECTOR upVect, positionVect, lookAtVect, DefaultForward;
 	XMVECTOR currCharDirection, oldCharDirection, charPosition, camRight, camforward;
+
+	float deltax, deltay;
 
 public:
 	Camera();
@@ -30,12 +33,13 @@ public:
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
-	XMVECTOR GetDirection();
+	XMVECTOR GetCharDirection();
+	XMVECTOR GetCamDirection();
 
 	void Update(XMFLOAT3 newLookAt);
 	void PassInViewMatrix(XMMATRIX&);
 
-	void SetCharacterRotation(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix);
+	void SetCharacterPosition(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix);
 };
 
 #endif // !_CAMERA_H

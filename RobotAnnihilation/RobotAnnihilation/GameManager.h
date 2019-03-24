@@ -28,13 +28,11 @@ public:
 	void SetKeyState(int keyCode, bool isPress);
 	KEYSTATE GetKeyState(int keyCode);
 
-	void SetMousePos(float x, float y);
-	float2 GetMousePos();
-	float2 GetPrevMousePos();
-
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
 	UI::UIManager* GetUIManager();
+
+	void ShootBullet(HWND hwnd);
 
 	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
 };
