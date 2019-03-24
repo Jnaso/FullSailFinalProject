@@ -9,12 +9,12 @@
 #include "dxstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
-#include "Player.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
 #include "DebugCamera.h"
 #include "Sound.h"
+#include "Bullet.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -29,8 +29,9 @@ class Graphics
 {
 private:
 	DX *myDX;
-	Player *myPlayer;
+	GameObject *myPlayer;
 	GameObject *Ground;
+	GameObject *Target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;
 	Camera *myCamera;
@@ -40,12 +41,15 @@ private:
 	XMMATRIX playerWorld;
 	bool debugCam;
 	float timeBetween;
+	XMFLOAT4 camPosition;
+	Sphere PlayerSphere;
+	Sphere TargetSphe;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;
 	ID3D11RasterizerState*		spriteRasterState;
 
-	std::vector<GameObject*> bullets;
+	std::vector<Bullet*> bullets;
 	vector<Sound*> myShots;
 
 public:

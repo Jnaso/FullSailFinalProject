@@ -90,7 +90,7 @@
     <ClInclude Include="Sound.h">
       <Filter>GameObject &amp; Components</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,7 +155,7 @@
     <ClCompile Include="Sound.cpp">
       <Filter>GameObject &amp; Components</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

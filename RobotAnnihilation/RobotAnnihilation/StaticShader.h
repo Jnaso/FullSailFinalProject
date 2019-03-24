@@ -34,6 +34,9 @@ private:
 		XMFLOAT4 spotLightDirection;
 		XMFLOAT4 spotLightPosition;
 		XMFLOAT4 spotLightExtra;
+		XMFLOAT4 cameraPosition;
+		XMFLOAT4 specularColor;
+		XMFLOAT4 specularExtra;
 	};
 
 	ID3D11VertexShader *myVertexShader;
@@ -46,7 +49,7 @@ private:
 	void DestroyShaders();
 	void ProcessShaderErrors(ID3D10Blob *error);
 
-	bool UpdateShaderBuffers(ID3D11DeviceContext *myContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, XMFLOAT4[], XMFLOAT4[], XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4);
+	bool UpdateShaderBuffers(ID3D11DeviceContext *myContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, XMFLOAT4[], XMFLOAT4[], XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx);
 	void DrawShaders(ID3D11DeviceContext *myContext, int indicies);
 
 public:
@@ -54,7 +57,7 @@ public:
 
 	bool Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, XMFLOAT4[], XMFLOAT4[], XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4);
+	bool Render(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDirection, XMFLOAT4 lightColor, XMFLOAT4[], XMFLOAT4[], XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx);
 };
 
 #endif // !_STATICSHADER_H_

@@ -32,8 +32,6 @@ public:
 	Graphics* GetGraphicsManager();
 	UI::UIManager* GetUIManager();
 
-	void ShootBullet(HWND hwnd);
-
 	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
 };
 

@@ -88,8 +88,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1920;
-		screenH = 1080;
+		screenW = 1280;
+		screenH = 720;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
@@ -136,12 +136,20 @@ bool MyWindow::Initialize()
 	//Set up the window and the dimensions 
 	CreateWindows(screenW, screenH);
 
+	/*if (!myInput)
+	{
+		return false;
+	}*/
 	gameManager = new GameManager();
 	if (!gameManager)
 	{
 		return false;
 	}
 
+	//if (!myGraphics)
+	//{
+	//	return false;
+	//}
 	//myInput = new InputManager();
 	if (!gameManager->GetInputManager())
 	{

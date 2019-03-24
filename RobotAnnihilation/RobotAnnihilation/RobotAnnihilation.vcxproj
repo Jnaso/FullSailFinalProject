@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
@@ -173,7 +174,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MyWindow.h" />
     <ClInclude Include="PhysicsComponent.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="RobotAnnihilation.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -187,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -198,7 +199,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyWindow.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sound.cpp" />

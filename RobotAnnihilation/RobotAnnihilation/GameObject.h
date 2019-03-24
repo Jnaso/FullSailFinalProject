@@ -27,18 +27,15 @@ class GameObject
 protected:
 	PhysicsComponent* ObjectPhysics;
 
-	Animation** objectAnimations;
-	int currentAnimation;
-	int AnimationCount;
+	std::vector<Animation*> objectAnimations;
+	Animation* currentAnimation;
 
 	Model* objectModel;
 
-	Sound** objectSounds;
-	int SoundCount;
+	std::vector<Sound*> objectSounds;
 
 public:
 	GameObject();
-	GameObject(int animationAmounts, int soundAmounts);
 	~GameObject();
 
 	virtual bool Initialize(const char* filePath, ID3D11Device* device);
@@ -51,5 +48,11 @@ public:
 
 	PhysicsComponent* GetPhysicsComponent();
 	void SetPhysicsComponent(PhysicsComponent* newPhysics);
+
+	Model* GetModelComponent();
+
+	void SetAnimation(int index);
+
+	Animation* GetCurrentAnimation();
 };
 

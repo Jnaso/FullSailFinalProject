@@ -191,7 +191,7 @@ void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, X
 	}
 
 	//Move the character by a speed 
-	float speed = .4f;
+	float speed = 0.4f;
 	charPosition = charPosition + (destinationDirection * speed);
 
 	//Translate the character 
