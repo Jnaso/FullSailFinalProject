@@ -3,6 +3,8 @@
 #include "WICTextureLoader.h"
 #include "Animation.h"
 #include "PhysicsComponent.h"
+#include "Model.h"
+#include "Sound.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <dxgi1_2.h>
@@ -24,52 +26,27 @@ class GameObject
 {
 	PhysicsComponent* ObjectPhysics;
 
-	std::vector<Vertex> ObjectVerts;
-	std::vector<uint32_t> ObjectIndices;
+	Animation** objectAnimations;
+	int currentAnimation;
+	int AnimationCount;
 
-	// Storage for reading in function
-	ID3D11ShaderResourceView* Diffuse;
-	ID3D11ShaderResourceView* Emissive;
-	ID3D11ShaderResourceView* Specular;
-	ID3D11ShaderResourceView* Normal;
+	Model* objectModel;
 
-	ID3D11Buffer* ObjectVBuffer = nullptr;
-	ID3D11Buffer* ObjectIndexBuffer = nullptr;
-
-	Animation* CurrentAnimation;
-	Animation* RunAnimation;
-	Animation* IdleAnimation;
-
-	float frametime;
-
-	void ReadMeshFile(const char* filePath, ID3D11Device* device);
+	Sound** objectSounds;
+	int SoundCount;
 
 public:
 	GameObject();
-	GameObject(const char* filePath, ID3D11Device* device);
+	GameObject(int animationAmounts, int soundAmounts);
 	~GameObject();
 
-	bool Initialize(ID3D11Device* device);
-	void Render(ID3D11DeviceContext* context);
-	void Shutdown();
+	virtual bool Initialize(const char* filePath, ID3D11Device* device);
+	virtual void Render(ID3D11DeviceContext* context);
+	virtual void Shutdown();
 
-	void Update(float delta);
+	virtual void Update(float delta);
 
-	Animation* GetRunAnimation();
-	void SetRunAnimation(Animation* anim);
-
-	Animation* GetIdleAnimation();
-	void SetIdleAnimation(Animation* anim);
-
-	Animation* GetCurrentAnimation();
-	void SetCurrentAnimation(Animation* anim);
-
-	Animation* AddAninimation(const char* filePath, ID3D11Device* device);
-
-	std::vector<Vertex> GetObjectVerts();
-	std::vector<uint32_t> GetObjectIndices();
-	ID3D11ShaderResourceView* GetDiffuseTexture();
-	ID3D11ShaderResourceView* GetNormalTexture();
+	void AddAninimation(const char* filePath, ID3D11Device* device, int index);
 
 	PhysicsComponent* GetPhysicsComponent();
 	void SetPhysicsComponent(PhysicsComponent* newPhysics);

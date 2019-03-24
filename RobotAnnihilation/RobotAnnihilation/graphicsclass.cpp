@@ -319,6 +319,11 @@ bool Graphics::Render(InputManager *myInput)
 	return true;
 }
 
+DX * Graphics::GetDX()
+{
+	return myDX;
+}
+
 void Graphics::Update(InputManager *myInput, float delta)
 {
 	Player->Update(delta);

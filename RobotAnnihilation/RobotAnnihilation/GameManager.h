@@ -4,9 +4,11 @@
 #include "UIManager.h"
 #include "InputManager.h"
 #include "GameObject.h"
+#include "dxstuff.h"
 
 class GameManager
 {
+	DX* myDx;
 	// Replace int with GameObjects when implemented
 	std::vector<GameObject*> GameObjects;
 	//Game Classes
@@ -35,8 +37,5 @@ public:
 	UI::UIManager* GetUIManager();
 
 	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
-
-	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char * text, DirectX::SimpleMath::Vector2 pos);
-	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
 };
 

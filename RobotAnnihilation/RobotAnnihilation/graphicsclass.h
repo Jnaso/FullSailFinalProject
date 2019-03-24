@@ -63,6 +63,8 @@ public:
 
 	void Shutdown();
 	bool Render(InputManager *);
+
+	DX* GetDX();
 };
 
 #endif // !_GRAPHICSCLASS_H_
