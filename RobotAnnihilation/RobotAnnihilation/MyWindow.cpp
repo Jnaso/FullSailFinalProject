@@ -121,30 +121,30 @@ bool MyWindow::Initialize()
 	//Set up the window and the dimensions 
 	CreateWindows(screenW, screenH);
 
-	if (!myInput)
+	/*if (!myInput)
 	{
 		return false;
-	}
+	}*/
 	gameManager = new GameManager();
 	if (!gameManager)
 	{
 		return false;
 	}
 
-	if (!myGraphics)
-	{
-		return false;
-	}
+	//if (!myGraphics)
+	//{
+	//	return false;
+	//}
 	//myInput = new InputManager();
 	if (!gameManager->GetInputManager())
 	{
 		return false;
 	}
 
-	if (!result)
+	/*if (!result)
 	{
 		return false;
-	}
+	}*/
 	////Set up for graphics object
 	//myGraphics = new Graphics();
 	if (!gameManager->GetGraphicsManager())
@@ -152,9 +152,6 @@ bool MyWindow::Initialize()
 		return false;
 	}
 
-	{
-		return false;
-	}
 	result = gameManager->Initialize(screenW, screenH, myWindow);
 	if (!result)
 	{
