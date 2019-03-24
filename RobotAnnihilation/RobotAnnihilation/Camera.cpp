@@ -142,11 +142,13 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 	if (myInput->GetKeyState(_ARROWLEFT))
 	{
 		camYaw -= speed * .5f;
+		//moveChar = true;
 	}
 
 	if (myInput->GetKeyState(_ARROWRIGHT))
 	{
 		camYaw += speed * .5f;
+		//moveChar = true;
 	}
 
 	if (myInput->GetKeyState(_ARROWUP))

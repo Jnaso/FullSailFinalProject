@@ -48,7 +48,6 @@
 class InputManager
 {
 private:
-	enum KEYSTATE { UP, DOWN };
 
 	bool *m_keys;
 

@@ -489,13 +489,10 @@ void DX::CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos)
 	ImagesToRender.push_back(temp);
 }
 
-void DX::CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char * text, DirectX::SimpleMath::Vector2 pos)
+void DX::CreateText(const char * text, int font, DirectX::SimpleMath::Vector2 pos)
 {
-	font->DrawString(spriteBatch.get(), text, pos);
-}
-void DX::CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos)
-{
-	font->DrawString(spriteBatch.get(), (const char*)text, pos);
+	Text temp((char*)text, font, pos);
+	TextToRender.push_back(temp);
 }
 
 void DX::SetViewMatrix(XMMATRIX other)

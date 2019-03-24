@@ -79,7 +79,7 @@ void InputManager::SetKeyState(int keyCode, bool isPress)
 	}
 }
 
-InputManager::KEYSTATE InputManager::GetKeyState(int keyCode)
+KEYSTATE InputManager::GetKeyState(int keyCode)
 {
 	
 	if (m_keys[keyCode])

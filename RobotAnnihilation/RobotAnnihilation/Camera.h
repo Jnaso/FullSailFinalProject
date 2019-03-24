@@ -4,6 +4,7 @@
 
 #include <DirectXMath.h>
 #include "InputManager.h"
+#include "MathDefines.h"
 using namespace DirectX;
 
 class Camera
