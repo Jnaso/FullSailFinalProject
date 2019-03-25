@@ -165,6 +165,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
     <ClInclude Include="dxstuff.h" />
+    <ClInclude Include="GeneralIncludes.h" />
     <ClInclude Include="graphicsclass.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="GameManager.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StaticShader.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="XTime.h" />
@@ -203,6 +205,7 @@
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StaticShader.cpp" />
+    <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />

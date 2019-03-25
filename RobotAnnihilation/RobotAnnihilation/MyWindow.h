@@ -5,7 +5,6 @@
 #include <Windows.h>
 #include "graphicsclass.h"
 #include "InputManager.h"
-#include "UIManager.h"
 #include "XTime.h"
 #include "GameManager.h"
 #include <windowsx.h>
