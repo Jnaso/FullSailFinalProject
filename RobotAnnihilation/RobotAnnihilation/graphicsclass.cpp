@@ -262,19 +262,6 @@ void Graphics::Shutdown()
 //Called each frame 
 bool Graphics::Render(InputManager *myInput)
 {
-	bool moving = false;
-	if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
-	{
-		moving = true;
-	}
-	if (moving)
-	{
-		myPlayer->SetAnimation(0);
-	}
-	else
-	{
-		myPlayer->SetAnimation(1);
-	}
 	XMMATRIX world, view, projection;
 	bool result;
 
@@ -368,6 +355,19 @@ void Graphics::Update(InputManager *myInput, float delta)
 	if (myPlayer->getTimeLeft() >= 0)
 	{
 		myPlayer->SubTimeLeft(delta);
+	}
+	bool moving = false;
+	if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+	{
+		moving = true;
+	}
+	if (moving)
+	{
+		myPlayer->SetAnimation(0);
+	}
+	else
+	{
+		myPlayer->SetAnimation(1);
 	}
 	myPlayer->Update(delta);
 
