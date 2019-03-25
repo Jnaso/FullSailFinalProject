@@ -12,6 +12,10 @@ GameObject::~GameObject()
 
 void GameObject::Update(float delta)
 {
+	if (TimeLeft >= 0)
+	{
+		TimeLeft -= delta;
+	}
 	currentAnimation->Update(delta);
 	ObjectPhysics->Update(delta);
 }

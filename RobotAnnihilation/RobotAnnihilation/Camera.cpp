@@ -89,7 +89,7 @@ void Camera::Update(XMFLOAT3 newLookAt)
 	positionVect = XMVector3Normalize(positionVect);
 
 	//Distance the camera from the target 
-	positionVect = (positionVect * 7.0f) + lookAtVect;
+	positionVect = (positionVect * 3.5f) + lookAtVect;
 
 	//Constantly update the camera forward to be in local space 
 	camforward = XMVector3Normalize(lookAtVect - positionVect);

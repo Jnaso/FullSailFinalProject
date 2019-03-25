@@ -294,12 +294,12 @@ bool Graphics::Render(InputManager *myInput)
 	else
 	{
 		XMMATRIX worldcopy = world;
-		world = XMMatrixMultiply(XMMatrixTranslation(1, 1, 0), worldcopy);
+		world = XMMatrixMultiply(XMMatrixTranslation(1.2f, 0.75f, 0), worldcopy);
 		myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 	}
 
 	XMMATRIX worldcopy = world;
-	world = XMMatrixMultiply(XMMatrixTranslation(-1, -1, 0), worldcopy);
+	world = XMMatrixMultiply(XMMatrixTranslation(-1.2f, -.75, 0), worldcopy);
 	myPlayer->Render(myDX->GetDeviceContext());
 	myPlayer->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 	//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
@@ -376,6 +376,10 @@ DX * Graphics::GetDX()
 
 void Graphics::Update(InputManager *myInput, float delta)
 {
+	if (myPlayer->getTimeLeft() >= 0)
+	{
+		myPlayer->SubTimeLeft(delta);
+	}
 	myPlayer->Update(delta);
 
 	myPlayer->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
@@ -425,11 +429,15 @@ void Graphics::Update(InputManager *myInput, float delta)
 
 void Graphics::ShootBullet(HWND hwnd)
 {
-	float3 forward = float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] };
-	float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f, myPlayer->GetPhysicsComponent()->GetPosition().z };
-	bullets.push_back(new Bullet());
-	bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward, playerPos);
-	myShots.push_back(new Sound((char*)"Gunshot.wav"));
-	myShots[myShots.size() - 1]->Initialize(hwnd);
-	myShots[myShots.size() - 1]->PlayWaveFile();
+	if (myPlayer->getTimeLeft() <= 0)
+	{
+		float3 forward = float3{ myCamera->GetCamDirection().m128_f32[0], myCamera->GetCamDirection().m128_f32[1], myCamera->GetCamDirection().m128_f32[2] };
+		float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f, myPlayer->GetPhysicsComponent()->GetPosition().z };
+		bullets.push_back(new Bullet());
+		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward * -1, playerPos);
+		myShots.push_back(new Sound((char*)"Gunshot.wav"));
+		myShots[myShots.size() - 1]->Initialize(hwnd);
+		myShots[myShots.size() - 1]->PlayWaveFile();
+		myPlayer->SetTimeLeft(myPlayer->getFireRate());
+	}
 }

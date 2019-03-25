@@ -70,13 +70,12 @@ void PhysicsComponent::Update(float delta)
 	velocity.addScaledVec(resultingAcceleration, delta);
 
 	velocity = velocity * powf(damping, delta);
-	clearAccumulator();
+	//clearAccumulator();
 	if (position.y < 0)
 	{
 		position.y = 0;
 	}
 	lifeTime -= delta;
-	//forward = float3{ cos(RotX)*cos(RotZ), cos(RotX)*sin(RotZ), sin(RotX) };
 }
 
 void PhysicsComponent::SetMass(float val)
@@ -121,7 +120,7 @@ float PhysicsComponent::GetDamping()
 
 void PhysicsComponent::AddForce(const float3 & vec)
 {
-	forceAccum += vec;
+	forceAccum = forceAccum+vec;
 }
 
 void PhysicsComponent::clearAccumulator()

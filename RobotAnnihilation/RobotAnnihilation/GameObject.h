@@ -34,6 +34,9 @@ protected:
 
 	std::vector<Sound*> objectSounds;
 
+	float fireRate = .5f;
+	float TimeLeft = 0.0f;
+
 public:
 	GameObject();
 	~GameObject();
@@ -54,5 +57,12 @@ public:
 	void SetAnimation(int index);
 
 	Animation* GetCurrentAnimation();
+
+	inline float getFireRate() { return fireRate; };
+	inline void SetFireRate(float fire) { fireRate = fire; };
+
+	inline float getTimeLeft() { return TimeLeft; };
+	inline void SubTimeLeft(float fire) { TimeLeft -= fire; };
+	inline void SetTimeLeft(float fire) { TimeLeft = fire; };
 };
 
