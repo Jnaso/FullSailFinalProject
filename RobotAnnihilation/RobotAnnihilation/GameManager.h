@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "graphicsclass.h"
-#include "UIManager.h"
 #include "InputManager.h"
 #include "GameObject.h"
 
@@ -12,7 +11,6 @@ class GameManager
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
-	UI::UIManager* myUiManager;
 public:
 	GameManager();
 	~GameManager();
@@ -32,11 +30,6 @@ public:
 
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
-	UI::UIManager* GetUIManager();
-
-	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
-
-	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, const char * text, DirectX::SimpleMath::Vector2 pos);
-	//void CreateText(std::unique_ptr<DirectX::SpriteFont>& font, char* text, DirectX::SimpleMath::Vector2 pos);
+	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
 };
 

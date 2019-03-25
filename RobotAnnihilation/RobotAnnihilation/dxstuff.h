@@ -2,23 +2,7 @@
 #ifndef _DXSTUFF_H_
 #define _DXSTUFF_H_
 
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3d11.lib")
-
-#include <windows.h>
-#include <memory>
-#include <dxgi.h>
-#include <d3dcommon.h>
-#include <d3d11_1.h>
-#include <DirectXMath.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
-#include "SimpleMath.h"
-#include "DDSTextureLoader.h"
-#include <vector>
-
-#define F_ARIAL 0
-#define F_COMICSANS 1
+#include "GeneralIncludes.h"
 
 #define IMAGEVEC myDX->ImagesToRender[i]
 
@@ -44,52 +28,7 @@ private:
 	XMMATRIX myView;
 
 public:
-
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
-	std::unique_ptr<DirectX::SpriteFont> ArialFont;
-	std::unique_ptr<DirectX::SpriteFont> ComicSansFont;
-
-	struct Image
-	{
-		ID3D11ShaderResourceView* shaderRes = nullptr;
-		DirectX::SimpleMath::Vector2 pos;
-		RECT myRect = RECT{ 1,1,1,1 };
-		Image(const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
-		{
-			wchar_t* temp = new wchar_t[301];
-			mbstowcs(temp, dir, 301);
-			pos = newPos;
-			HRESULT hr = DirectX::CreateDDSTextureFromFile(device, temp, nullptr, &shaderRes);
-			delete temp;
-		}
-
-		Image(RECT r, const char* dir, ID3D11Device* device, DirectX::SimpleMath::Vector2 newPos)
-		{
-			myRect = r;
-			wchar_t* temp = new wchar_t[301];
-			mbstowcs(temp, dir, 301);
-			pos = newPos;
-			HRESULT hr = DirectX::CreateDDSTextureFromFile(device, temp, nullptr, &shaderRes);
-			delete temp;
-		}
-	};
-
-	struct Text
-	{
-		DirectX::SimpleMath::Vector2 m_pos;
-		const char* m_text;
-		int m_font;
-		Text(char* text, int font, DirectX::SimpleMath::Vector2 pos)
-		{
-			m_text = text;
-			m_font = font;
-			m_pos = pos;
-		}
-	};
 	
-	std::vector<Image> ImagesToRender;
-	std::vector<Text> TextToRender;
-
 	DX();
 	DX(const DX &other);
 	~DX();
@@ -106,12 +45,6 @@ public:
 	void PassProjectionMatrix(XMMATRIX &proj);
 	void PassWorldMatrix(XMMATRIX &world);
 	void PassViewdMatrix(XMMATRIX &view);
-
-	void CreateImage(const char* dir, DirectX::SimpleMath::Vector2 pos);
-	void CreateImage(char* dir, DirectX::SimpleMath::Vector2 pos);
-	void CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos);
-
-	void CreateText(const char* text, int font, DirectX::SimpleMath::Vector2 pos);
 
 	void SetViewMatrix(XMMATRIX);
 	void SetWorldMatrix(XMMATRIX);

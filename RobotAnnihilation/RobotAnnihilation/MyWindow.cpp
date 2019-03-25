@@ -15,12 +15,16 @@ bool MyWindow::Run()
 		return false;
 	}
 
+	gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "Hello World");
+	gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/turtle.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	//Render every frame and stop if anything goes wrong 
 	result = gameManager->Render();
 	if (!result)
 	{
 		return false;
 	}
+
+	
 
 	return true;
 }
@@ -146,10 +150,7 @@ bool MyWindow::Initialize()
 		return false;
 	}
 	
-	if (!gameManager->GetUIManager())
-	{
-		return false;
-	}
+
 
 	RECT tempR = RECT{ 1,1,1,1 };
 
@@ -157,9 +158,7 @@ bool MyWindow::Initialize()
 	tempPos.x = 0;
 	tempPos.y = 0;
 
-	//myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
-	gameManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", tempPos);
-	//myUiManager->CreateText("Hello World", false, F_ARIAL, tempPos);
+
 	return true;
 }
 

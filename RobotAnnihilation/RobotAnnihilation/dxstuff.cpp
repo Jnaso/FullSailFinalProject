@@ -337,26 +337,6 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0, 0.0f);
 	myView = XMMatrixLookAtLH(Eye, At, Up);
 
-	//Initialize Sprite Batch
-	spriteBatch.reset(new DirectX::SpriteBatch(myDeviceContext));
-	if (!spriteBatch)
-	{
-		return false;
-	}
-
-	//Initialize Sprite Font (Arial)
-	ArialFont.reset(new DirectX::SpriteFont(myDevice, L"DrawingStuff/Arial.spritefont"));
-	if (!ArialFont)
-	{
-		return false;
-	}
-
-	ComicSansFont.reset(new DirectX::SpriteFont(myDevice, L"DrawingStuff/ComicSans.spritefont"));
-	if (!ComicSansFont)
-	{
-		return false;
-	}
-
 	return true;
 }
 
@@ -476,23 +456,6 @@ void DX::PassWorldMatrix(XMMATRIX &other)
 void DX::PassViewdMatrix(XMMATRIX &other)
 {
 	other = myView;
-}
-
-void DX::CreateImage(const char * dir, DirectX::SimpleMath::Vector2 pos)
-{
-	Image temp(dir, myDevice, pos);
-	ImagesToRender.push_back(temp);
-}
-void DX::CreateImage(RECT r, const char * dir, DirectX::SimpleMath::Vector2 pos)
-{
-	Image temp(r, dir, myDevice, pos);
-	ImagesToRender.push_back(temp);
-}
-
-void DX::CreateText(const char * text, int font, DirectX::SimpleMath::Vector2 pos)
-{
-	Text temp((char*)text, font, pos);
-	TextToRender.push_back(temp);
 }
 
 void DX::SetViewMatrix(XMMATRIX other)
