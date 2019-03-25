@@ -57,8 +57,15 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	myTargets.push_back(new Target());
-	myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
+	srand((unsigned int)time(NULL));
+	for (unsigned int i = 0; i < 10; i++)
+	{
+		myTargets.push_back(new Target());
+		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
+	}
+
+	//myTargets.push_back(new Target());
+	//myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
 
 	//Initialize the shader object 
 	myShaderManager = new ShaderManager();

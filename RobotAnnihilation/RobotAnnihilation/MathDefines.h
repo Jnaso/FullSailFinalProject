@@ -7,6 +7,8 @@
 #include <d3d11_2.h>
 #include <DirectXMath.h>
 #include <dinput.h>
+#include <time.h>
+#include <stdlib.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
