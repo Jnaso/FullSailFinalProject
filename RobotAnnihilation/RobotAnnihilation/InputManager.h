@@ -53,6 +53,7 @@ private:
 	bool *m_keys;
 
 	IDirectInputDevice8* mouseinput;
+	DIMOUSESTATE currMouseState;
 	DIMOUSESTATE lastMouseState;
 	LPDIRECTINPUT8 DirectInput;
 
@@ -70,6 +71,9 @@ public:
 	IDirectInputDevice8* GetMouseInput();
 	DIMOUSESTATE GetPrevMouseState();
 	void SetPrevMouseState(DIMOUSESTATE state);
+
+	DIMOUSESTATE GetCurrMouseState();
+	void SetCurrMouseState();
 	
 };
 

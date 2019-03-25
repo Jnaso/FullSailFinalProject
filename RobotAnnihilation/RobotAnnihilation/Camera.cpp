@@ -116,13 +116,8 @@ void Camera::PassInViewMatrix(XMMATRIX &other)
 //Move the camera based on input 
 void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 {
-	DIMOUSESTATE mouseCurrState;
-
-	myInput->GetMouseInput()->Acquire();
-
-	myInput->GetMouseInput()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseCurrState);
+	DIMOUSESTATE mouseCurrState = myInput->GetCurrMouseState();
 	//Speed of movement
-	float speed = 5.0f * time;
 	bool moveChar = false;
 	XMVECTOR desiredCharDir = XMVECTOR{0, 0, 0, 0};
 
@@ -155,8 +150,8 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 
 	if (mouseCurrState.lX != myInput->GetPrevMouseState().lX || mouseCurrState.lY != myInput->GetPrevMouseState().lY)
 	{
-		camYaw += myInput->GetPrevMouseState().lX * .002f;
-		camPitch += myInput->GetPrevMouseState().lY * .002f;
+		camYaw += myInput->GetPrevMouseState().lX * time * .2f;
+		camPitch += myInput->GetPrevMouseState().lY * time * .2f;
 		if (camPitch > 0.5f)
 		{
 			camPitch = .5f;

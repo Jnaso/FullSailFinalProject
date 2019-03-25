@@ -7,8 +7,6 @@ MyWindow::MyWindow()
 
 bool MyWindow::Run()
 {
-	DIMOUSESTATE mouse;
-
 	bool result;
 
 	//If user presses escape, close the window 
@@ -22,10 +20,7 @@ bool MyWindow::Run()
 		paused = !paused;
 	}
 
-	gameManager->GetInputManager()->GetMouseInput()->Acquire();
-	gameManager->GetInputManager()->GetMouseInput()->GetDeviceState(sizeof(DIMOUSESTATE), &mouse);
-
-	if (mouse.rgbButtons[0])
+	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
 	{
 		gameManager->GetGraphicsManager()->ShootBullet(myWindow);
 	}
@@ -261,37 +256,6 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		gameManager->SetKeyState(wparam, false);
 		return 0;
 	}
-	case WM_MOUSEMOVE:
-		
-		break;
-	case WM_LBUTTONDOWN:
-		// Call bullet function here
-		gameManager->SetKeyState(_LMOUSE, true);
-		if (!paused)
-		{
-			gameManager->GetGraphicsManager()->ShootBullet(myWindow);
-		}
-		break;
-	case WM_LBUTTONUP:
-		gameManager->SetKeyState(_LMOUSE, false);
-		break;
-	case WM_RBUTTONDOWN:
-		gameManager->SetKeyState(_RMOUSE, true);
-		break;
-	case WM_RBUTTONUP:
-		gameManager->SetKeyState(_RMOUSE, false);
-		break;
-	case WM_MOUSEWHEEL:
-		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
-		{
-			std::cout << "Scroll Up" << std::endl;
-		}
-		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
-		{
-			std::cout << "Scroll Down" << std::endl;
-		}
-		// Negative = Scroll Down | Positive = Scroll Up
-		break;
 	default:
 	{
 		//All other messages can be handled normally 

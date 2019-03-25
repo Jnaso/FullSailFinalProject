@@ -135,5 +135,15 @@ void InputManager::SetPrevMouseState(DIMOUSESTATE state)
 	lastMouseState = state;
 }
 
+DIMOUSESTATE InputManager::GetCurrMouseState()
+{
+	return currMouseState;
+}
+
+void InputManager::SetCurrMouseState()
+{
+	mouseinput->GetDeviceState(sizeof(DIMOUSESTATE), &currMouseState);
+}
+
 
 

@@ -41,6 +41,8 @@ UI::UIManager * GameManager::GetUIManager()
 
 void GameManager::Update(float delta)
 {
+	myInput->GetMouseInput()->Acquire();
+	myInput->SetCurrMouseState();
 	myGraphics->Update(myInput, delta);
 	for (unsigned int i = 0; i < GameObjects.size(); i++)
 	{
