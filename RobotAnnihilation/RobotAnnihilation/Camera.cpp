@@ -153,6 +153,32 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 	XMVECTOR copyvec = desiredCharDir;
 	desiredCharDir = XMVector4Normalize(copyvec);
 
+	/*if (myInput->GetKeyState(_ARROWLEFT))
+	{
+		camYaw -= speed * .5f;
+	}
+
+	if (myInput->GetKeyState(_ARROWRIGHT))
+	{
+		camYaw += speed * .5f;
+	}
+
+	if (myInput->GetKeyState(_ARROWUP))
+	{
+		if (camPitch >= -.25f)
+		{
+			camPitch -= speed * .5f;
+		}
+	}
+
+	if (myInput->GetKeyState(_ARROWDOWN))
+	{
+		if (camPitch <= 0.5f)
+		{
+			camPitch += speed * .5f;
+		}
+	}*/
+
 	if (mouseCurrState.lX != myInput->GetPrevMouseState().lX || mouseCurrState.lY != myInput->GetPrevMouseState().lY)
 	{
 		camYaw += myInput->GetPrevMouseState().lX * .002f;

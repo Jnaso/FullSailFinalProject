@@ -34,6 +34,8 @@ protected:
 
 	std::vector<Sound*> objectSounds;
 
+	std::vector<Sphere> colliders;
+
 public:
 	GameObject();
 	~GameObject();
@@ -54,5 +56,9 @@ public:
 	void SetAnimation(int index);
 
 	Animation* GetCurrentAnimation();
+
+	void AddCollider(float3 pos, float rad);
+
+	Sphere GetCollider(int index);
 };
 

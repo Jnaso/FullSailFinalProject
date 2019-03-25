@@ -59,21 +59,48 @@ void GameObject::Render(ID3D11DeviceContext* context)
 
 void GameObject::Shutdown()
 {
+	size_t i;
 	objectModel->Shutdown();
-	for (size_t i = 0; i < objectAnimations.size(); i++)
+	for (i = 0; i < objectAnimations.size(); i++)
 	{
 		Animation* temp;
 		temp = objectAnimations[i];
 		objectAnimations.erase(objectAnimations.begin() + i);
 		delete temp;
 	}
-	for (size_t i = 0; i < objectSounds.size(); i++)
+	for (i = 0; i < objectSounds.size(); i++)
 	{
 		Sound* temp;
 		temp = objectSounds[i];
 		objectSounds.erase(objectSounds.begin() + i);
 		delete temp;
 	}
+
+	colliders.clear();
 	delete objectModel;
 	delete ObjectPhysics;
+}
+
+void GameObject::AddCollider(float3 pos, float rad)
+{
+	Sphere newSphere;
+	newSphere.center = pos;
+	newSphere.radius = rad;
+	colliders.push_back(newSphere);
+}
+
+Sphere GameObject::GetCollider(int index)
+{
+	if (index < 0)
+	{
+		return colliders[0];
+	}
+	else if (index >= colliders.size())
+	{
+		return colliders[colliders.size() - 1];
+	}
+	else
+	{
+		return colliders[index];
+	}
 }

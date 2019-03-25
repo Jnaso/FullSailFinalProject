@@ -42,7 +42,6 @@ private:
 	bool debugCam;
 	float timeBetween;
 	XMFLOAT4 camPosition;
-	Sphere PlayerSphere;
 	Sphere TargetSphe;
 
 	ID3D11BlendState*			spriteBlendState;

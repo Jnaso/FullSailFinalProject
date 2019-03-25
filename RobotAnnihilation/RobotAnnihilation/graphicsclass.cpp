@@ -51,11 +51,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	PlayerSphere.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	PlayerSphere.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	PlayerSphere.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-	PlayerSphere.radius = 0.8f;
-
 	Ground = new GameObject();
 	Ground->Initialize("Assets/GroundPlane.mesh", myDX->GetDevice());	
 	if (!Ground)
@@ -408,16 +403,16 @@ void Graphics::Update(InputManager *myInput, float delta)
 			temp = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete temp;
+			break;
 		}
-	}
-
-	PlayerSphere.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	PlayerSphere.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	PlayerSphere.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-
-	if (MovingSphereToSphere(PlayerSphere, myPlayer->GetPhysicsComponent()->GetVelocity(), TargetSphe, delta))
-	{
-		std::cout << "Boom, Collision!" << std::endl;
+		if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Target->GetPhysicsComponent()->GetPosition()) <= 7.0f)
+		{
+			if (MovingSphereToSphere(bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), TargetSphe, delta))
+			{
+				std::cout << "Boom, Collision!" << std::endl;
+				bullets[i]->SetDestroy();
+			}
+		}
 	}
 
 	system("CLS");
