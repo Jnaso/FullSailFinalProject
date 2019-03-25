@@ -2,7 +2,8 @@
 
 Bullet::Bullet(float life)
 {
-	//Initializing variables 
+	//Initializing variables
+	GameObject::GameObject();
 	readyToDestroy = false;
 	lifeTime = life;
 }
@@ -10,7 +11,7 @@ Bullet::Bullet(float life)
 bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 forward, float3 position)
 {
 
-	GetModelComponent()->Initialize("Assets/Sphere.mesh", myDevice);
+	GetModelComponent()->Initialize(fileName, myDevice);
 	if (!GetModelComponent())
 	{
 		return false;
@@ -22,10 +23,10 @@ bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 f
 	GetPhysicsComponent()->SetLifeTime(lifeTime);
 	GetPhysicsComponent()->SetVelocity(velocity);
 	GetPhysicsComponent()->SetAccel({ 0, -1.0f, 0 });
-	GetPhysicsComponent()->SetMass(2.0f);
+	GetPhysicsComponent()->SetMass(0.1f);
 	GetPhysicsComponent()->SetDamping(0.99f);
 
-	AddCollider(GetPhysicsComponent()->GetPosition(), 0.8f);
+	AddCollider(GetPhysicsComponent()->GetPosition(), 1.0f);
 
 	return true;
 }

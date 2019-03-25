@@ -15,6 +15,7 @@
 #include "DebugCamera.h"
 #include "Sound.h"
 #include "Bullet.h"
+#include "Target.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -31,7 +32,7 @@ private:
 	DX *myDX;
 	GameObject *myPlayer;
 	GameObject *Ground;
-	GameObject *Target;
+	//GameObject *target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;
 	Camera *myCamera;
@@ -48,7 +49,8 @@ private:
 	ID3D11DepthStencilState*	spriteDepthState;
 	ID3D11RasterizerState*		spriteRasterState;
 
-	std::vector<Bullet*> bullets;
+	vector<Bullet*> bullets;
+	vector<Target*> myTargets;
 	vector<Sound*> myShots;
 
 public:
