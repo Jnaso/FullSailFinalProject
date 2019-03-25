@@ -11,7 +11,6 @@ Graphics::Graphics(InputManager* input)
 	myCamera = nullptr;
 	myDebug = nullptr;
 	debugCam = false;
-	Target = nullptr;
 	timeBetween = timeGetTime();
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
@@ -53,11 +52,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	PlayerSphere.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	PlayerSphere.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	PlayerSphere.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-	PlayerSphere.radius = 0.8f;
-
 	Ground = new GameObject();
 	Ground->Initialize("Assets/GroundPlane.mesh", myDX->GetDevice());	
 	if (!Ground)
@@ -65,33 +59,15 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	Target = new GameObject();
-	Target->Initialize("Assets/Sphere.mesh", myDX->GetDevice());
-	if (!Target)
+	srand((unsigned int)time(NULL));
+	for (unsigned int i = 0; i < 10; i++)
 	{
-		return false;
+		myTargets.push_back(new Target());
+		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
 	}
 
-	Target->GetPhysicsComponent()->SetPosition(float3{ 0.0f, 2.0f, -20.0f });
-
-	TargetSphe.center = Target->GetPhysicsComponent()->GetPosition();
-
-	TargetSphe.radius = 0.8f;
-
-	//result = Target->Initialize(myDX->GetDevice());
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	////Make sure the object initializes with no problem 
-	//result = myPlayer->Initialize(myDX->GetDevice());
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	//result = Ground->Initialize(myDX->GetDevice());
+	//myTargets.push_back(new Target());
+	//myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
 
 	//Initialize the shader object 
 	myShaderManager = new ShaderManager();
@@ -244,13 +220,6 @@ void Graphics::Shutdown()
 		Ground = nullptr;
 	}
 
-	if (Target)
-	{
-		Target->Shutdown();
-		delete Target;
-		Target = nullptr;
-	}
-
 	if (myCamera)
 	{
 		delete myCamera;
@@ -280,6 +249,13 @@ void Graphics::Shutdown()
 	if (m_spriteBatch) { m_spriteBatch.release(); }
 	if (m_arialFont) { m_arialFont.release(); }
 	if (m_comicSansFont) { m_comicSansFont.release(); }
+
+	for (int i = 0; i < myTargets.size(); i++)
+	{
+		myTargets[i]->Shutdown();
+		delete myTargets[i];
+		myTargets[i] = nullptr;
+	}
 
 }
 
@@ -359,11 +335,15 @@ bool Graphics::Render(InputManager *myInput)
 	//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Ground->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
-	world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(Target->GetPhysicsComponent()->GetPosition().x, Target->GetPhysicsComponent()->GetPosition().y, Target->GetPhysicsComponent()->GetPosition().z));
+	for (unsigned int i = 0; i < myTargets.size(); i++)
+	{
+		world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
 
-	Target->Render(myDX->GetDeviceContext());
+		myTargets[i]->Render(myDX->GetDeviceContext());
 
-	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Target->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Target->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+	}
+
 	if (!debugCam)
 	{
 		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
@@ -421,19 +401,39 @@ void Graphics::Update(InputManager *myInput, float delta)
 			temp = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete temp;
+			break;
+		}
+
+		for (unsigned int j = 0; j < myTargets.size(); j++)
+		{
+
+			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			{
+				if (MovingSphereToSphere(bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), myTargets[j]->GetCollider(0), delta))
+				{
+					std::cout << "Boom, Collision!" << std::endl;
+					bullets[i]->SetDestroy();
+					myTargets[j]->SetDestroy();
+				}
+			}
 		}
 	}
 
-	PlayerSphere.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	PlayerSphere.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	PlayerSphere.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-
-	if (MovingSphereToSphere(PlayerSphere, myPlayer->GetPhysicsComponent()->GetVelocity(), TargetSphe, delta))
+	for (unsigned int i = 0; i < myTargets.size(); i++)
 	{
-		std::cout << "Boom, Collision!" << std::endl;
+		myTargets[i]->Update(delta);
+		if (myTargets[i]->Destroy())
+		{
+			Target *temp2;
+			myTargets[i]->Shutdown();
+			temp2 = myTargets[i];
+			myTargets.erase(myTargets.begin() + i);
+			delete temp2;
+			break;
+		}
 	}
 
-	system("CLS");
+	//system("CLS");
 }
 
 void Graphics::ShootBullet(HWND hwnd)

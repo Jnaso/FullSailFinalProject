@@ -19,6 +19,7 @@ public:
 	void SetVelocity(float3 vel);
 	float3 GetVelocity();
 	bool Destroy();
+	void SetDestroy();
 };
 
 #endif // !_BULLET_H_

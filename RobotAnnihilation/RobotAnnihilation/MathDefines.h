@@ -1,4 +1,5 @@
 #pragma once
+//#define _XM_NO_INTRINSICS_
 
 #include <vector>
 #include <array>
@@ -6,6 +7,8 @@
 #include <d3d11_2.h>
 #include <DirectXMath.h>
 #include <dinput.h>
+#include <time.h>
+#include <stdlib.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -326,15 +329,16 @@ inline float3 XMVectortofloat3(XMVECTOR input)
 	return output;
 }
 
+inline float DitanceFloat3(float3 pos1, float3 pos2)
+{
+	return sqrtf(pow((pos2.x - pos1.x), 2) + pow((pos2.y - pos1.y), 2) + pow((pos2.z - pos1.z), 2));
+}
+
 inline float DotProduct(float3 a, float3 b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-//struct Ray
-//{
-//
-//};
 
 struct Ray
 {
@@ -421,9 +425,4 @@ inline bool MovingSphereToSphere(const Sphere &moving, const float3 &velocity, c
 	return false;
 }
 
-//bool AdvancedSphereCollide(Sphere moving, Sphere staticS, float &t)
-//{
-//	
-//
-//}
 

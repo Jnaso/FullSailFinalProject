@@ -16,6 +16,7 @@
 #include "Sound.h"
 #include "UIManager.h"
 #include "Bullet.h"
+#include "Target.h"
 
 //Full screen flag 
 const bool FULL_SCREEN = false;
@@ -34,7 +35,7 @@ private:
 	DX *myDX;
 	GameObject *myPlayer;
 	GameObject *Ground;
-	GameObject *Target;
+	//GameObject *target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;
 	Camera *myCamera;
@@ -45,14 +46,14 @@ private:
 	bool debugCam;
 	float timeBetween;
 	XMFLOAT4 camPosition;
-	Sphere PlayerSphere;
 	Sphere TargetSphe;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;
 	ID3D11RasterizerState*		spriteRasterState;
 
-	std::vector<Bullet*> bullets;
+	vector<Bullet*> bullets;
+	vector<Target*> myTargets;
 	vector<Sound*> myShots;
 
 	//2D Graphics Variables

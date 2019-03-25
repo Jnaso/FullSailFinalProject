@@ -37,6 +37,8 @@ protected:
 	float fireRate = .5f;
 	float TimeLeft = 0.0f;
 
+	std::vector<Sphere> colliders;
+
 public:
 	GameObject();
 	~GameObject();
@@ -64,5 +66,9 @@ public:
 	inline float getTimeLeft() { return TimeLeft; };
 	inline void SubTimeLeft(float fire) { TimeLeft -= fire; };
 	inline void SetTimeLeft(float fire) { TimeLeft = fire; };
+
+	void AddCollider(float3 pos, float rad);
+
+	Sphere GetCollider(int index);
 };
 
