@@ -293,8 +293,13 @@ bool Graphics::Render(InputManager *myInput)
 	}
 	else
 	{
+		XMMATRIX worldcopy = world;
+		world = XMMatrixMultiply(XMMatrixTranslation(1, 0, 0), worldcopy);
 		myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 	}
+
+	XMMATRIX worldcopy = world;
+	world = XMMatrixMultiply(XMMatrixTranslation(-1, 0, 0), worldcopy);
 	myPlayer->Render(myDX->GetDeviceContext());
 	myPlayer->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 	//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
