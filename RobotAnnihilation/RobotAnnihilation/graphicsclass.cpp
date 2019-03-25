@@ -304,9 +304,9 @@ bool Graphics::Render(InputManager *myInput)
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->Render(myDX->GetDeviceContext());
-		world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPosition().x, bullets[i]->GetPosition().y, bullets[i]->GetPosition().z));
+		world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
 		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
-		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetGameObject()->GetModelComponent()->GetObjectIndices().size(), world, view, projection, bullets[i]->GetGameObject()->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, bullets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 	}	
 	world = XMMatrixIdentity();
 
