@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "graphicsclass.h"
-#include "UIManager.h"
 #include "InputManager.h"
 #include "GameObject.h"
 #include "dxstuff.h"
@@ -14,7 +13,7 @@ class GameManager
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
-	UI::UIManager* myUiManager;
+	UIManager* myUiManager;
 public:
 	GameManager();
 	~GameManager();
@@ -30,8 +29,6 @@ public:
 
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
-	UI::UIManager* GetUIManager();
-
-	void CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos);
+	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
 };
 

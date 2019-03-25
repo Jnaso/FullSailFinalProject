@@ -15,6 +15,8 @@ bool MyWindow::Run()
 		return false;
 	}
 
+	
+
 	if (gameManager->GetKeyState((int)'P'))
 	{
 		paused = !paused;
@@ -31,6 +33,8 @@ bool MyWindow::Run()
 	{
 		return false;
 	}
+
+	
 
 	return true;
 }
@@ -170,20 +174,11 @@ bool MyWindow::Initialize()
 		return false;
 	}
 	
-	if (!gameManager->GetUIManager())
-	{
-		return false;
-	}
+	gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "Hello World");
+	gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/turtle.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 
-	RECT tempR = RECT{ 1,1,1,1 };
 
-	float2 tempPos;
-	tempPos.x = 0;
-	tempPos.y = 0;
 
-	//myUiManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", UI::UIType::IMAGE, tempPos);
-	gameManager->CreateImage(tempR, false, "DrawingStuff/turtle.dds", tempPos);
-	//myUiManager->CreateText("Hello World", false, F_ARIAL, tempPos);
 	return true;
 }
 

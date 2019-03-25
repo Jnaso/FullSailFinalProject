@@ -5,8 +5,7 @@
 GameManager::GameManager()
 {
 	myInput = new InputManager();
-	myGraphics = new Graphics();
-	myUiManager = new UI::UIManager(myGraphics, myInput);
+	myGraphics = new Graphics(myInput);
 }
 
 
@@ -32,11 +31,6 @@ InputManager * GameManager::GetInputManager()
 Graphics * GameManager::GetGraphicsManager()
 {
 	return myGraphics;
-}
-
-UI::UIManager * GameManager::GetUIManager()
-{
-	return myUiManager;
 }
 
 void GameManager::Update(float delta)
@@ -77,14 +71,5 @@ void GameManager::ShutDown()
 		delete myInput;
 		myInput = 0;
 	}
-	//Cleans up the UI object
-	if (myUiManager)
-	{
-		delete myUiManager;
-		myUiManager = 0;
-	}
-}
-void GameManager::CreateImage(RECT dimensions, bool interact, const char * filePath, float2 pos)
-{
-	myUiManager->CreateImage(dimensions, interact, filePath, pos);
+
 }

@@ -1,6 +1,6 @@
 #include "graphicsclass.h"
 
-Graphics::Graphics()
+Graphics::Graphics(InputManager* input)
 {
 	//Zero memory 
 	myDX = nullptr;
@@ -14,6 +14,8 @@ Graphics::Graphics()
 	Target = nullptr;
 	timeBetween = timeGetTime();
 	playerWorld = XMMatrixIdentity();
+	myUI = nullptr;
+	myInput = input;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -143,34 +145,66 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myColors[0] = {0.0f, 1.0f, 0.0f, 1.0f};
 	myColors[1] = {0.0f, 1.0f, 1.0f, 1.0f};
 
-	CD3D11_RASTERIZER_DESC rdesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
-	myDX->GetDevice()->CreateRasterizerState(&rdesc, &spriteRasterState);
+	//Create UI Manager
+	myUI = new UIManager(myInput, myDX->GetDevice(), myDX->GetDeviceContext());
+	if (!myUI)
+	{
+		return false;
+	}
 
+	m_spriteBatch.reset(new DirectX::SpriteBatch(myDX->GetDeviceContext()));
+	if (!m_spriteBatch)
+	{
+		return false;
+	}
+
+	m_arialFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/Arial.spritefont"));
+	if (!m_arialFont)
+	{
+		return false;
+	}
+
+	m_comicSansFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/ComicSans.spritefont"));
+	if (!m_comicSansFont)
+	{
+		return false;
+	}
+
+	//return true;
+
+	HRESULT hr;
+
+	CD3D11_RASTERIZER_DESC rdesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+	hr = myDX->GetDevice()->CreateRasterizerState(&rdesc, &spriteRasterState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
 	CD3D11_BLEND_DESC bdesc = CD3D11_BLEND_DESC(CD3D11_DEFAULT());
 	bdesc.AlphaToCoverageEnable = true;
-	myDX->GetDevice()->CreateBlendState(&bdesc, &spriteBlendState);
-
+	hr = myDX->GetDevice()->CreateBlendState(&bdesc, &spriteBlendState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
 	CD3D11_DEPTH_STENCIL_DESC sdesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
-	myDX->GetDevice()->CreateDepthStencilState(&sdesc, &spriteDepthState);
+	hr = myDX->GetDevice()->CreateDepthStencilState(&sdesc, &spriteDepthState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
 
 	return true;
 }
 
-void Graphics::CreateImage(RECT dimensions, const char * filePath, float2 pos)
+void Graphics::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char * text)
 {
-	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
-	myDX->CreateImage(dimensions, filePath, temp);
-}
-void Graphics::CreateImage(const char * filePath, float2 pos)
-{
-	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
-	myDX->CreateImage(filePath, temp);
+	myUI->CreateText(srcRect, interactable, enabled, pos, font, text);
 }
 
-void Graphics::CreateText(const char * text, int font, float2 pos)
+void Graphics::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath)
 {
-	DirectX::SimpleMath::Vector2 temp(pos.x, pos.y);
-	myDX->CreateText(text, font, temp);
+	myUI->CreateImage(srcRect, interactable, enabled, pos, filePath, myDX->GetDevice());
 }
 
 //Pointer clean up 
@@ -241,6 +275,11 @@ void Graphics::Shutdown()
 		delete myShots[i];
 		myShots[i] = nullptr;
 	}
+
+	//Clean up for 2d graphics
+	if (m_spriteBatch) { m_spriteBatch.release(); }
+	if (m_arialFont) { m_arialFont.release(); }
+	if (m_comicSansFont) { m_comicSansFont.release(); }
 
 }
 
@@ -327,38 +366,13 @@ bool Graphics::Render(InputManager *myInput)
 	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Target->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Target->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 	if (!debugCam)
 	{
-		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
-
-		myDX->spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Immediate, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 		 
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
-
-		unsigned int imageCount = myDX->ImagesToRender.size();
-
-		unsigned int textCount = myDX->TextToRender.size();
-		for (unsigned int i = 0; i < textCount; i++)
-		{
-			int font = myDX->TextToRender[i].m_font;
-			const char* text = myDX->TextToRender[i].m_text;
-			DirectX::SimpleMath::Vector2 pos = myDX->TextToRender[i].m_pos;
-			if (font == F_ARIAL)
-			{
-				myDX->ArialFont->DrawString(myDX->spriteBatch.get(), text, pos);
-			}
-			else if (font == F_COMICSANS)
-			{
-				myDX->ComicSansFont->DrawString(myDX->spriteBatch.get(), text, pos);
-			}
-		}
-
-		for (unsigned int i = 0; i < myDX->ImagesToRender.size(); i++)
-		{
-			myDX->spriteBatch->Draw(myDX->ImagesToRender[i].shaderRes, myDX->ImagesToRender[i].pos);
-		}
-
-
-
-		myDX->spriteBatch->End();
+		
+		myUI->Render(m_spriteBatch, m_arialFont, m_comicSansFont);
+		
+		m_spriteBatch->End();
 	}
 	
 	//Present the swap chain 
@@ -367,11 +381,6 @@ bool Graphics::Render(InputManager *myInput)
 	
 
 	return true;
-}
-
-DX * Graphics::GetDX()
-{
-	return myDX;
 }
 
 void Graphics::Update(InputManager *myInput, float delta)
