@@ -32,7 +32,7 @@ bool InputManager::Initialize(HINSTANCE instance, HWND wind)
 		NULL);
 
 	hr = mouseinput->SetDataFormat(&c_dfDIMouse);
-	hr = mouseinput->SetCooperativeLevel(wind, DISCL_EXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND);
+	hr = mouseinput->SetCooperativeLevel(wind, DISCL_NOWINKEY | DISCL_FOREGROUND);
 
 	return true;
 }
