@@ -15,6 +15,7 @@ Graphics::Graphics(InputManager* input)
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
 	myInput = input;
+	health = 100;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -51,6 +52,12 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
+
+	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
+	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
+	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
+
+	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
 
 	Ground = new GameObject();
 	Ground->Initialize("Assets/GroundPlane.mesh", myDX->GetDevice());	
@@ -396,6 +403,11 @@ void Graphics::Update(InputManager *myInput, float delta)
 		}
 	}
 
+	for (unsigned int i = 0; i < myTargets.size(); i++)
+	{
+		myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+	}
+
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->Update(delta);
@@ -414,7 +426,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 
 			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 			{
-				if (MovingSphereToSphere(bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), myTargets[j]->GetCollider(0), delta))
+				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
 				{
 					std::cout << "Boom, Collision!" << std::endl;
 					bullets[i]->SetDestroy();
@@ -424,9 +436,12 @@ void Graphics::Update(InputManager *myInput, float delta)
 		}
 	}
 
+	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
+	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
+	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
+
 	for (unsigned int i = 0; i < myTargets.size(); i++)
 	{
-		myTargets[i]->Update(delta);
 		if (myTargets[i]->Destroy())
 		{
 			Target *temp2;
@@ -435,6 +450,12 @@ void Graphics::Update(InputManager *myInput, float delta)
 			myTargets.erase(myTargets.begin() + i);
 			delete temp2;
 			break;
+		}
+
+		if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
+		{
+			health -= 3;
+			std::cout << health << std::endl;
 		}
 	}
 

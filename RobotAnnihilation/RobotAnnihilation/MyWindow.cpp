@@ -17,6 +17,7 @@ bool MyWindow::Run()
 
 	
 
+
 	if (gameManager->GetKeyState((int)'P')&1)
 	{
 		paused = !paused;
@@ -97,13 +98,12 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		posX, posY, screenW, screenH, NULL, NULL, myInstance, NULL);
 
+
+
 	//Display window 
 	ShowWindow(myWindow, SW_SHOW);
 	SetForegroundWindow(myWindow);
 	SetFocus(myWindow);
-
-	//Show/Hide cursor 
-	ShowCursor(true);
 }
 
 void MyWindow::ShutdownWindows()
