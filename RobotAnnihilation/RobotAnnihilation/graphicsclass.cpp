@@ -48,6 +48,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
 	myPlayer->GetPhysicsComponent()->SetMass(50);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
+	myPlayer->SetAnimation(0);
 	if (!myPlayer)
 	{
 		return false;
@@ -273,11 +274,10 @@ bool Graphics::Render(InputManager *myInput)
 	bool result;
 
 	HRESULT hr;
-
-
+	
 	//Clear the screen 
 	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
-
+	
 	myDX->PassWorldMatrix(world);
 	if (debugCam)
 	{
@@ -292,50 +292,54 @@ bool Graphics::Render(InputManager *myInput)
 	////Manipulate matricies here
 	world = playerWorld;
 
-	camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3]};
+	camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3] };
 
-	//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
-	myPlayer->Render(myDX->GetDeviceContext());
-	if (debugCam)
+	if (!myUI->GetUIElements()[3]->GetEnabled())
 	{
-		myDebug->Update();
-	}
-	else
-	{
+
+		//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
+		myPlayer->Render(myDX->GetDeviceContext());
+		if (debugCam)
+		{
+			myDebug->Update();
+		}
+		else
+		{
+			XMMATRIX worldcopy = world;
+			world = XMMatrixMultiply(XMMatrixTranslation(1.2f, 0.75f, 0), worldcopy);
+			myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
+		}
+
 		XMMATRIX worldcopy = world;
-		world = XMMatrixMultiply(XMMatrixTranslation(1.2f, 0.75f, 0), worldcopy);
-		myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
-	}
+		world = XMMatrixMultiply(XMMatrixTranslation(-1.2f, -.75, 0), worldcopy);
+		myPlayer->Render(myDX->GetDeviceContext());
+		myPlayer->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
+		//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
+		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myPlayer->GetModelComponent()->GetDiffuseTexture(), myPlayer->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
-	XMMATRIX worldcopy = world;
-	world = XMMatrixMultiply(XMMatrixTranslation(-1.2f, -.75, 0), worldcopy);
-	myPlayer->Render(myDX->GetDeviceContext());
-	myPlayer->GetPhysicsComponent()->SetPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
-	//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
-	result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myPlayer->GetModelComponent()->GetDiffuseTexture(), myPlayer->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		myDX->PassWorldMatrix(world);
+		for (unsigned int i = 0; i < bullets.size(); i++)
+		{
+			bullets[i]->Render(myDX->GetDeviceContext());
+			world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
+			//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
+			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, bullets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		}
+		world = XMMatrixIdentity();
 
-	myDX->PassWorldMatrix(world);
-	for (unsigned int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i]->Render(myDX->GetDeviceContext());
-		world = XMMatrixMultiply(XMMatrixScaling(.25f, .25f, .25f), XMMatrixTranslation(bullets[i]->GetPhysicsComponent()->GetPosition().x, bullets[i]->GetPhysicsComponent()->GetPosition().y, bullets[i]->GetPhysicsComponent()->GetPosition().z));
-		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetObjectIndices().size(), world, view, projection, bullets[i]->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
-		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), bullets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, bullets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
-	}	
-	world = XMMatrixIdentity();
+		Ground->Render(myDX->GetDeviceContext());
 
-	Ground->Render(myDX->GetDeviceContext());
+		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Ground->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
-	//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
-	result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Ground->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		for (unsigned int i = 0; i < myTargets.size(); i++)
+		{
+			world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
 
-	for (unsigned int i = 0; i < myTargets.size(); i++)
-	{
-		world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
+			myTargets[i]->Render(myDX->GetDeviceContext());
 
-		myTargets[i]->Render(myDX->GetDeviceContext());
-
-		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		}
 	}
 
 	if (!debugCam)
@@ -364,98 +368,101 @@ void Graphics::Update()
 
 void Graphics::Update(InputManager *myInput, float delta)
 {
-	if (myPlayer->getTimeLeft() >= 0)
+	if (!myUI->GetUIElements()[3]->GetEnabled())
 	{
-		myPlayer->SubTimeLeft(delta);
-	}
-	bool moving = false;
-	if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
-	{
-		moving = true;
-	}
-	if (moving)
-	{
-		myPlayer->SetAnimation(0);
-	}
-	else
-	{
-		myPlayer->SetAnimation(1);
-	}
-	myPlayer->Update(delta);
-
-	myPlayer->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
-
-	if(debugCam)	
-	{
-		myDebug->GetInput(myInput, delta);
-	}
-	else
-	{
-		myCamera->GetInput(myInput, delta, playerWorld);
-	}
-
-	if (myInput->GetKeyState((int)'O'))
-	{
-		if (timeGetTime() >= timeBetween + 300)
+		if (myPlayer->getTimeLeft() >= 0)
 		{
-			debugCam = !debugCam;
-			timeBetween = timeGetTime();
+			myPlayer->SubTimeLeft(delta);
 		}
-	}
-
-	for (unsigned int i = 0; i < myTargets.size(); i++)
-	{
-		myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
-	}
-
-	for (unsigned int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i]->Update(delta);
-		if (bullets[i]->Destroy())
+		bool moving = false;
+		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
 		{
-			Bullet *temp;
-			bullets[i]->Shutdown();
-			temp = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete temp;
-			break;
+			moving = true;
+		}
+		if (moving)
+		{
+			myPlayer->SetAnimation(0);
+		}
+		else
+		{
+			myPlayer->SetAnimation(1);
+		}
+		myPlayer->Update(delta);
+
+		myPlayer->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
+
+		if (debugCam)
+		{
+			myDebug->GetInput(myInput, delta);
+		}
+		else
+		{
+			myCamera->GetInput(myInput, delta, playerWorld);
 		}
 
-		for (unsigned int j = 0; j < myTargets.size(); j++)
+		if (myInput->GetKeyState((int)'O'))
 		{
-
-			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			if (timeGetTime() >= timeBetween + 300)
 			{
-				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
+				debugCam = !debugCam;
+				timeBetween = timeGetTime();
+			}
+		}
+
+		for (unsigned int i = 0; i < myTargets.size(); i++)
+		{
+			myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+		}
+
+		for (unsigned int i = 0; i < bullets.size(); i++)
+		{
+			bullets[i]->Update(delta);
+			if (bullets[i]->Destroy())
+			{
+				Bullet *temp;
+				bullets[i]->Shutdown();
+				temp = bullets[i];
+				bullets.erase(bullets.begin() + i);
+				delete temp;
+				break;
+			}
+
+			for (unsigned int j = 0; j < myTargets.size(); j++)
+			{
+
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 				{
-					std::cout << "Boom, Collision!" << std::endl;
-					bullets[i]->SetDestroy();
-					myTargets[j]->SetDestroy();
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
+					{
+						std::cout << "Boom, Collision!" << std::endl;
+						bullets[i]->SetDestroy();
+						myTargets[j]->SetDestroy();
+					}
 				}
 			}
 		}
-	}
 
-	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
+		playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
+		playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
+		playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
 
-	for (unsigned int i = 0; i < myTargets.size(); i++)
-	{
-		if (myTargets[i]->Destroy())
+		for (unsigned int i = 0; i < myTargets.size(); i++)
 		{
-			Target *temp2;
-			myTargets[i]->Shutdown();
-			temp2 = myTargets[i];
-			myTargets.erase(myTargets.begin() + i);
-			delete temp2;
-			break;
-		}
+			if (myTargets[i]->Destroy())
+			{
+				Target *temp2;
+				myTargets[i]->Shutdown();
+				temp2 = myTargets[i];
+				myTargets.erase(myTargets.begin() + i);
+				delete temp2;
+				break;
+			}
 
-		if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
-		{
-			health -= 3;
-			std::cout << health << std::endl;
+			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
+			{
+				health -= 3;
+				std::cout << health << std::endl;
+			}
 		}
 	}
 

@@ -15,9 +15,6 @@ bool MyWindow::Run()
 		return false;
 	}
 
-	
-
-
 	if (gameManager->GetKeyState((int)'P')&1)
 	{
 		paused = !paused;
