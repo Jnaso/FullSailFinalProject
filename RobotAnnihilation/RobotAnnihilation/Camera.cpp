@@ -124,25 +124,25 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 	//Update the chracter's direction and the camera's movement on each press 
 	if (myInput->GetKeyState((int)'W'))
 	{
-		desiredCharDir += XMVECTOR{ camforward.m128_f32[0], 0.0f, camforward.m128_f32[2], camforward.m128_f32[3] };
+		desiredCharDir += XMVECTOR{ camforward.m128_f32[0] * time, 0.0f* time, camforward.m128_f32[2] * time, camforward.m128_f32[3] * time };
 		moveChar = true;
 	}
 
 	if (myInput->GetKeyState((int)'S'))
 	{
-		desiredCharDir += XMVECTOR{ -camforward.m128_f32[0], 0.0f, -camforward.m128_f32[2], -camforward.m128_f32[3] };
+		desiredCharDir += XMVECTOR{ -camforward.m128_f32[0] * time, 0.0f* time, -camforward.m128_f32[2] * time, -camforward.m128_f32[3] * time };
 		moveChar = true;
 	}
 
 	if (myInput->GetKeyState((int)'A'))
 	{
-		desiredCharDir += camRight;
+		desiredCharDir += camRight * time;
 		moveChar = true;
 	}
 
 	if (myInput->GetKeyState((int)'D'))
 	{
-		desiredCharDir += -camRight;
+		desiredCharDir += -camRight * time;
 		moveChar = true;
 	}
 	XMVECTOR copyvec = desiredCharDir;
@@ -212,7 +212,7 @@ void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, X
 	}
 
 	//Move the character by a speed 
-	float speed = 0.4f;
+	float speed = 20.0f * time;
 	charPosition = charPosition + (destinationDirection * speed);
 
 	//Translate the character 

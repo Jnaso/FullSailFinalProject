@@ -46,16 +46,17 @@ PixelInput Main(VertexInput input)
 
 	output.pos = skinned;
 	output.pos = mul(output.pos, worldMatrix);
+	output.PixelPos = output.pos;
 	output.pos = mul(output.pos, viewMatrix);
 	output.pos = mul(output.pos, projectionMatrix);
 
 	output.tex = input.tex;
 
-	output.norm = mul(skinnedNorm, worldMatrix);
+	output.norm = mul(float4(skinnedNorm.xyz, 0), worldMatrix).xyz;
 	output.Tang = normalize(mul(float4(input.tan, 0), worldMatrix).xyz);
 	output.Binomial = cross(output.norm, output.Tang);
 
-	output.PixelPos = mul(float4(input.pos, 1.0f), worldMatrix).xyz;
+	// = mul(float4(input.pos, 1.0f), worldMatrix).xyz;
 
 	return output;
 }
