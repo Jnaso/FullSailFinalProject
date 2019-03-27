@@ -37,35 +37,58 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 
 void UIManager::Update()
 {
-	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
+	//std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
-		if (m_UIElements[i]->GetInteractable())
+		UIElement* temp = m_UIElements[i];
+
+		if (temp->GetInteractable())
 		{
-			if (PtInRect((const RECT*)m_UIElements[i]->GetSrcRect(), m_Input->GetMousePos()))
+			if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
 			{
-				m_UIElements[i]->SetEnabled(false);
-			}
-			else
-			{
-				m_UIElements[i]->SetEnabled(true);
+				if (temp->m_OnMouseEnter)
+				{ 
+					temp->m_OnMouseEnter(); 
+				}
+
+				if (temp->GetInteractable())
+				{
+					if (m_Input->GetKeyState(_LMOUSE))
+					{
+						if (temp->m_OnMouseClick) { temp->m_OnMouseClick(); }
+					}
+				}
 			}
 		}
 	}
 }
 
-UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
+UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text, void(*MouseOver)(), void(*Click)())
 {
-	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
+	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, MouseOver, Click, font, text);
 	m_UIElements.push_back(temp);
 	return temp;
 }
 
-UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device)
+UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device, void(*MouseOver)(), void(*Click)())
 {
-	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, filePath, device);
+	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, MouseOver, Click, filePath, device);
 	m_UIElements.push_back(temp);
 	return temp;
+}
+
+void UIManager::DestroyUIElement(UIElement* item, int index)
+{
+	m_UIElements.erase(m_UIElements.begin() + index);
+	delete item;
+}
+
+void UIManager::HideMainMenu()
+{
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		m_UIElements[i]->SetEnabled(false);
+	}
 }
 
 UIManager::~UIManager()

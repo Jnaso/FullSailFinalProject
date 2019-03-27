@@ -15,8 +15,6 @@ bool MyWindow::Run()
 		return false;
 	}
 
-	
-
 	if (gameManager->GetKeyState((int)'P') & 1)
 	{
 		paused = !paused;
@@ -99,13 +97,12 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		posX, posY, screenW, screenH, NULL, NULL, myInstance, NULL);
 
+
+
 	//Display window 
 	ShowWindow(myWindow, SW_SHOW);
 	SetForegroundWindow(myWindow);
 	SetFocus(myWindow);
-
-	//Show/Hide cursor 
-	ShowCursor(true);
 }
 
 void MyWindow::ShutdownWindows()
@@ -127,6 +124,11 @@ void MyWindow::ShutdownWindows()
 	myInstance = NULL;
 
 	ApplicationHandle = NULL;
+}
+
+void MyWindow::GameIsDone()
+{
+	m_done = true;
 }
 
 bool MyWindow::Initialize()
@@ -182,21 +184,40 @@ bool MyWindow::Initialize()
 	//Update() takes care of checking for MouseOver checking
 	#pragma region UIElement Creation
 	//ENABLE AFTER GAMEPLAY IMPLEMENTATION
-	////UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
-	////UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
-	////UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
-	////UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	//Text
+	UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
+	UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
+	UIElement* quitText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Quit");
+	
+	//Images
+	UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* quitButton = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 
 	//UIElement Adjustments
-	////mainMenuBkrnd->SetSize(float2{ 1280, 720 });
-	////mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
-	////
-	////UIButtonImage->SetSize(float2{ 215,71 });
-	////UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
-	////
-	////startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
-	////mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
-	#pragma endregion
+	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });
+	mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	
+	UIButtonImage->SetSize(float2{ 215,71 });
+	UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	//Lamda [Place Scope Here](Parameters){Code Here} 
+	//Used To Set the function pointer in UIElement
+	UIButtonImage->m_OnMouseClick = [this]()
+	{
+		gameManager->GetGraphicsManager()->GetUIManager()->HideMainMenu();
+	};
+
+	startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
+	mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
+
+	
+	
+	quitButton->SetSize(float2{ 215,71 });
+	quitButton->SetPos(float2{ screenW * 0.5f, (screenH * 0.5f) + 200 });
+	quitButton->m_OnMouseClick = [this]() { GameIsDone(); };
+
+	quitText->SetPos(float2{ quitButton->m_pos.x, quitButton->m_pos.y });
+#pragma endregion
 
 
 	return true;
@@ -214,12 +235,12 @@ void MyWindow::Shutdown()
 void MyWindow::Render()
 {
 	MSG msg;
-	bool done, result;
+	bool result;
 
 	ZeroMemory(&msg, sizeof(MSG));
 	
-	done = false;
-	while (!done)
+	m_done = false;
+	while (!m_done)
 	{
 		//Read in any messages 
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -233,7 +254,7 @@ void MyWindow::Render()
 		//Quit message received 
 		if (msg.message == WM_QUIT)
 		{
-			done = true;
+			m_done = true;
 		}
 		else
 		{
@@ -242,11 +263,12 @@ void MyWindow::Render()
 			{
 				Update(timer.Delta());
 			}
+			gameManager->GetUIManager()->Update();
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
 			{
-				done = true;
+				m_done = true;
 			}
 		}
 	}
@@ -273,6 +295,18 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	}
 	case WM_MOUSEMOVE:
 		gameManager->GetInputManager()->SetMousePos(POINT{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) });
+		return 0;
+	case WM_LBUTTONDOWN:
+		gameManager->GetInputManager()->SetKeyState(_LMOUSE, true);
+		return 0;
+	case WM_LBUTTONUP:
+		gameManager->GetInputManager()->SetKeyState(_LMOUSE, false);
+		return 0;
+	case WM_RBUTTONUP:
+		gameManager->GetInputManager()->SetKeyState(_RMOUSE, true);
+		return 0;
+	case WM_RBUTTONDOWN:
+		gameManager->GetInputManager()->SetKeyState(_RMOUSE, false);
 		return 0;
 	default:
 	{
