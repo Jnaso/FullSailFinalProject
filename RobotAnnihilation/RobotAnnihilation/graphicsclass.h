@@ -49,6 +49,7 @@ private:
 	Sphere TargetSphe;
 	AABB playerBox;
 	unsigned int health;
+	unsigned int enemyCount;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;

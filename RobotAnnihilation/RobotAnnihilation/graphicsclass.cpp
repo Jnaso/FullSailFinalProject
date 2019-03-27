@@ -15,7 +15,7 @@ Graphics::Graphics(InputManager* input)
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
 	myInput = input;
-	health = 100;
+	health = 1000;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -68,7 +68,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	srand((unsigned int)time(NULL));
-	for (unsigned int i = 0; i < 10; i++)
+	enemyCount = rand() % 25 + 10;
+	for (unsigned int i = 0; i < enemyCount; i++)
 	{
 		myTargets.push_back(new Target());
 		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
@@ -356,8 +357,6 @@ bool Graphics::Render(InputManager *myInput)
 	//Present the swap chain 
 	myDX->PresentScreen();
 
-	
-
 	return true;
 }
 
@@ -434,9 +433,11 @@ void Graphics::Update(InputManager *myInput, float delta)
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
 					{
-						std::cout << "Boom, Collision!" << std::endl;
+						//std::cout << "Boom, Collision!" << std::endl;
 						bullets[i]->SetDestroy();
 						myTargets[j]->SetDestroy();
+						enemyCount--;
+						std::cout << enemyCount << std::endl;
 					}
 				}
 			}
