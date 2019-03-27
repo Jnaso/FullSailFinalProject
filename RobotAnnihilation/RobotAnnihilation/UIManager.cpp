@@ -37,7 +37,10 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 
 void UIManager::Update()
 {
+#ifndef DEBUG
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
+#endif // !DEBUG
+
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
 		if (m_UIElements[i]->GetInteractable())
