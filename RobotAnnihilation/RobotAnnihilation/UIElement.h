@@ -45,6 +45,9 @@ public:
 	bool GetEnabled() { return m_enabled; }
 	void SetEnabled(bool value) { m_enabled = value; }
 	
+	bool GetMouseOver() { return m_mouseOver; }
+	void SetMouseOver(bool value) { m_mouseOver = value; }
+
 	float2 GetPos() 
 	{
 		float2 temp = { m_pos.x, m_pos.y };

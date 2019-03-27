@@ -40,15 +40,21 @@ void UIManager::Update()
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
-		if (m_UIElements[i]->GetInteractable())
+		UIElement* temp = m_UIElements[i];
+
+		if (temp->GetInteractable())
 		{
-			if (PtInRect((const RECT*)m_UIElements[i]->GetSrcRect(), m_Input->GetMousePos()))
+			if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
 			{
-				m_UIElements[i]->SetEnabled(false);
+				temp->SetMouseOver(true);
+				if (m_Input->GetKeyState(_LMOUSE))
+				{
+					this->DestroyUIElement(temp, i);
+				}
 			}
 			else
 			{
-				m_UIElements[i]->SetEnabled(true);
+				temp->SetMouseOver(false);
 			}
 		}
 	}
@@ -66,6 +72,12 @@ UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled,
 	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, filePath, device);
 	m_UIElements.push_back(temp);
 	return temp;
+}
+
+void UIManager::DestroyUIElement(UIElement* item, int index)
+{
+	m_UIElements.erase(m_UIElements.begin() + index);
+	delete item;
 }
 
 UIManager::~UIManager()

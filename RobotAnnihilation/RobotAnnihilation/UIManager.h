@@ -31,6 +31,8 @@ public:
 	//Keep All Images within powers of 2(*FIX*)
 	UIElement* CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device);
 
+	void DestroyUIElement(UIElement* item, int index);
+
 	~UIManager();
 
 	std::vector<UIElement*> GetUIElements() { return m_UIElements; }

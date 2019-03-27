@@ -180,20 +180,20 @@ bool MyWindow::Initialize()
 	//Update() takes care of checking for MouseOver checking
 	#pragma region UIElement Creation
 	//ENABLE AFTER GAMEPLAY IMPLEMENTATION
-	////UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
-	////UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
-	////UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
-	////UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
+	UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
+	UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 
 	//UIElement Adjustments
-	////mainMenuBkrnd->SetSize(float2{ 1280, 720 });
-	////mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
-	////
-	////UIButtonImage->SetSize(float2{ 215,71 });
-	////UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
-	////
-	////startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
-	////mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
+	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });
+	mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	
+	UIButtonImage->SetSize(float2{ 215,71 });
+	UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	
+	startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
+	mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
 	#pragma endregion
 
 
@@ -271,6 +271,18 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	}
 	case WM_MOUSEMOVE:
 		gameManager->GetInputManager()->SetMousePos(POINT{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) });
+		return 0;
+	case WM_LBUTTONDOWN:
+		gameManager->GetInputManager()->SetKeyState(_LMOUSE, true);
+		return 0;
+	case WM_LBUTTONUP:
+		gameManager->GetInputManager()->SetKeyState(_LMOUSE, false);
+		return 0;
+	case WM_RBUTTONUP:
+
+		return 0;
+	case WM_RBUTTONDOWN:
+
 		return 0;
 	default:
 	{
