@@ -62,19 +62,19 @@ float4 Main(PixelInput input) : SV_TARGET
 	}
 
 	float3 pLightDir1 = normalize(lightPosition[0].xyz - input.PixelPos);
-	float PDot1 = saturate(dot(pLightDir1, normal));
+	float PDot1 = saturate(dot(pLightDir1, input.norm));
 	float attenuation1 = saturate(1.0f - (length(pLightDir1) / lightPosition[0].w));
 	float3 Point1 = (lightCols[0].rgb * PDot1 * textureColor.rgb) * attenuation1;
 
 	float3 pLightDir2 = normalize(lightPosition[1].xyz - input.PixelPos);
-	float PDot2 = saturate(dot(pLightDir2, normal));
+	float PDot2 = saturate(dot(pLightDir2, input.norm));
 	float attenuation2 = saturate(1.0f - (length(pLightDir2) / lightPosition[1].w));
 	float3 Point2 = (lightCols[1].rgb * PDot2 * textureColor.rgb) * attenuation2;
 
 	float3 SPLightDir = normalize(SpotPos.xyz - input.PixelPos);
 	float surfaceRatio = saturate(dot(-SPLightDir, normalize(SpotDir.xyz)));
 	float spotFactor = (surfaceRatio > SpotEx.y) ? 1.0f : 0.0f;
-	float lightRatio = saturate(dot(SPLightDir, normal));
+	float lightRatio = saturate(dot(SPLightDir, input.norm));
 	float att1 = 1.0 - saturate(length(SpotPos.xyz - input.PixelPos) / SpotEx.z);
 	float att2 = 1.0 - saturate((SpotEx.x - surfaceRatio) / (SpotEx.x - SpotEx.y));
 	float finalAtt = att1 * att2;
@@ -82,7 +82,7 @@ float4 Main(PixelInput input) : SV_TARGET
 
 	//float3 viewDir = normalize(cameraPos - input.PixelPos);
 	//float3 halfVect = normalize((lightDir) + viewDir);
-	//float intensity = max(pow(saturate(dot(normal, normalize(halfVect))), specEx.x), 0);
+	//float intensity = max(pow(saturate(dot(input.norm5, normalize(halfVect))), specEx.x), 0);
 	//float3 specular = specColor.rgb * specEx.y * intensity;
 
 	finalColor.rgb = ambient + direct + Point1 + Point2 + Spot;

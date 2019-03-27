@@ -61,7 +61,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
 
 	Ground = new GameObject();
-	Ground->Initialize("Assets/GroundPlane.mesh", myDX->GetDevice());	
+	Ground->Initialize("Assets/Ground.mesh", myDX->GetDevice());	
 	if (!Ground)
 	{
 		return false;
@@ -116,7 +116,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	myLighting->SetDirectionalColor(1.0f, 0.0f, 0.0f, 1.0f);
+	myLighting->SetDirectionalColor(1.0f, 1.0f, 1.0f, 1.0f);
 	myLighting->SetDirection(0.0f, 0.0f, 1.0f);
 	myLighting->SetSpotlightColor(1.0f, 1.0f, 1.0f, 1.0f);
 	myLighting->SetSpotlightDirection(0, -1, 0, 1);
@@ -125,10 +125,10 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	//myLighting->SetSpecularColor(1, 0, 1, 1);
 	//myLighting->SetSpecularExtra(50, 1.0f, 0, 0);
 
-	myPosition[0] = { 0.0f, 3.0f, 10.0f, 10.0f };
-	myPosition[1] = { 0.0f, 3.0f, -10.0f, 20.0f };
-	myColors[0] = {0.0f, 1.0f, 0.0f, 1.0f};
-	myColors[1] = {0.0f, 1.0f, 1.0f, 1.0f};
+	myPosition[0] = { 0.0f, 3.0f, 10.0f, 5.0f };
+	myPosition[1] = { 0.0f, 3.0f, -10.0f, 5.0f };
+	myColors[0] = {1.0f, 0.0f, 0.0f, 1.0f};
+	myColors[1] = {0.0f, 0.0f, 1.0f, 1.0f};
 
 	//Create UI Manager
 	myUI = new UIManager(myInput, myDX->GetDevice(), myDX->GetDeviceContext());

@@ -9,7 +9,7 @@ cbuffer MatrixBuffer
 
 struct VertexInputType
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
 	float3 tan : TANGENT;
@@ -31,18 +31,18 @@ PixelInput Main(VertexInputType input)
 {
 	PixelInput output;
 
-	input.position.w = 1.0f;
-
-	output.pos = mul(input.position, worldMatrix);
+	output.pos = mul(float4(input.position, 1.0f), worldMatrix);
+	output.PixelPos = output.pos;
 	output.pos = mul(output.pos, viewMatrix);
 	output.pos = mul(output.pos, projectionMatrix);
 
 	output.tex = input.tex;
-
-	output.norm = mul(input.normal, worldMatrix);
-	output.norm = normalize(output.norm);
 	
-	output.PixelPos = mul(input.position, worldMatrix).xyz;
+	output.norm = mul(float4(input.normal, 0), worldMatrix).xyz;
+	output.Tang = normalize(mul(float4(input.tan, 0), worldMatrix).xyz);
+	output.Binomial = cross(output.norm, output.Tang);
+	
+	// = mul(float4(input.position, 1.0f), worldMatrix).xyz;
 
 	return output;
 }
