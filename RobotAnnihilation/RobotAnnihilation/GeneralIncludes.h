@@ -15,6 +15,7 @@
 #include <d3dcommon.h>
 #include <SimpleMath.h>
 #include <vector>
+#include <iostream>
 
 //External Files
 #include "MathDefines.h"

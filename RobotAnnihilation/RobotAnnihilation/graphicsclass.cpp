@@ -350,6 +350,11 @@ bool Graphics::Render(InputManager *myInput)
 	return true;
 }
 
+void Graphics::Update()
+{
+	myUI->Update();
+}
+
 void Graphics::Update(InputManager *myInput, float delta)
 {
 	if (myPlayer->getTimeLeft() >= 0)

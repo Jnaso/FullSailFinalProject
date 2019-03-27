@@ -10,13 +10,21 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
+struct RECTDIMENSIONS
+{
+	float2 topLeft;
+	float2 topRight;
+};
+
 class UIElement
 {
 protected:
-	RECT m_srcRect;
+	RECT m_destRect;
 	bool m_interactable;
 	bool m_mouseOver;
 	bool m_enabled;
+
+public :
 	DirectX::SimpleMath::Vector2 m_pos;
 
 public:
@@ -24,8 +32,12 @@ public:
 	~UIElement();
 
 	#pragma region Acessors_And_Mutators
-	RECT GetSrcRect() { return m_srcRect; }
-	void SetSrcRect(RECT value) { m_srcRect = value; }
+	
+	RECT* GetSrcRect() 
+	{
+		RECT* temp = &m_destRect;
+		return temp; 
+	}
 	
 	bool GetInteractable() { return m_interactable; }
 	void SetInteractable(bool value) { m_interactable = value; }
@@ -38,17 +50,24 @@ public:
 		float2 temp = { m_pos.x, m_pos.y };
 		return temp;
 	}
-	void setPos(float2 value) 
+	void SetPos(float2 value) 
 	{ 
-		SimpleMath::Vector2 temp(value.x, value.y);
+		SimpleMath::Vector2 temp(value.x - (m_destRect.right * 0.5f) , value.y - (m_destRect.bottom * 0.5f));
+		m_destRect.left = temp.x;
+		m_destRect.top = temp.y;
+		m_destRect.right += temp.x;
+		m_destRect.bottom += temp.y;
 		m_pos = temp; 
 	}
+	
+	void SetSize(float2 value) { m_destRect = RECT{ (LONG)m_pos.x, (LONG)m_pos.y, (LONG)(m_pos.x + value.x), (LONG)(m_pos.y + value.y) }; }
+	float2 GetSize() { return float2{ (float)(m_destRect.right - m_destRect.left), (float)(m_destRect.bottom - m_destRect.bottom) }; }
+
 	#pragma endregion
 
 
-
 	//Virtual Function
-	virtual void Update() {};
+	virtual void Update(/*Going to be a function pointer passed into the constructor and eventually a mesage manager*/) {}
 	virtual void Render() {}
 };
 
@@ -69,6 +88,7 @@ public:
 
 	const char* GetText() { return m_text; }
 	void SetText(const char* value) { m_text = value; }
+
 };
 
 class ImageElement : public UIElement

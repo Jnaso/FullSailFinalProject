@@ -56,6 +56,7 @@ private:
 	DIMOUSESTATE currMouseState;
 	DIMOUSESTATE lastMouseState;
 	LPDIRECTINPUT8 DirectInput;
+	POINT m_mousePos;
 
 public:
 
@@ -74,6 +75,9 @@ public:
 
 	DIMOUSESTATE GetCurrMouseState();
 	void SetCurrMouseState();
+
+	POINT GetMousePos() { return m_mousePos; }
+	void SetMousePos(POINT value) { m_mousePos = value; }
 	
 };
 

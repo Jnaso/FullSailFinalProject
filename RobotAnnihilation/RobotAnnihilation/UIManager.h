@@ -19,17 +19,17 @@ private:
 	//Vector of Ui Elements to render
 	std::vector<UIElement*> m_UIElements;
 
-	
-
 public:
 	
 	UIManager(InputManager* input, ID3D11Device* device, ID3D11DeviceContext* context);
 
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
-	void CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
+	void Update();
 
-	void CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device);
+	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
+	//Keep All Images within powers of 2(*FIX*)
+	UIElement* CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device);
 
 	~UIManager();
 
