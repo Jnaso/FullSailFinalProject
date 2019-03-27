@@ -32,5 +32,13 @@ public:
 	std::vector<float4x4> GetJoints();
 	void SetJoints(std::vector<float4x4> newJ);
 	std::vector<int32_t> GetParents();
+
+	float GetFrameTime();
+	void SetFrameTime(float delta);
+
+	anim_clip GetAnimationClip() { return ObjAnim; }
+
+	std::vector<float4x4> Flatten(std::vector<float4x4> joints, std::vector<int32_t> parents);
+	float4x4 RecursiveJointCalc(unsigned int currentIndex, std::vector<float4x4>& joints, std::vector<int32_t>& parents);
 };
 

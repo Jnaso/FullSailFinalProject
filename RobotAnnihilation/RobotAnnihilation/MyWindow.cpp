@@ -15,12 +15,13 @@ bool MyWindow::Run()
 		return false;
 	}
 
-	if (gameManager->GetKeyState((int)'P') & 1)
+	//if (gameManager->GetKeyState((int)'P') & 1)
+	if (gameManager->GetKeyState((int)'P'))
 	{
 		paused = !paused;
 	}
 
-	ShowCursor(paused);
+	//ShowCursor(paused);
 
 	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
 	{
@@ -87,8 +88,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1920;
-		screenH = 1080;
+		screenW = 1260;
+		screenH = 720;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
@@ -218,7 +219,6 @@ bool MyWindow::Initialize()
 
 	quitText->SetPos(float2{ quitButton->m_pos.x, quitButton->m_pos.y });
 #pragma endregion
-
 
 	return true;
 }
