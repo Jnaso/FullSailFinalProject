@@ -83,6 +83,9 @@ public:
 
 	DX* GetGraphicsEngine() { return myDX; }
 	UIManager* GetUIManager() { return myUI; }
+
+	unsigned int GetHealth();
+	unsigned int GetEnemies();
 };
 
 #endif // !_GRAPHICSCLASS_H_

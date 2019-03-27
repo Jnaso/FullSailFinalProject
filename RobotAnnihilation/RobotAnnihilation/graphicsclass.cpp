@@ -484,3 +484,13 @@ void Graphics::ShootBullet(HWND hwnd)
 		myPlayer->SetTimeLeft(myPlayer->getFireRate());
 	}
 }
+
+unsigned int Graphics::GetHealth()
+{
+	return health;
+}
+
+unsigned int Graphics::GetEnemies()
+{
+	return enemyCount;
+}
