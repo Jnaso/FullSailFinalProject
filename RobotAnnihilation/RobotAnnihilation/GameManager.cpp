@@ -43,6 +43,8 @@ void GameManager::Update(float delta)
 		// Uncomment when GameObjects have been implemented
 		//GameObjects[i].Update(delta);
 	}
+
+	myGraphics->Update();
 }
 
 bool GameManager::Render()

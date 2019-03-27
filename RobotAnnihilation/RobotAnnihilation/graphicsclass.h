@@ -76,6 +76,7 @@ public:
 
 	void Shutdown();
 	bool Render(InputManager *);
+	void Update();
 
 	DX* GetGraphicsEngine() { return myDX; }
 	UIManager* GetUIManager() { return myUI; }

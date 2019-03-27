@@ -176,9 +176,27 @@ bool MyWindow::Initialize()
 		return false;
 	}
 	
-	gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "Hello World");
-	gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/turtle.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	//Constructors Take In Default Variables
+	//Graphics Class calls both Update() and Render() for UIManager Class
+	//UIManager Class deals with Update() and Render() for UIElements
+	//Update() takes care of checking for MouseOver checking
+	#pragma region UIElement Creation
+	//ENABLE AFTER GAMEPLAY IMPLEMENTATION
+	////UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
+	////UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
+	////UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	////UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 
+	//UIElement Adjustments
+	////mainMenuBkrnd->SetSize(float2{ 1280, 720 });
+	////mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	////
+	////UIButtonImage->SetSize(float2{ 215,71 });
+	////UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	////
+	////startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
+	////mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
+	#pragma endregion
 
 
 	return true;
@@ -253,6 +271,9 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		gameManager->SetKeyState(wparam, false);
 		return 0;
 	}
+	case WM_MOUSEMOVE:
+		gameManager->GetInputManager()->SetMousePos(POINT{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) });
+		return 0;
 	default:
 	{
 		//All other messages can be handled normally 
