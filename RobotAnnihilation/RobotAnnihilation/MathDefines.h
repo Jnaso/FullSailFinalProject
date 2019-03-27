@@ -339,6 +339,31 @@ inline float DotProduct(float3 a, float3 b)
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
+inline float MinFloat(float x, float y)
+{
+	if (x <= y)
+	{
+		return x;
+	}
+
+	return y;
+}
+
+inline float MaxFloat(float x, float y)
+{
+	if (x >= y)
+	{
+		return x;
+	}
+
+	return y;
+}
+
+struct AABB
+{
+	float3 center;
+	float3 dimensions;
+};
 
 struct Ray
 {
@@ -351,6 +376,16 @@ struct Sphere
 	float radius;
 	float3 center;
 };
+
+inline float3 GetMin(AABB ab)
+{
+	return { ab.center.x - ab.dimensions.x, ab.center.y - ab.dimensions.y, ab.center.z - ab.dimensions.z };
+}
+
+inline float3 GetMax(AABB ab)
+{
+	return { ab.center.x + ab.dimensions.x, ab.center.y + ab.dimensions.y, ab.center.z + ab.dimensions.z };
+}
 
 inline bool SpheresCollide(Sphere a, Sphere b)
 {
@@ -403,6 +438,7 @@ inline bool RayToSphere(const Ray &ray, const Sphere &sphere, float &ft)
 
 inline bool MovingSphereToSphere(const Sphere &moving, const float3 &velocity, const Sphere &Static, float &ft)
 {
+
 	Sphere temp = Static;
 	temp.radius += moving.radius;
 
@@ -424,5 +460,48 @@ inline bool MovingSphereToSphere(const Sphere &moving, const float3 &velocity, c
 
 	return false;
 }
+
+inline bool SphereToAABB(Sphere s, AABB a)
+{
+	float3 Min = GetMin(a);
+	float3 Max = GetMax(a);
+
+	float x = MaxFloat(Min.x, MinFloat(s.center.x, Max.x));
+	float y = MaxFloat(Min.y, MinFloat(s.center.y, Max.y));
+	float z = MaxFloat(Min.z, MinFloat(s.center.z, Max.z));
+
+	float distance = DitanceFloat3(float3{x, y, z}, s.center);
+
+	return distance < s.radius;
+}
+
+inline bool RayToAABB(Ray r, AABB ab)
+{
+	float3 Min = GetMin(ab);
+	float3 Max = GetMax(ab);
+
+	float t1 = (Min.x - r.start.x) / r.dir.x;
+	float t2 = (Max.x - r.start.x) / r.dir.x;
+	float t3 = (Min.y - r.start.y) / r.dir.y;
+	float t4 = (Max.y - r.start.y) / r.dir.y;
+	float t5 = (Min.z - r.start.z) / r.dir.z;
+	float t6 = (Max.z - r.start.z) / r.dir.z;
+
+	float tmin = MaxFloat(MaxFloat(MinFloat(t1, t2), MinFloat(t3, t4)), MinFloat(t5, t6));
+	float tmax = MinFloat(MinFloat(MaxFloat(t1, t2), MaxFloat(t3, t4)), MaxFloat(t5, t6));
+
+	if (tmax < 0)
+	{
+		return false;
+	}
+
+	if (tmin > tmax)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 
 

@@ -52,6 +52,12 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
+	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
+	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
+
+	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
+
 	Ground = new GameObject();
 	Ground->Initialize("Assets/GroundPlane.mesh", myDX->GetDevice());	
 	if (!Ground)
@@ -419,6 +425,10 @@ void Graphics::Update(InputManager *myInput, float delta)
 		}
 	}
 
+	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
+	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
+	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
+
 	for (unsigned int i = 0; i < myTargets.size(); i++)
 	{
 		myTargets[i]->Update(delta);
@@ -430,6 +440,11 @@ void Graphics::Update(InputManager *myInput, float delta)
 			myTargets.erase(myTargets.begin() + i);
 			delete temp2;
 			break;
+		}
+
+		if (SphereToAABB(myTargets[i]->GetCollider(0), playerBox))
+		{
+			std::cout << "Boom, Boom, Boom!" << std::endl;
 		}
 	}
 
