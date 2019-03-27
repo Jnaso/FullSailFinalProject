@@ -218,6 +218,16 @@ bool MyWindow::Initialize()
 	quitButton->m_OnMouseClick = [this]() { GameIsDone(); };
 
 	quitText->SetPos(float2{ quitButton->m_pos.x, quitButton->m_pos.y });
+
+
+
+	memset(tempT0, '\0', sizeof(tempT0));
+	_itoa_s(gameManager->GetGraphicsManager()->GetEnemies(), tempT0, 65, 10);
+	this->gameManager->m_scoreText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, F_COMICSANS, (const char*)tempT0);
+
+	memset(tempT1, '\0', sizeof(tempT1));
+	_itoa_s(gameManager->GetGraphicsManager()->GetHealth(), tempT1, 65, 10);
+	this->gameManager->m_healthText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 0,50 }, F_COMICSANS, (const char*)tempT1);
 #pragma endregion
 
 	return true;
