@@ -23,12 +23,14 @@ private:
 	bool Run();
 	void CreateWindows(int&, int&);
 	void ShutdownWindows();
+	
 
 	bool paused = false;
+	bool m_done = false;
 
 public:
 	MyWindow();
-
+	void GameIsDone();
 	bool Initialize();
 	void Shutdown();
 	void Render();

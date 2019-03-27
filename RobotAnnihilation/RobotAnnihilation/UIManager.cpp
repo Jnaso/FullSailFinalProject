@@ -35,7 +35,7 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 	}
 }
 
-void UIManager::Update(bool paused)
+void UIManager::Update()
 {
 	//std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
@@ -85,7 +85,7 @@ void UIManager::DestroyUIElement(UIElement* item, int index)
 
 void UIManager::HideMainMenu()
 {
-	for (unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 6; i++)
 	{
 		m_UIElements[i]->SetEnabled(false);
 	}
