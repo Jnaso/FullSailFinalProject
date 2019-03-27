@@ -25,7 +25,7 @@ public:
 
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
-	void Update(bool paused);
+	void Update();
 
 	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text, void(*MouseOver)()=nullptr, void(*Click)()=nullptr);
 	//Keep All Images within powers of 2(*FIX*)
