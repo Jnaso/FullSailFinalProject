@@ -6,7 +6,7 @@ cbuffer ConstantBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
-	float4x4 bindPoses[28];
+	float4x4 bindPoses[50];
 };
 
 

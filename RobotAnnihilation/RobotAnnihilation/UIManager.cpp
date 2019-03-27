@@ -38,6 +38,10 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 void UIManager::Update()
 {
 	//std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
+#ifdef DEBUG
+	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
+#endif // !DEBUG
+
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
 		UIElement* temp = m_UIElements[i];

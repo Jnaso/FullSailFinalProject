@@ -28,16 +28,24 @@ protected:
 	PhysicsComponent* ObjectPhysics;
 
 	std::vector<Animation*> objectAnimations;
-	Animation* currentAnimation;
+	Animation* currentUpperAnimation;
+	Animation* currentLowerAnimation;
 
 	Model* objectModel;
 
 	std::vector<Sound*> objectSounds;
 
-	float fireRate = .5f;
-	float TimeLeft = 0.0f;
-
 	std::vector<Sphere> colliders;
+
+	std::vector<float4x4> AnimationJoints;
+	std::vector<int32_t> AnimationParents;
+
+	float timeLeft = 0;
+	float fireRatePistol = 0.5f;
+	float fireRateMachine = 0.3f;
+	float fireRateSubMachine = 0.15f;
+
+	float currentFireRate = fireRatePistol;
 
 public:
 	GameObject();
@@ -56,19 +64,28 @@ public:
 
 	Model* GetModelComponent();
 
-	void SetAnimation(int index);
+	void SetAnimationUpper(int index);
+	void SetAnimationLower(int index);
 
-	Animation* GetCurrentAnimation();
-
-	inline float getFireRate() { return fireRate; };
-	inline void SetFireRate(float fire) { fireRate = fire; };
-
-	inline float getTimeLeft() { return TimeLeft; };
-	inline void SubTimeLeft(float fire) { TimeLeft -= fire; };
-	inline void SetTimeLeft(float fire) { TimeLeft = fire; };
+	Animation* GetCurrentAnimationUpper();
+	Animation* GetCurrentAnimationLower();
 
 	void AddCollider(float3 pos, float rad);
 
-	Sphere *GetCollider(int index);
+	std::vector<float4x4> SetSkeletonLines(anim_clip animationUpper, anim_clip animationLower, float timeUpper, float timeLower);
+
+	Sphere* GetCollider(int index);
+	std::vector<float4x4> GetJoints() { return AnimationJoints; };
+
+	float getTimeLeft() { return timeLeft; };
+	float GetCurrentFireRate() { return currentFireRate; };
+	void SetCurrentFireRate(float FireRate) { currentFireRate = FireRate; };
+	float getFireRatePistol() { return fireRatePistol; };
+	float getFireRateMachine() { return fireRateMachine; };
+	float getFireRateSubMachine() { return fireRateSubMachine; };
+
+	void SubTimeLeft(float delta) { timeLeft -= delta; };
+
+	void SetTimeLeft(float time) { timeLeft = time; };
 };
 

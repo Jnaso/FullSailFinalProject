@@ -15,12 +15,13 @@ bool MyWindow::Run()
 		return false;
 	}
 
-	if (gameManager->GetKeyState((int)'P') & 1)
+	//if (gameManager->GetKeyState((int)'P') & 1)
+	if (gameManager->GetKeyState((int)'P'))
 	{
 		paused = !paused;
 	}
 
-	ShowCursor(paused);
+	//ShowCursor(paused);
 
 	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
 	{
@@ -228,7 +229,6 @@ bool MyWindow::Initialize()
 	_itoa_s(gameManager->GetGraphicsManager()->GetHealth(), tempT1, 65, 10);
 	this->gameManager->m_healthText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 0,50 }, F_COMICSANS, (const char*)tempT1);
 #pragma endregion
-
 
 	return true;
 }

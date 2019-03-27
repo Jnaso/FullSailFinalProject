@@ -4,9 +4,38 @@ Animation::Animation()
 {
 }
 
+float4x4 Animation::RecursiveJointCalc(unsigned int currentIndex, std::vector<float4x4>& joints, std::vector<int32_t>& parents)
+{
+	if (parents[currentIndex] == -1)
+	{
+		return joints[currentIndex];
+	}
+	else
+	{
+		return XMMatrixToFloat4x4(XMMatrixMultiply(Float4x4ToXMMatrix(joints[currentIndex]), Float4x4ToXMMatrix(RecursiveJointCalc(parents[currentIndex], joints, parents))));
+	}
+}
+
+std::vector<float4x4> Animation::Flatten(std::vector<float4x4> joints, std::vector<int32_t> parents)
+{
+	std::vector<float4x4> NewJoints;
+	for (unsigned int i = 0; i < joints.size(); i++)
+	{
+		float4x4 joint = RecursiveJointCalc(i, joints, parents);
+		NewJoints.push_back(joint);
+	}
+	return NewJoints;
+}
+
 Animation::Animation(const char* filePath, ID3D11Device* device)
 {
 	ReadAnimFile(filePath, device);
+	for (size_t i = 0; i < ObjAnim.frames.size(); i++)
+	{
+		std::vector<float4x4> flattenedjoints = Flatten(ObjAnim.frames[i].joints, ObjAnim.parent_indicies);
+		ObjAnim.frames[i].joints = flattenedjoints;
+	}
+	ObjAnim.bindPose.joints = Flatten(ObjAnim.bindPose.joints, ObjAnim.parent_indicies);
 }
 
 
@@ -168,4 +197,18 @@ void Animation::SetJoints(std::vector<float4x4> newJ)
 std::vector<int32_t> Animation::GetParents()
 {
 	return ObjAnim.parent_indicies;
+}
+
+float Animation::GetFrameTime()
+{
+	return frameTime;
+}
+
+void Animation::SetFrameTime(float delta)
+{
+	frameTime += delta;
+	while (frameTime > ObjAnim.duration)
+	{
+		frameTime -= ObjAnim.duration;
+	}
 }

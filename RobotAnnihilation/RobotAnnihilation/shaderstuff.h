@@ -13,7 +13,7 @@
 using namespace std;
 using namespace DirectX;
 
-const unsigned int MAX_POSES = 28;
+const unsigned int MAX_POSES = 50;
 
 class AnimatedShader
 {
