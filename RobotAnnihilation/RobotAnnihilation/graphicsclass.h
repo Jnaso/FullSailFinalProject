@@ -17,6 +17,7 @@
 #include "UIManager.h"
 #include "Bullet.h"
 #include "Target.h"
+#include <string.h>
 
 //Full screen flag 
 const bool FULL_SCREEN = false;

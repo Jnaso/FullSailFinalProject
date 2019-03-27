@@ -27,7 +27,9 @@ private:
 
 	bool paused = false;
 	bool m_done = false;
-
+	
+	char tempT0[65];
+	char tempT1[65];
 public:
 	MyWindow();
 	void GameIsDone();

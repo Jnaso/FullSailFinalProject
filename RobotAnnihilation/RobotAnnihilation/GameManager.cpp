@@ -23,6 +23,23 @@ KEYSTATE GameManager::GetKeyState(int keyCode)
 	return myInput->GetKeyState(keyCode);
 }
 
+void GameManager::UpdateScoreText()
+{
+	
+	memset(displayString, '\0', sizeof(displayString));
+	_itoa_s(GetGraphicsManager()->GetEnemies(), displayString, 65, 10);
+	TextElement* temp = dynamic_cast<TextElement*>(m_scoreText);
+	temp->SetText((const char*)displayString);
+}
+
+void GameManager::UpdateHealthText()
+{
+	memset(displayString1, '\0', sizeof(displayString1));
+	_itoa_s(GetGraphicsManager()->GetHealth(), displayString1, 65, 10);
+	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);
+	temp->SetText((const char*)displayString1);
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -45,6 +62,9 @@ void GameManager::Update(float delta)
 	}
 
 	myGraphics->Update();
+
+	UpdateScoreText();
+	UpdateHealthText();
 }
 
 bool GameManager::Render()
