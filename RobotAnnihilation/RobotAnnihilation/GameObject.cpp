@@ -93,18 +93,19 @@ void GameObject::AddCollider(float3 pos, float rad)
 	colliders.push_back(newSphere);
 }
 
-Sphere GameObject::GetCollider(int index)
+Sphere *GameObject::GetCollider(int index)
 {
 	if (index < 0)
 	{
-		return colliders[0];
+		return &colliders[0];
 	}
 	else if (index >= colliders.size())
 	{
-		return colliders[colliders.size() - 1];
+		return &colliders[colliders.size() - 1];
 	}
 	else
 	{
-		return colliders[index];
+		return &colliders[index];
 	}
 }
+

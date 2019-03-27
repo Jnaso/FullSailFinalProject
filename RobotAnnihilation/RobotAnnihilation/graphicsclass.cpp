@@ -15,6 +15,7 @@ Graphics::Graphics(InputManager* input)
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
 	myInput = input;
+	health = 100;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -397,6 +398,11 @@ void Graphics::Update(InputManager *myInput, float delta)
 		}
 	}
 
+	for (unsigned int i = 0; i < myTargets.size(); i++)
+	{
+		myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+	}
+
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->Update(delta);
@@ -415,7 +421,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 
 			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 			{
-				if (MovingSphereToSphere(bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), myTargets[j]->GetCollider(0), delta))
+				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
 				{
 					std::cout << "Boom, Collision!" << std::endl;
 					bullets[i]->SetDestroy();
@@ -431,7 +437,6 @@ void Graphics::Update(InputManager *myInput, float delta)
 
 	for (unsigned int i = 0; i < myTargets.size(); i++)
 	{
-		myTargets[i]->Update(delta);
 		if (myTargets[i]->Destroy())
 		{
 			Target *temp2;
@@ -442,9 +447,10 @@ void Graphics::Update(InputManager *myInput, float delta)
 			break;
 		}
 
-		if (SphereToAABB(myTargets[i]->GetCollider(0), playerBox))
+		if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
 		{
-			std::cout << "Boom, Boom, Boom!" << std::endl;
+			health -= 3;
+			std::cout << health << std::endl;
 		}
 	}
 

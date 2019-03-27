@@ -69,6 +69,6 @@ public:
 
 	void AddCollider(float3 pos, float rad);
 
-	Sphere GetCollider(int index);
+	Sphere *GetCollider(int index);
 };
 

@@ -26,7 +26,7 @@ bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 f
 	GetPhysicsComponent()->SetMass(0.1f);
 	GetPhysicsComponent()->SetDamping(0.99f);
 
-	AddCollider(GetPhysicsComponent()->GetPosition(), 1.0f);
+	AddCollider(GetPhysicsComponent()->GetPosition(), 0.4f);
 
 	return true;
 }
@@ -39,7 +39,9 @@ void Bullet::Update(float delta)
 		readyToDestroy = true;
 	}
 
-	GetCollider(0).center = GetPhysicsComponent()->GetPosition();
+	GetCollider(0)->center = GetPhysicsComponent()->GetPosition();
+	//std::cout << GetCollider(0)->center.x << " " << GetCollider(0)->center.y << " " << GetCollider(0)->center.z << " " << std::endl;
+
 }
 
 void Bullet::SetVelocity(float3 vel)

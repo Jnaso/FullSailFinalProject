@@ -16,6 +16,7 @@ public:
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
 	bool Destroy();
 	void SetDestroy();
+	void Update(float delta, float3 forward);
 	AABB GetAABB();
 };
 
