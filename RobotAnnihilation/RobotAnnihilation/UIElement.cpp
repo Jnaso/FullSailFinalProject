@@ -3,13 +3,16 @@
 
 
 #pragma region Element_Base_Class
-UIElement::UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos)
+UIElement::UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)())
 {
 	m_destRect = srcRect;
 	m_interactable = interactable;
 	m_enabled = enabled;
 	SimpleMath::Vector2 temp(pos.x, pos.y);
 	m_pos = temp;
+
+	//Sets Function Pointers
+	OnMouseOver = MouseOver;
 }
 
 
@@ -19,8 +22,8 @@ UIElement::~UIElement()
 #pragma endregion
 
 #pragma region Text_Child_Class
-TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
-	: UIElement(srcRect, interactable, enabled, pos)
+TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)(), int font, const char* text)
+	: UIElement(srcRect, interactable, enabled, pos, MouseOver, Click)
 {
 	m_font = font;
 	m_text = text;
@@ -39,8 +42,8 @@ void TextElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::uniq
 #pragma endregion
 
 #pragma region Image_Child_Class
-ImageElement::ImageElement(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device)
-	: UIElement(srcRect, interactable, enabled, pos)
+ImageElement::ImageElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)(), const char* filePath, ID3D11Device* device)
+	: UIElement(srcRect, interactable, enabled, pos, MouseOver, Click)
 {
 	wchar_t* temp = new wchar_t[301];
 	mbstowcs(temp, filePath, 301);

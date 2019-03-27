@@ -359,7 +359,7 @@ bool Graphics::Render(InputManager *myInput)
 
 void Graphics::Update()
 {
-	myUI->Update();
+	//myUI->Update();
 }
 
 void Graphics::Update(InputManager *myInput, float delta)

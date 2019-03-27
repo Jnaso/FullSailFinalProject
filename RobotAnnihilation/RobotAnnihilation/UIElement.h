@@ -10,11 +10,6 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
-struct RECTDIMENSIONS
-{
-	float2 topLeft;
-	float2 topRight;
-};
 
 class UIElement
 {
@@ -24,11 +19,16 @@ protected:
 	bool m_mouseOver;
 	bool m_enabled;
 
-public :
+public:
+	void(*OnMouseOver)();
+	void(*OnClick)();
+	std::function<void()> m_OnMouseEnter;
+	std::function<void()> m_OnMouseClick;
+
 	DirectX::SimpleMath::Vector2 m_pos;
 
 public:
-	UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos);
+	UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)());
 	~UIElement();
 
 	#pragma region Acessors_And_Mutators
@@ -38,7 +38,7 @@ public:
 		RECT* temp = &m_destRect;
 		return temp; 
 	}
-	
+
 	bool GetInteractable() { return m_interactable; }
 	void SetInteractable(bool value) { m_interactable = value; }
 	
@@ -81,7 +81,7 @@ private:
 	const char* m_text;
 
 public:
-	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
+	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)(), int font, const char* text);
 
 	void Update();
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& font);
@@ -100,7 +100,7 @@ private:
 	ID3D11ShaderResourceView* m_texture;
 
 public:
-	ImageElement(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device);
+	ImageElement(RECT srcRect, bool interactable, bool enabled, float2 pos, void(*MouseOver)(), void(*Click)(), const char* filePath, ID3D11Device* device);
 
 	void Update();
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch);

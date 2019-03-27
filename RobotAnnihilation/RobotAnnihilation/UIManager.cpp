@@ -35,7 +35,7 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 	}
 }
 
-void UIManager::Update()
+void UIManager::Update(bool paused)
 {
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
@@ -46,30 +46,33 @@ void UIManager::Update()
 		{
 			if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
 			{
-				temp->SetMouseOver(true);
-				if (m_Input->GetKeyState(_LMOUSE))
-				{
-					this->DestroyUIElement(temp, i);
+				if (temp->m_OnMouseEnter)
+				{ 
+					temp->m_OnMouseEnter(); 
 				}
-			}
-			else
-			{
-				temp->SetMouseOver(false);
+
+				if (temp->GetInteractable())
+				{
+					if (m_Input->GetKeyState(_LMOUSE))
+					{
+						if (temp->m_OnMouseClick) { temp->m_OnMouseClick(); }
+					}
+				}
 			}
 		}
 	}
 }
 
-UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
+UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text, void(*MouseOver)(), void(*Click)())
 {
-	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
+	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, MouseOver, Click, font, text);
 	m_UIElements.push_back(temp);
 	return temp;
 }
 
-UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device)
+UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device, void(*MouseOver)(), void(*Click)())
 {
-	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, filePath, device);
+	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, MouseOver, Click, filePath, device);
 	m_UIElements.push_back(temp);
 	return temp;
 }
@@ -78,6 +81,14 @@ void UIManager::DestroyUIElement(UIElement* item, int index)
 {
 	m_UIElements.erase(m_UIElements.begin() + index);
 	delete item;
+}
+
+void UIManager::HideMainMenu()
+{
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		m_UIElements[i]->SetEnabled(false);
+	}
 }
 
 UIManager::~UIManager()

@@ -191,7 +191,15 @@ bool MyWindow::Initialize()
 	
 	UIButtonImage->SetSize(float2{ 215,71 });
 	UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
-	
+
+	std::function<void()> tempVoid = [this]() { MyWindow::Shutdown(); };
+
+	//Lamda [Place Scope Here](Parameters){Code Here}
+	UIButtonImage->m_OnMouseClick = [this]()
+	{
+		gameManager->GetGraphicsManager()->GetUIManager()->HideMainMenu();
+	};
+
 	startText->SetPos(float2{ UIButtonImage->m_pos.x,UIButtonImage->m_pos.y });
 	mainMenuText->SetPos(float2{ (screenW * 0.5f) - 50, mainMenuText->m_pos.y });
 	#pragma endregion
@@ -240,6 +248,7 @@ void MyWindow::Render()
 			{
 				Update(timer.Delta());
 			}
+			gameManager->GetUIManager()->Update(paused);
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
@@ -279,10 +288,10 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 		gameManager->GetInputManager()->SetKeyState(_LMOUSE, false);
 		return 0;
 	case WM_RBUTTONUP:
-
+		gameManager->GetInputManager()->SetKeyState(_RMOUSE, true);
 		return 0;
 	case WM_RBUTTONDOWN:
-
+		gameManager->GetInputManager()->SetKeyState(_RMOUSE, false);
 		return 0;
 	default:
 	{

@@ -16,6 +16,7 @@
 #include <SimpleMath.h>
 #include <vector>
 #include <iostream>
+#include <functional>
 
 //External Files
 #include "MathDefines.h"
