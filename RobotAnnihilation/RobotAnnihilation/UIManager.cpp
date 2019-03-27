@@ -37,7 +37,7 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 
 void UIManager::Update()
 {
-#ifndef DEBUG
+#ifdef DEBUG
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 #endif // !DEBUG
 

@@ -428,7 +428,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 			{
 				if (MovingSphereToSphere(bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), myTargets[j]->GetCollider(0), delta))
 				{
-#ifndef DEBUG
+#ifdef DEBUG
 					std::cout << "Boom, Collision!" << std::endl;
 #endif // !DEBUG
 
