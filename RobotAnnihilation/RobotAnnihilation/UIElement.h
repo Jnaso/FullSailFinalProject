@@ -109,4 +109,8 @@ public:
 	void SetTexture(ID3D11ShaderResourceView* value) { m_texture = value; }
 };
 
+class ButtonElement : public ImageElement
+{
+
+};
 #endif // !_ELEMENT_H_
