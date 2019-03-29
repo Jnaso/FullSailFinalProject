@@ -10,6 +10,8 @@ template <class T>
 inline void saferelease(T& t)
 {
 	if (t) { t->Release(); }
+	delete t;
+	t = nullptr;
 }
 
 //Internal Files
