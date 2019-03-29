@@ -127,6 +127,11 @@ void MyWindow::ShutdownWindows()
 	ApplicationHandle = NULL;
 }
 
+ID3D11Device * MyWindow::GetDevice()
+{
+	return gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice();
+}
+
 void MyWindow::GameIsDone()
 {
 	m_done = true;
@@ -194,6 +199,36 @@ bool MyWindow::Initialize()
 	UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	UIElement* quitButton = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+
+
+
+	//Buttons
+	UIElement* sButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, this->GetDevice(), 0, "Start");
+	ButtonElement* startButton = static_cast<ButtonElement*>(sButton);
+	if (startButton)
+	{
+		startButton->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		startButton->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		startButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		startButton->m_OnMouseClick = [this]()
+		{
+			gameManager->GetGraphicsManager()->GetUIManager()->HideMainMenu();
+		};
+	}
+
+	UIElement* qButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, this->GetDevice(), 0, "Quit");
+	ButtonElement* quitButton1 = static_cast<ButtonElement*>(qButton);
+	if (quitButton1)
+	{
+		quitButton1->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		quitButton1->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		quitButton1->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		quitButton1->m_OnMouseClick = [this]()
+		{
+			GameIsDone();
+		};
+		quitButton1->SetPos(float2{ 0, startButton->GetPos().y + startButton->GetSize().y });
+	}
 
 	//UIElement Adjustments
 	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });

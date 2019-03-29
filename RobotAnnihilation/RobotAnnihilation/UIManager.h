@@ -27,9 +27,11 @@ public:
 
 	void Update();
 
-	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text, void(*MouseOver)()=nullptr, void(*Click)()=nullptr);
+	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
 	//Keep All Images within powers of 2(*FIX*)
-	UIElement* CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device, void(*MouseOver)()=nullptr, void(*Click)()=nullptr);
+	UIElement* CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device);
+
+	UIElement* CreateButton(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device* device, int font = F_ARIAL, const char* text = 0);
 
 	void DestroyUIElement(UIElement* item, int index);
 	

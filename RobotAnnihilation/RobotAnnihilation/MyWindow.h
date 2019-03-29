@@ -24,6 +24,7 @@ private:
 	void CreateWindows(int&, int&);
 	void ShutdownWindows();
 	
+	ID3D11Device* GetDevice();
 
 	bool paused = false;
 	bool m_done = false;

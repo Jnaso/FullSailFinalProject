@@ -63,19 +63,10 @@ void GameManager::Update(float delta)
 
 	myGraphics->Update();
 
+
+
 	UpdateScoreText();
 	UpdateHealthText();
-
-	if (myGraphics->GetEnemies() <= 0)
-	{
-		m_YouWin = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
-	if (myGraphics->GetHealth() <= 0)
-	{
-		m_YouLose = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
 }
 
 bool GameManager::Render()

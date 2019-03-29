@@ -6,6 +6,12 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 
+template <class T>
+inline void saferelease(T& t)
+{
+	if (t) { t->Release(); }
+}
+
 //Internal Files
 #include <windows.h>
 #include <memory>
@@ -17,6 +23,7 @@
 #include <vector>
 #include <iostream>
 #include <functional>
+#include <assert.h>
 
 //External Files
 #include "MathDefines.h"

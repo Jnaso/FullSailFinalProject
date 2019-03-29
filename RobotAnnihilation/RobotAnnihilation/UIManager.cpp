@@ -30,6 +30,13 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 		if (iElem)
 		{
 			iElem->Render(batch);
+			continue;
+		}
+		ButtonElement* bElem = dynamic_cast<ButtonElement*>(m_UIElements[i]);
+		if (bElem)
+		{
+			bElem->Render(batch, arial, comicSans);
+			continue;
 		}
 		
 	}
@@ -41,11 +48,14 @@ void UIManager::Update()
 #ifdef DEBUG
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
 #endif // !DEBUG
-
+	for (unsigned int i = 0; i < m_UIElements.size(); i++)
+	{
+		m_UIElements[i]->Update();
+	}
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
 		UIElement* temp = m_UIElements[i];
-
+	
 		if (temp->GetInteractable())
 		{
 			if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
@@ -54,7 +64,7 @@ void UIManager::Update()
 				{ 
 					temp->m_OnMouseEnter(); 
 				}
-
+	
 				if (temp->GetInteractable())
 				{
 					if (m_Input->GetKeyState(_LMOUSE))
@@ -67,16 +77,23 @@ void UIManager::Update()
 	}
 }
 
-UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text, void(*MouseOver)(), void(*Click)())
+UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
 {
-	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, MouseOver, Click, font, text);
+	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
 	m_UIElements.push_back(temp);
 	return temp;
 }
 
-UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device, void(*MouseOver)(), void(*Click)())
+UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath, ID3D11Device* device)
 {
-	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, MouseOver, Click, filePath, device);
+	UIElement* temp = new ImageElement(srcRect, interactable, enabled, pos, filePath, device);
+	m_UIElements.push_back(temp);
+	return temp;
+}
+
+UIElement * UIManager::CreateButton(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device * device, int font, const char * text)
+{
+	UIElement* temp = new ButtonElement(srcRect, interactable, enabled, pos, device, m_Input, font, text);
 	m_UIElements.push_back(temp);
 	return temp;
 }
