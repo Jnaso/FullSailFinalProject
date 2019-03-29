@@ -40,7 +40,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
-	myPlayer = new GameObject();
+	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
 	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);

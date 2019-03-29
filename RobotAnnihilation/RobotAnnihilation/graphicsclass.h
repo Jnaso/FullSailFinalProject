@@ -9,6 +9,7 @@
 #include "dxstuff.h"
 #include "allofthelights.h"
 #include "GameObject.h"
+#include "Player.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
@@ -34,7 +35,7 @@ private:
 	InputManager* myInput;
 	UIManager* myUI;
 	DX *myDX;
-	GameObject *myPlayer;
+	Player *myPlayer;
 	GameObject *Ground;
 	//GameObject *target;
 	ShaderManager *myShaderManager;

@@ -175,6 +175,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MyWindow.h" />
     <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RobotAnnihilation.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyWindow.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sound.cpp" />

@@ -28,8 +28,7 @@ protected:
 	PhysicsComponent* ObjectPhysics;
 
 	std::vector<Animation*> objectAnimations;
-	Animation* currentUpperAnimation;
-	Animation* currentLowerAnimation;
+	Animation* currentAnimation;
 
 	Model* objectModel;
 
@@ -39,13 +38,6 @@ protected:
 
 	std::vector<float4x4> AnimationJoints;
 	std::vector<int32_t> AnimationParents;
-
-	float timeLeft = 0;
-	float fireRatePistol = 0.5f;
-	float fireRateMachine = 0.3f;
-	float fireRateSubMachine = 0.15f;
-
-	float currentFireRate = fireRatePistol;
 
 public:
 	GameObject();
@@ -64,28 +56,19 @@ public:
 
 	Model* GetModelComponent();
 
-	void SetAnimationUpper(int index);
-	void SetAnimationLower(int index);
+	void SetAnimation(int index);
 
-	Animation* GetCurrentAnimationUpper();
-	Animation* GetCurrentAnimationLower();
+	Animation* GetCurrentAnimation();
 
 	void AddCollider(float3 pos, float rad);
-
-	std::vector<float4x4> SetSkeletonLines(anim_clip animationUpper, anim_clip animationLower, float timeUpper, float timeLower);
 
 	Sphere* GetCollider(int index);
 	std::vector<float4x4> GetJoints() { return AnimationJoints; };
 
-	float getTimeLeft() { return timeLeft; };
-	float GetCurrentFireRate() { return currentFireRate; };
-	void SetCurrentFireRate(float FireRate) { currentFireRate = FireRate; };
-	float getFireRatePistol() { return fireRatePistol; };
-	float getFireRateMachine() { return fireRateMachine; };
-	float getFireRateSubMachine() { return fireRateSubMachine; };
+	int GetParent(int index, std::vector<int32_t> parents);
 
-	void SubTimeLeft(float delta) { timeLeft -= delta; };
+	float4x4 RecursiveJointCalc(unsigned int currentIndex, std::vector<float4x4>& joints, std::vector<int32_t>& parents);
 
-	void SetTimeLeft(float time) { timeLeft = time; };
+	std::vector<float4x4> Flatten(std::vector<float4x4> joints, std::vector<int32_t> parents);
 };
 
