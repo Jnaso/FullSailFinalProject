@@ -176,8 +176,8 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 
 	if (mouseCurrState.lX != myInput->GetPrevMouseState().lX || mouseCurrState.lY != myInput->GetPrevMouseState().lY)
 	{
-		camYaw += myInput->GetPrevMouseState().lX * time * .2f;
-		camPitch += myInput->GetPrevMouseState().lY * time * .2f;
+		camYaw += myInput->GetPrevMouseState().lX * time * 2.0f;
+		camPitch += myInput->GetPrevMouseState().lY * time * 2.0f;
 		if (camPitch > 0.5f)
 		{
 			camPitch = .5f;
