@@ -20,9 +20,9 @@
 #include <string.h>
 
 //Full screen flag 
-const bool FULL_SCREEN = false;
+const bool FULL_SCREEN = true;
 //Vsync flag 
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 //Far plane 
 const float FAR_PLANE = 1000.0f;
 //Near plane

@@ -417,9 +417,25 @@ void Graphics::Update(InputManager *myInput, float delta)
 				timeBetween = timeGetTime();
 			}
 		}
+
 		for (unsigned int i = 0; i < myTargets.size(); i++)
 		{
 			myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+			if (myTargets[i]->Destroy())
+			{
+				Target *temp2;
+				myTargets[i]->Shutdown();
+				temp2 = myTargets[i];
+				myTargets.erase(myTargets.begin() + i);
+				delete temp2;
+				break;
+			}
+
+			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
+			{
+				health -= 3;
+				std::cout << health << std::endl;
+			}
 		}
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
@@ -456,25 +472,6 @@ void Graphics::Update(InputManager *myInput, float delta)
 		playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
 		playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
 		playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-
-		for (unsigned int i = 0; i < myTargets.size(); i++)
-		{
-			if (myTargets[i]->Destroy())
-			{
-				Target *temp2;
-				myTargets[i]->Shutdown();
-				temp2 = myTargets[i];
-				myTargets.erase(myTargets.begin() + i);
-				delete temp2;
-				break;
-			}
-
-			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
-			{
-				health -= 3;
-				std::cout << health << std::endl;
-			}
-		}
 	}
 
 	//system("CLS");
