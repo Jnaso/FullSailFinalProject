@@ -162,6 +162,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="DebugCamera.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
     <ClInclude Include="dxstuff.h" />
