@@ -6,6 +6,7 @@ Graphics::Graphics(InputManager* input)
 	myDX = nullptr;
 	myPlayer = nullptr; 
 	Ground = nullptr;
+	Skybox = nullptr;
 	myLighting = nullptr;
 	myShaderManager = nullptr;
 	myCamera = nullptr;
@@ -79,6 +80,14 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
+
+	Skybox = new GameObject();
+	Skybox->Initialize("Assets/SkyBox.mesh", myDX->GetDevice());
+	if (!Skybox)
+	{
+		return false;
+	}
+
 
 	srand((unsigned int)time(NULL));
 	enemyCount = rand() % 25 + 10;
@@ -242,6 +251,13 @@ void Graphics::Shutdown()
 		Ground = nullptr;
 	}
 
+	if (Skybox)
+	{
+		Skybox->Shutdown();
+		delete Skybox;
+		Skybox = nullptr;
+	}
+
 	if (myCamera)
 	{
 		delete myCamera;
@@ -303,14 +319,28 @@ bool Graphics::Render(InputManager *myInput)
 	}
 	myDX->PassProjectionMatrix(projection);
 
+
 	////Manipulate matricies here
-	world = playerWorld;
 
 	camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3] };
 
+	XMVECTOR myCam = XMMatrixInverse(nullptr, XMMatrixTranspose(view)).r[3];
+	XMFLOAT4 skyboxPosition;
+	XMStoreFloat4(&skyboxPosition, myCam);
+
 	if (!myUI->GetUIElements()[3]->GetEnabled())
 	{
+		myDX->SetSkyboxRaster();
 
+		world = XMMatrixScaling(900.0f, 900.0f, 900.f);
+
+		Skybox->Render(myDX->GetDeviceContext());
+
+		myShaderManager->RenderSkyboxShader(myDX->GetDeviceContext(), Skybox->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myShaderManager->GetSkyBox());
+
+		myDX->SetRegularRaster();
+
+		world = playerWorld;
 		//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
 		myPlayer->Render(myDX->GetDeviceContext());
 		if (debugCam)
@@ -430,9 +460,25 @@ void Graphics::Update(InputManager *myInput, float delta)
 				timeBetween = timeGetTime();
 			}
 		}
+
 		for (unsigned int i = 0; i < myTargets.size(); i++)
 		{
 			myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+			if (myTargets[i]->Destroy())
+			{
+				Target *temp2;
+				myTargets[i]->Shutdown();
+				temp2 = myTargets[i];
+				myTargets.erase(myTargets.begin() + i);
+				delete temp2;
+				break;
+			}
+
+			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
+			{
+				health -= 3;
+				std::cout << health << std::endl;
+			}
 		}
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
@@ -469,25 +515,6 @@ void Graphics::Update(InputManager *myInput, float delta)
 		playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
 		playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
 		playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-
-		for (unsigned int i = 0; i < myTargets.size(); i++)
-		{
-			if (myTargets[i]->Destroy())
-			{
-				Target *temp2;
-				myTargets[i]->Shutdown();
-				temp2 = myTargets[i];
-				myTargets.erase(myTargets.begin() + i);
-				delete temp2;
-				break;
-			}
-
-			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
-			{
-				health -= 3;
-				std::cout << health << std::endl;
-			}
-		}
 	}
 
 	//system("CLS");

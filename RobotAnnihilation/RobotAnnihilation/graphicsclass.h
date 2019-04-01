@@ -24,7 +24,7 @@
 //Full screen flag 
 const bool FULL_SCREEN = false;
 //Vsync flag 
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 //Far plane 
 const float FAR_PLANE = 1000.0f;
 //Near plane
@@ -38,6 +38,7 @@ private:
 	DX *myDX;
 	Player *myPlayer;
 	GameObject *Ground;
+	GameObject *Skybox;
 	//GameObject *target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;

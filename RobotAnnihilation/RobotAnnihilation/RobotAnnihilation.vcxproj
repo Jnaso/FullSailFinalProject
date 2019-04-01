@@ -181,6 +181,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="shaderstuff.h" />
+    <ClInclude Include="SkyboxShader.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StaticShader.h" />
     <ClInclude Include="Target.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RobotAnnihilation.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StaticShader.cpp" />
     <ClCompile Include="UIElement.cpp" />
@@ -228,6 +230,8 @@
     <None Include="NonAnimationVertexShader.vs" />
     <None Include="NonNormalPixelShader.ps" />
     <None Include="PixelShader.ps" />
+    <None Include="Skybox.ps" />
+    <None Include="Skybox.vs" />
     <None Include="VertexShader.vs" />
     <None Include="VertexShaderStatic.vs" />
   </ItemGroup>

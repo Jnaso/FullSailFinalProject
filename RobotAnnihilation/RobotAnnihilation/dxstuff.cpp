@@ -12,6 +12,7 @@ DX::DX()
 	myDepthStencilState = nullptr;
 	myDepthStencilView = nullptr;
 	myRasterState = nullptr;
+	mySkyboxRasterState = nullptr;
 }
 
 //Copy constructor 
@@ -35,7 +36,7 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 	D3D11_TEXTURE2D_DESC myDepthBufferDesc;
 	D3D11_DEPTH_STENCIL_DESC myDepthStencilDescription;
 	D3D11_DEPTH_STENCIL_VIEW_DESC myDepthStencilViewDesc;
-	D3D11_RASTERIZER_DESC myRasterDesc;
+	D3D11_RASTERIZER_DESC myRasterDesc, mySkyRasterState;
 	D3D11_VIEWPORT myViewport;
 	float fieldOfView, aspectRatio;
 	IDXGIFactory *myFactory;
@@ -309,6 +310,19 @@ bool DX::Initialize(int windowWidth, int windowHeight, bool myVsync, HWND window
 		return false;
 	}
 
+	mySkyRasterState.FillMode = D3D11_FILL_SOLID;
+	mySkyRasterState.CullMode = D3D11_CULL_FRONT;
+	mySkyRasterState.FrontCounterClockwise = false;
+	mySkyRasterState.DepthBias = false;
+	mySkyRasterState.DepthBiasClamp = 0;
+	mySkyRasterState.SlopeScaledDepthBias = 0;
+	mySkyRasterState.DepthClipEnable = false;
+	mySkyRasterState.ScissorEnable = false;
+	mySkyRasterState.MultisampleEnable = false;
+	mySkyRasterState.AntialiasedLineEnable = false;
+
+	result = myDevice->CreateRasterizerState(&mySkyRasterState, &mySkyboxRasterState);
+
 	//Set the raster state 
 	myDeviceContext->RSSetState(myRasterState);
 
@@ -389,6 +403,12 @@ void DX::Shutdown()
 	{
 		myRasterState->Release();
 		myRasterState = nullptr;
+	}
+
+	if (mySkyboxRasterState)
+	{
+		mySkyboxRasterState->Release();
+		mySkyboxRasterState = nullptr;
 	}
 
 	if (mySwapChain)
@@ -477,4 +497,14 @@ XMMATRIX DX::GetViewMatrix()
 XMMATRIX DX::GetWorldMatrix()
 {
 	return myWorld;
+}
+
+void DX::SetRegularRaster()
+{
+	myDeviceContext->RSSetState(myRasterState);
+}
+
+void DX::SetSkyboxRaster()
+{
+	myDeviceContext->RSSetState(mySkyboxRasterState);
 }

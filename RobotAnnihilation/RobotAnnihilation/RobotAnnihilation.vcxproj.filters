@@ -105,13 +105,17 @@
     <ClInclude Include="Target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
+    <ClInclude Include="SkyboxShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
     <ClInclude Include="Gun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
-    </ClInclude>  </ItemGroup>
-  <ItemGroup>
+    </ClInclude>  </ItemGroup>  <ItemGroup>
     <ClCompile Include="RobotAnnihilation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -181,6 +185,10 @@
     <ClCompile Include="Target.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkyboxShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
     <ClCompile Include="Gun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -206,5 +214,7 @@
     <None Include="VertexShaderStatic.vs" />
     <None Include="NonNormalPixelShader.ps" />
     <None Include="NonAnimationVertexShader.vs" />
+    <None Include="Skybox.vs" />
+    <None Include="Skybox.ps" />
   </ItemGroup>
 </Project>

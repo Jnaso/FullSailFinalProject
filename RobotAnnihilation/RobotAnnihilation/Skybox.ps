@@ -1,0 +1,13 @@
+TextureCube cube;
+SamplerState samTriLinear : register(s0);
+
+struct OutputVertex
+{
+	float4 FinalPosition : SV_POSITION;
+	float3 FinalTexture : TEXCOORD0;
+};
+
+float4 main(OutputVertex IN) : SV_TARGET
+{
+	return cube.Sample(samTriLinear, IN.FinalTexture);
+}
