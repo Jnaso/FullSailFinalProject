@@ -15,7 +15,6 @@ void Gun::Render(ID3D11DeviceContext * context)
 void Gun::Shutdown()
 {
 	if(gunModel) gunModel->Shutdown();
-	delete gunModel;
 }
 
 void Gun::Update(float delta)
@@ -25,9 +24,14 @@ void Gun::Update(float delta)
 
 Gun::Gun()
 {
+	FireRate = 0.0f;
+	DamageAmount = 0.0f;
+	ShootPos = float3{0, 0, 0};
+	gunModel = nullptr;
 }
 
 
 Gun::~Gun()
 {
+	delete gunModel;
 }

@@ -9,6 +9,13 @@ bool MyWindow::Run()
 {
 	bool result;
 
+	timer.Signal();
+	if (!paused)
+	{
+		Update(timer.Delta());
+	}
+	gameManager->GetUIManager()->Update();
+
 	//If user presses escape, close the window 
 	if (gameManager->GetKeyState(_ESCAPE))
 	{
@@ -268,12 +275,6 @@ void MyWindow::Render()
 		}
 		else
 		{
-			timer.Signal();
-			if (!paused)
-			{
-				Update(timer.Delta());
-			}
-			gameManager->GetUIManager()->Update();
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)

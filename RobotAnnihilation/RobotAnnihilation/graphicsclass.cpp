@@ -49,6 +49,19 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->GetPhysicsComponent()->SetMass(50);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(0);
+	Gun* Pistol = new Gun();
+	Pistol->SetFireRate(0.5f);
+	Pistol->SetDamageAmount(25);
+	myPlayer->AddGun(Pistol);
+	Gun* MachineGun = new Gun();
+	MachineGun->SetFireRate(0.3f);
+	MachineGun->SetDamageAmount(35);
+	myPlayer->AddGun(MachineGun);
+	Gun* SubMachineGun = new Gun();
+	SubMachineGun->SetFireRate(0.15f);
+	SubMachineGun->SetDamageAmount(30);
+	myPlayer->AddGun(SubMachineGun);
+	myPlayer->SetCurrentGun(0);
 	if (!myPlayer)
 	{
 		return false;
@@ -369,15 +382,15 @@ void Graphics::Update(InputManager *myInput, float delta)
 	{
 		if (myInput->GetKeyState((int)'1'))
 		{
-			myPlayer->SetCurrentFireRate(myPlayer->getFireRatePistol());
+			myPlayer->SetCurrentGun(0);
 		}
 		if (myInput->GetKeyState((int)'2'))
 		{
-			myPlayer->SetCurrentFireRate(myPlayer->getFireRateMachine());
+			myPlayer->SetCurrentGun(1);
 		}
 		if (myInput->GetKeyState((int)'3'))
 		{
-			myPlayer->SetCurrentFireRate(myPlayer->getFireRateSubMachine());
+			myPlayer->SetCurrentGun(2);
 		}
 		if (myPlayer->getTimeLeft() >= 0)
 		{
@@ -491,7 +504,7 @@ void Graphics::ShootBullet(HWND hwnd)
 		myShots.push_back(new Sound((char*)"Gunshot.wav"));
 		myShots[myShots.size() - 1]->Initialize(hwnd);
 		myShots[myShots.size() - 1]->PlayWaveFile();
-		myPlayer->SetTimeLeft(myPlayer->GetCurrentFireRate());
+		myPlayer->SetTimeLeft(myPlayer->GetCurrentGun()->GetFireRate());
 	}
 }
 

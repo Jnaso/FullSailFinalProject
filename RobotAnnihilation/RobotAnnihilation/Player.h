@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Gun.h"
 class Player :
 	public GameObject
 {
@@ -7,12 +8,9 @@ protected:
 	Animation* currentUpperAnimation;
 	Animation* currentLowerAnimation;
 
-	float timeLeft = 0;
-	float fireRatePistol = 0.5f;
-	float fireRateMachine = 0.3f;
-	float fireRateSubMachine = 0.15f;
-
-	float currentFireRate = fireRatePistol;
+	Gun* CurrentGun;
+	std::vector<Gun*> CurrentGuns;
+	float timeLeft = 0.0f;
 
 public:
 	Player();
@@ -27,14 +25,14 @@ public:
 	void SetAnimationLower(int index);
 
 	float getTimeLeft() { return timeLeft; };
-	float GetCurrentFireRate() { return currentFireRate; };
-	void SetCurrentFireRate(float FireRate) { currentFireRate = FireRate; };
-	float getFireRatePistol() { return fireRatePistol; };
-	float getFireRateMachine() { return fireRateMachine; };
-	float getFireRateSubMachine() { return fireRateSubMachine; };
 
 	void SubTimeLeft(float delta) { timeLeft -= delta; };
 
 	void SetTimeLeft(float time) { timeLeft = time; };
+
+	void AddGun(Gun* newGun) { CurrentGuns.push_back(newGun); };
+	void ReplaceGun(Gun* newGun, int index) { CurrentGuns[index] = newGun; };
+	void SetCurrentGun(int index) { CurrentGun = CurrentGuns[index]; };
+	Gun* GetCurrentGun() { return CurrentGun; };
 };
 

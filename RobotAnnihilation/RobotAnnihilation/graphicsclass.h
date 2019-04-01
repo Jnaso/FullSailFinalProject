@@ -10,6 +10,7 @@
 #include "allofthelights.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "Gun.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
