@@ -343,7 +343,7 @@ bool Graphics::Render(InputManager *myInput)
 
 	if (!debugCam)
 	{
-		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 		 
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 		

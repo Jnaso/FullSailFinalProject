@@ -44,4 +44,3 @@ public:
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
 };
-

@@ -25,7 +25,6 @@ KEYSTATE GameManager::GetKeyState(int keyCode)
 
 void GameManager::UpdateScoreText()
 {
-	
 	memset(displayString, '\0', sizeof(displayString));
 	_itoa_s(GetGraphicsManager()->GetEnemies(), displayString, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_scoreText);

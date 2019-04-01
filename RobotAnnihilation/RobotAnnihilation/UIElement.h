@@ -26,7 +26,6 @@ public:
 
 	DirectX::SimpleMath::Vector2 m_pos;
 
-public:
 	UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos);
 	~UIElement();
 
@@ -52,12 +51,14 @@ public:
 		float2 temp = { m_pos.x, m_pos.y };
 		return temp;
 	}
+
 	void SetPos(float2 value) 
 	{ 
+		m_destRect.right = static_cast<LONG>(value.x + GetSize().x);
+		m_destRect.bottom = static_cast<LONG>(value.y + GetSize().y);
 		m_destRect.left = value.x;
 		m_destRect.top = value.y;
-		m_destRect.right += value.x;
-		m_destRect.bottom += value.y;
+		
 		m_pos = { value.x, value.y };
 	}
 	
@@ -98,7 +99,7 @@ public:
 	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
 
 	void Update();
-	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& font);
+	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
 	int GetFont() { return m_font; }
 	void SetFont(int value) { m_font = value; }
@@ -132,6 +133,8 @@ class ButtonElement : public UIElement
 	ID3D11ShaderResourceView* m_textures[3];
 	ID3D11Device* m_device;
 	InputManager* m_input;
+
+public:
 	TextElement* m_buttonText = nullptr;
 
 public:

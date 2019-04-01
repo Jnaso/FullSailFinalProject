@@ -6,12 +6,14 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 
-template <class T>
-inline void saferelease(T& t)
+template <class T> inline void saferelease(T& t)
 {
-	if (t) { t->Release(); }
-	delete t;
-	t = nullptr;
+	if (t)
+	{ 
+		t->Release();
+		t = 0;
+	}
+
 }
 
 //Internal Files

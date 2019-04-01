@@ -16,14 +16,7 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 		TextElement* tElem = dynamic_cast<TextElement*>(m_UIElements[i]);
 		if (tElem)
 		{
-			if (tElem->GetFont() == F_ARIAL)
-			{
-				tElem->Render(batch, arial);
-			}
-			else if (tElem->GetFont() == F_COMICSANS)
-			{
-				tElem->Render(batch, comicSans);
-			}
+			tElem->Render(batch, arial, comicSans);
 			continue;
 		}
 		ImageElement* iElem = dynamic_cast<ImageElement*>(m_UIElements[i]);
@@ -44,43 +37,44 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 
 void UIManager::Update()
 {
-	//std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
-#ifdef DEBUG
+	#ifdef DEBUG
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
-#endif // !DEBUG
+	#endif // !DEBUG
+
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
 		m_UIElements[i]->Update();
 	}
-	for (unsigned int i = 0; i < m_UIElements.size(); i++)
-	{
-		UIElement* temp = m_UIElements[i];
-	
-		if (temp->GetInteractable())
-		{
-			if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
-			{
-				if (temp->m_OnMouseEnter)
-				{ 
-					temp->m_OnMouseEnter(); 
-				}
-	
-				if (temp->GetInteractable())
-				{
-					if (m_Input->GetKeyState(_LMOUSE))
-					{
-						if (temp->m_OnMouseClick) { temp->m_OnMouseClick(); }
-					}
-				}
-			}
-		}
-	}
+	//for (unsigned int i = 0; i < m_UIElements.size(); i++)
+	//{
+	//	UIElement* temp = m_UIElements[i];
+	//
+	//	if (temp->GetInteractable())
+	//	{
+	//		if (PtInRect((const RECT*)temp->GetSrcRect(), m_Input->GetMousePos()))
+	//		{
+	//			if (temp->m_OnMouseEnter)
+	//			{ 
+	//				temp->m_OnMouseEnter(); 
+	//			}
+	//
+	//			if (temp->GetInteractable())
+	//			{
+	//				if (m_Input->GetKeyState(_LMOUSE))
+	//				{
+	//					if (temp->m_OnMouseClick) { temp->m_OnMouseClick(); }
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
 {
 	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
-	m_UIElements.push_back(temp);
+	m_UIElements.insert(m_UIElements.begin(), temp);
+	++textCount;
 	return temp;
 }
 
@@ -94,7 +88,7 @@ UIElement* UIManager::CreateImage(RECT srcRect, bool interactable, bool enabled,
 UIElement * UIManager::CreateButton(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device * device, int font, const char * text)
 {
 	UIElement* temp = new ButtonElement(srcRect, interactable, enabled, pos, device, m_Input, font, text);
-	m_UIElements.push_back(temp);
+	m_UIElements.insert(m_UIElements.begin() + textCount, temp);
 	return temp;
 }
 
@@ -106,10 +100,15 @@ void UIManager::DestroyUIElement(UIElement* item, int index)
 
 void UIManager::HideMainMenu()
 {
-	for (unsigned int i = 0; i < 6; i++)
+	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
 		m_UIElements[i]->SetEnabled(false);
 	}
+}
+
+std::vector<UIElement*> UIManager::GetUIElements()
+{
+	return m_UIElements;
 }
 
 UIManager::~UIManager()

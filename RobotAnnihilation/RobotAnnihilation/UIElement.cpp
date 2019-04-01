@@ -29,11 +29,18 @@ TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 p
 void TextElement::Update()
 {
 }
-void TextElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& font)
+void TextElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans)
 {
 	if (m_enabled)
 	{
-		font->DrawString(batch.get(), this->m_text, this->m_pos);
+		if (this->m_font == F_ARIAL)
+		{
+			arial->DrawString(batch.get(), this->m_text, this->m_pos);
+		}
+		else if (this->m_font == F_COMICSANS)
+		{
+			comicSans->DrawString(batch.get(), this->m_text, this->m_pos);
+		}
 	}
 }
 #pragma endregion
@@ -63,8 +70,8 @@ ImageElement::ImageElement(RECT srcRect, bool interactable, bool enabled, float2
 		dim.y = static_cast<float>(desc.Height);
 	}
 
-	saferelease(tex2d);
-	saferelease(res);
+	if (tex2d) { tex2d->Release(); }
+	if (res) { res->Release(); }
 
 	m_destRect =
 	{
@@ -87,11 +94,11 @@ void ImageElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch)
 }
 ImageElement::~ImageElement()
 {
-	saferelease(m_texture);
+	if (m_texture) { m_texture->Release(); };
 }
 #pragma endregion
 
-#pragma region ButtonElement
+#pragma region Button_Child_Class
 
 //MAKE SURE TO SET THE DEFAULT TEXTURE!! (SetDefaultTexture(File Path))
 ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device* device, InputManager* input, /*Text Variables*/ int font, const char* text)
@@ -108,6 +115,8 @@ ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, floa
 void ButtonElement::Update()
 {
 	m_interactable = m_enabled;
+	m_buttonText->SetEnabled(m_enabled);
+	
 	if (m_interactable)
 	{
 		PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
@@ -128,7 +137,7 @@ void ButtonElement::RenderText(std::unique_ptr<DirectX::SpriteBatch>& batch, std
 {
 	//Draw Text
 	int currfont = m_buttonText->GetFont();
-	SimpleMath::Vector2 tempPos = { m_buttonText->GetPos().x,m_buttonText->GetPos().y };
+	SimpleMath::Vector2 tempPos = { this->GetPos().x,this->GetPos().y };
 	if (currfont == F_ARIAL)
 	{
 		arial->DrawString(batch.get(), m_buttonText->GetText(), tempPos);
@@ -141,6 +150,10 @@ void ButtonElement::RenderText(std::unique_ptr<DirectX::SpriteBatch>& batch, std
 void ButtonElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans)
 {
 	//Draw Image
+	if (this->m_buttonText->GetEnabled())
+	{
+		RenderText(batch, arial, comicSans);
+	}
 	if (this->m_enabled)
 	{
 		//If the mouse is over the button(within the RECT)
@@ -151,29 +164,26 @@ void ButtonElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::un
 				if (m_textures[ButtonElement::MOUSECLICK])
 				{
 					//If button is clicked (Left Mouse Button)
-
+					
 					batch->Draw(m_textures[ButtonElement::MOUSECLICK], this->m_destRect);
-					RenderText(batch, arial, comicSans);
 					return;
-
 				}
 			}
 			else
 			{
 				if (m_textures[ButtonElement::MOUSEOVER])
 				{
+					
 					batch->Draw(m_textures[ButtonElement::MOUSEOVER], this->m_destRect);
-					RenderText(batch, arial, comicSans);
 					return;
 				}
 			}
 			
 		}
 		//Else Draw the normal texture
+		
 		batch->Draw(m_textures[ButtonElement::DEFAULT], this->m_destRect);
-		RenderText(batch, arial, comicSans);
 	}
-	return;
 }
 //Sets The Dimentions of the Image
 void ButtonElement::SetDefaultTexture(const char * filePath)
@@ -199,6 +209,7 @@ void ButtonElement::SetDefaultTexture(const char * filePath)
 		dim.x = static_cast<float>(desc.Width);
 		dim.y = static_cast<float>(desc.Height);
 	}
+
 
 	saferelease(tex2d);
 	saferelease(res);

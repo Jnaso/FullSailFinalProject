@@ -188,21 +188,20 @@ bool MyWindow::Initialize()
 	//Graphics Class calls both Update() and Render() for UIManager Class
 	//UIManager Class deals with Update() and Render() for UIElements
 	//Update() takes care of checking for MouseOver checking
+
 	#pragma region UIElement Creation
 	//ENABLE AFTER GAMEPLAY IMPLEMENTATION
 	//Text
 	UIElement* startText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_ARIAL, "Start");
-	UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Main Menu");
-	UIElement* quitText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Quit");
+	UIElement* mainMenuText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Robot Annihilation");
+	//UIElement* quitText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Quit");
 	
 	//Images
-	UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
-	UIElement* quitButton = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* UIButtonImage = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0, 0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* quitButton = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/UIButton1.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 
-
-
-	//Buttons
+	//Buttons Setup(Will be moved later)
 	UIElement* sButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, this->GetDevice(), 0, "Start");
 	ButtonElement* startButton = static_cast<ButtonElement*>(sButton);
 	if (startButton)
@@ -214,8 +213,12 @@ bool MyWindow::Initialize()
 		{
 			gameManager->GetGraphicsManager()->GetUIManager()->HideMainMenu();
 		};
+
+		startButton->SetSize(float2{ 200, 50 });
+		startButton->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f)  });
 	}
 
+	
 	UIElement* qButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, this->GetDevice(), 0, "Quit");
 	ButtonElement* quitButton1 = static_cast<ButtonElement*>(qButton);
 	if (quitButton1)
@@ -227,15 +230,33 @@ bool MyWindow::Initialize()
 		{
 			GameIsDone();
 		};
-		quitButton1->SetPos(float2{ 0, startButton->GetPos().y + startButton->GetSize().y });
+		quitButton1->SetSize(float2{ 200, 50 });
+		quitButton1->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f) + (startButton->GetSize().y*2) });
 	}
+
+	UIElement* oButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, this->GetDevice(), 0, "Options");
+	ButtonElement* optionsButton = static_cast<ButtonElement*>(oButton);
+	if (optionsButton)
+	{
+		optionsButton->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		optionsButton->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		optionsButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		optionsButton->m_OnMouseClick = [this]()
+		{
+			//Open Options Menu
+		};
+		optionsButton->SetSize(float2{ 200, 50 });
+		optionsButton->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f) + startButton->GetSize().y  });
+	}
+
 
 	//UIElement Adjustments
 	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });
-	mainMenuBkrnd->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	mainMenuBkrnd->SetPos(float2{ 0.0f, 0.0f });
 	
 	UIButtonImage->SetSize(float2{ 215,71 });
 	UIButtonImage->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+
 	//Lamda [Place Scope Here](Parameters){Code Here} 
 	//Used To Set the function pointer in UIElement
 	UIButtonImage->m_OnMouseClick = [this]()
@@ -252,9 +273,7 @@ bool MyWindow::Initialize()
 	quitButton->SetPos(float2{ screenW * 0.5f, (screenH * 0.5f) + 200 });
 	quitButton->m_OnMouseClick = [this]() { GameIsDone(); };
 
-	quitText->SetPos(float2{ quitButton->m_pos.x, quitButton->m_pos.y });
-
-
+	//quitText->SetPos(float2{ quitButton->m_pos.x, quitButton->m_pos.y });
 
 	memset(tempT0, '\0', sizeof(tempT0));
 	_itoa_s(gameManager->GetGraphicsManager()->GetEnemies(), tempT0, 65, 10);
