@@ -6,6 +6,7 @@ Player::Player()
 {
 	objectModel = new Model();
 	ObjectPhysics = new PhysicsComponent();
+	health = 1000;
 }
 
 
@@ -56,6 +57,10 @@ Player::~Player()
 
 bool Player::Initialize(const char * filePath, ID3D11Device * device)
 {
+	playerBox.center.x = ObjectPhysics->GetPosition().x;
+	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
+	playerBox.center.z = ObjectPhysics->GetPosition().z;
+	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
 	return objectModel->Initialize(filePath, device);
 }
 
@@ -66,26 +71,7 @@ void Player::Render(ID3D11DeviceContext * context)
 
 void Player::Shutdown()
 {
-	size_t i;
-	objectModel->Shutdown();
-	for (i = 0; i < objectAnimations.size(); i++)
-	{
-		Animation* temp;
-		temp = objectAnimations[i];
-		objectAnimations.erase(objectAnimations.begin() + i);
-		delete temp;
-	}
-	for (i = 0; i < objectSounds.size(); i++)
-	{
-		Sound* temp;
-		temp = objectSounds[i];
-		objectSounds.erase(objectSounds.begin() + i);
-		delete temp;
-	}
-
-	colliders.clear();
-	delete objectModel;
-	delete ObjectPhysics;
+	GameObject::Shutdown();
 }
 
 void Player::Update(float delta)
@@ -97,6 +83,9 @@ void Player::Update(float delta)
 		currentUpperAnimation->SetFrameTime(delta);
 		AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
 	}
+	playerBox.center.x = ObjectPhysics->GetPosition().x;
+	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
+	playerBox.center.z = ObjectPhysics->GetPosition().z;
 }
 
 float4x4 LerpJoint(float4x4 frame1, float4x4 frame2, float ratio)

@@ -36,7 +36,6 @@ private:
 	InputManager* myInput;
 	UIManager* myUI;
 	DX *myDX;
-	Player *myPlayer;
 	GameObject *Ground;
 	GameObject *Skybox;
 	//GameObject *target;
@@ -51,17 +50,10 @@ private:
 	float timeBetween;
 	XMFLOAT4 camPosition;
 	Sphere TargetSphe;
-	AABB playerBox;
-	unsigned int health;
-	unsigned int enemyCount;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;
 	ID3D11RasterizerState*		spriteRasterState;
-
-	vector<Bullet*> bullets;
-	vector<Target*> myTargets;
-	vector<Sound*> myShots;
 
 	//2D Graphics Variables
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
@@ -82,14 +74,13 @@ public:
 	void CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath);
 
 	void Shutdown();
-	bool Render(InputManager *);
+	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets);
 	void Update();
 
 	DX* GetGraphicsEngine() { return myDX; }
 	UIManager* GetUIManager() { return myUI; }
 
-	unsigned int GetHealth();
-	unsigned int GetEnemies();
+	Camera* GetCamera() { return myCamera; };
 };
 
 #endif // !_GRAPHICSCLASS_H_

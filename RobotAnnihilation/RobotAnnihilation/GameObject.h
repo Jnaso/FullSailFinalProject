@@ -70,5 +70,8 @@ public:
 	float4x4 RecursiveJointCalc(unsigned int currentIndex, std::vector<float4x4>& joints, std::vector<int32_t>& parents);
 
 	std::vector<float4x4> Flatten(std::vector<float4x4> joints, std::vector<int32_t> parents);
+
+	std::vector<Sound*>GetSounds() { return objectSounds; };
+	void AddSound(Sound* newSound) { objectSounds.push_back(newSound); };
 };
 
