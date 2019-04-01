@@ -167,6 +167,7 @@
     <ClInclude Include="dxstuff.h" />
     <ClInclude Include="GeneralIncludes.h" />
     <ClInclude Include="graphicsclass.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Camera.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="allofthelights.cpp" />
