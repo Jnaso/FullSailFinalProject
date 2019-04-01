@@ -33,7 +33,6 @@ const float NEAR_PLANE = 0.1f;
 class Graphics
 {
 private:
-	InputManager* myInput;
 	UIManager* myUI;
 	DX *myDX;
 	Player *myPlayer;
@@ -50,7 +49,6 @@ private:
 	bool debugCam;
 	float timeBetween;
 	XMFLOAT4 camPosition;
-	Sphere TargetSphe;
 	AABB playerBox;
 	unsigned int health;
 	unsigned int enemyCount;
@@ -75,7 +73,7 @@ public:
 
 	void ShootBullet(HWND hwnd);
 
-	bool Initialize(int windowWidth, int windowHeight, HWND window);
+	bool Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput);
 
 	//UI Manager Function Pass Throughs
 	void CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);

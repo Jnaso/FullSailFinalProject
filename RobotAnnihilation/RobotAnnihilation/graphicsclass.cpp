@@ -15,11 +15,10 @@ Graphics::Graphics(InputManager* input)
 	timeBetween = timeGetTime();
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
-	myInput = input;
 	health = 1000;
 }
 
-bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
+bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput)
 {
 	bool result;
 

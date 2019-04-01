@@ -85,7 +85,7 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
-	return myGraphics->Initialize(windowWidth, windowHeight, window);
+	return myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 }
 
 void GameManager::ShutDown()
