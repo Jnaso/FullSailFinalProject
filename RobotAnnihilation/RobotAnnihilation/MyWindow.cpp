@@ -32,7 +32,7 @@ bool MyWindow::Run()
 
 	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
 	{
-		gameManager->GetGraphicsManager()->ShootBullet(myWindow);
+		gameManager->ShootBullets();
 	}
 
 	//Render every frame and stop if anything goes wrong 
@@ -229,11 +229,11 @@ bool MyWindow::Initialize()
 
 
 	memset(tempT0, '\0', sizeof(tempT0));
-	_itoa_s(gameManager->GetGraphicsManager()->GetEnemies(), tempT0, 65, 10);
+	_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
 	this->gameManager->m_scoreText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, F_COMICSANS, (const char*)tempT0);
 
 	memset(tempT1, '\0', sizeof(tempT1));
-	_itoa_s(gameManager->GetGraphicsManager()->GetHealth(), tempT1, 65, 10);
+	_itoa_s(gameManager->GetHealth(), tempT1, 65, 10);
 	this->gameManager->m_healthText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 0,50 }, F_COMICSANS, (const char*)tempT1);
 #pragma endregion
 

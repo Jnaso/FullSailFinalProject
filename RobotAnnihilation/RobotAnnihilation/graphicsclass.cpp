@@ -4,7 +4,6 @@ Graphics::Graphics(InputManager* input)
 {
 	//Zero memory 
 	myDX = nullptr;
-	myPlayer = nullptr; 
 	Ground = nullptr;
 	Skybox = nullptr;
 	myLighting = nullptr;
@@ -15,7 +14,6 @@ Graphics::Graphics(InputManager* input)
 	timeBetween = timeGetTime();
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
-	health = 1000;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput)
@@ -40,39 +38,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
-	myPlayer = new Player();
-	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
-	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
-	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
-	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
-	myPlayer->GetPhysicsComponent()->SetAccel(float3{0, -0.50, 0});
-	myPlayer->GetPhysicsComponent()->SetMass(50);
-	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
-	myPlayer->SetAnimationUpper(0);
-	Gun* Pistol = new Gun();
-	Pistol->SetFireRate(0.5f);
-	Pistol->SetDamageAmount(25);
-	myPlayer->AddGun(Pistol);
-	Gun* MachineGun = new Gun();
-	MachineGun->SetFireRate(0.3f);
-	MachineGun->SetDamageAmount(35);
-	myPlayer->AddGun(MachineGun);
-	Gun* SubMachineGun = new Gun();
-	SubMachineGun->SetFireRate(0.15f);
-	SubMachineGun->SetDamageAmount(30);
-	myPlayer->AddGun(SubMachineGun);
-	myPlayer->SetCurrentGun(0);
-	if (!myPlayer)
-	{
-		return false;
-	}
-
-	playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-	playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-	playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
-
-	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
-
 	Ground = new GameObject();
 	Ground->Initialize("Assets/Ground.mesh", myDX->GetDevice());	
 	if (!Ground)
@@ -86,16 +51,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	{
 		return false;
 	}
-
-
-	srand((unsigned int)time(NULL));
-	enemyCount = rand() % 25 + 10;
-	for (unsigned int i = 0; i < enemyCount; i++)
-	{
-		myTargets.push_back(new Target());
-		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
-	}
-
 	//myTargets.push_back(new Target());
 	//myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
 
@@ -235,14 +190,6 @@ void Graphics::Shutdown()
 		delete myShaderManager;
 		myShaderManager = nullptr;
 	}
-
-	if (myPlayer)
-	{
-		myPlayer->Shutdown();
-		delete myPlayer;
-		myPlayer = nullptr;
-	}
-
 	if (Ground)
 	{
 		Ground->Shutdown();
@@ -274,30 +221,14 @@ void Graphics::Shutdown()
 		delete myDebug;
 		myDebug = nullptr;
 	}
-
-	for (int i = 0; i < myShots.size(); i++)
-	{
-		myShots[i]->Shutdown();
-		delete myShots[i];
-		myShots[i] = nullptr;
-	}
-
 	//Clean up for 2d graphics
 	if (m_spriteBatch) { m_spriteBatch.release(); }
 	if (m_arialFont) { m_arialFont.release(); }
 	if (m_comicSansFont) { m_comicSansFont.release(); }
-
-	for (int i = 0; i < myTargets.size(); i++)
-	{
-		myTargets[i]->Shutdown();
-		delete myTargets[i];
-		myTargets[i] = nullptr;
-	}
-
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets)
 {
 	XMMATRIX world, view, projection;
 	bool result;
@@ -341,7 +272,7 @@ bool Graphics::Render(InputManager *myInput)
 
 		world = playerWorld;
 		//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
-		myPlayer->Render(myDX->GetDeviceContext());
+		
 		if (debugCam)
 		{
 			myDebug->Update();
@@ -409,39 +340,6 @@ void Graphics::Update(InputManager *myInput, float delta)
 {
 	if (!myUI->GetUIElements()[3]->GetEnabled())
 	{
-		if (myInput->GetKeyState((int)'1'))
-		{
-			myPlayer->SetCurrentGun(0);
-		}
-		if (myInput->GetKeyState((int)'2'))
-		{
-			myPlayer->SetCurrentGun(1);
-		}
-		if (myInput->GetKeyState((int)'3'))
-		{
-			myPlayer->SetCurrentGun(2);
-		}
-		if (myPlayer->getTimeLeft() >= 0)
-		{
-			myPlayer->SubTimeLeft(delta);
-		}
-		bool moving = false;
-		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
-		{
-			moving = true;
-		}
-		if (moving)
-		{
-			myPlayer->SetAnimationLower(1);
-		}
-		else
-		{
-			myPlayer->SetAnimationLower(0);
-		}
-		myPlayer->Update(delta);
-
-		myPlayer->GetPhysicsComponent()->SetForward(float3{ myCamera->GetCharDirection().m128_f32[0], myCamera->GetCharDirection().m128_f32[1], myCamera->GetCharDirection().m128_f32[2] });
-
 		if (debugCam)
 		{
 			myDebug->GetInput(myInput, delta);
@@ -459,61 +357,6 @@ void Graphics::Update(InputManager *myInput, float delta)
 				timeBetween = timeGetTime();
 			}
 		}
-
-		for (unsigned int i = 0; i < myTargets.size(); i++)
-		{
-			myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
-			if (myTargets[i]->Destroy())
-			{
-				Target *temp2;
-				myTargets[i]->Shutdown();
-				temp2 = myTargets[i];
-				myTargets.erase(myTargets.begin() + i);
-				delete temp2;
-				break;
-			}
-
-			if (SphereToAABB(*myTargets[i]->GetCollider(0), playerBox))
-			{
-				health -= 3;
-				std::cout << health << std::endl;
-			}
-		}
-
-		for (unsigned int i = 0; i < bullets.size(); i++)
-		{
-			bullets[i]->Update(delta);
-			if (bullets[i]->Destroy() || bullets[i]->GetPhysicsComponent()->GetPosition().y <= 0.0f)
-			{
-				Bullet *temp;
-				bullets[i]->Shutdown();
-				temp = bullets[i];
-				bullets.erase(bullets.begin() + i);
-				delete temp;
-				break;
-			}
-
-
-			for (unsigned int j = 0; j < myTargets.size(); j++)
-			{
-
-				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
-				{
-					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
-					{
-						//std::cout << "Boom, Collision!" << std::endl;
-						bullets[i]->SetDestroy();
-						myTargets[j]->SetDestroy();
-						enemyCount--;
-						std::cout << enemyCount << std::endl;
-					}
-				}
-			}
-		}
-
-		playerBox.center.x = myPlayer->GetPhysicsComponent()->GetPosition().x;
-		playerBox.center.y = myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f;
-		playerBox.center.z = myPlayer->GetPhysicsComponent()->GetPosition().z;
 	}
 
 	//system("CLS");
@@ -521,25 +364,5 @@ void Graphics::Update(InputManager *myInput, float delta)
 
 void Graphics::ShootBullet(HWND hwnd)
 {
-	if (myPlayer->getTimeLeft() <= 0)
-	{
-		float3 forward = float3{ myCamera->GetCamDirection().m128_f32[0], myCamera->GetCamDirection().m128_f32[1], myCamera->GetCamDirection().m128_f32[2] };
-		float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.5f, myPlayer->GetPhysicsComponent()->GetPosition().z };
-		bullets.push_back(new Bullet());
-		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward * -1, playerPos);
-		myShots.push_back(new Sound((char*)"Gunshot.wav"));
-		myShots[myShots.size() - 1]->Initialize(hwnd);
-		myShots[myShots.size() - 1]->PlayWaveFile();
-		myPlayer->SetTimeLeft(myPlayer->GetCurrentGun()->GetFireRate());
-	}
-}
-
-unsigned int Graphics::GetHealth()
-{
-	return health;
-}
-
-unsigned int Graphics::GetEnemies()
-{
-	return enemyCount;
+	
 }

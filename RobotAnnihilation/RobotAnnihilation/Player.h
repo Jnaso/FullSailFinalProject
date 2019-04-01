@@ -11,6 +11,8 @@ protected:
 	Gun* CurrentGun;
 	std::vector<Gun*> CurrentGuns;
 	float timeLeft = 0.0f;
+	AABB playerBox;
+	unsigned int health;
 
 public:
 	Player();
@@ -34,5 +36,10 @@ public:
 	void ReplaceGun(Gun* newGun, int index) { CurrentGuns[index] = newGun; };
 	void SetCurrentGun(int index) { CurrentGun = CurrentGuns[index]; };
 	Gun* GetCurrentGun() { return CurrentGun; };
+
+	AABB GetAABB() { return playerBox; };
+
+	unsigned int GetHealth() { return health; };
+	void SetHealth(unsigned int newHeath) { health = newHeath; }
 };
 
