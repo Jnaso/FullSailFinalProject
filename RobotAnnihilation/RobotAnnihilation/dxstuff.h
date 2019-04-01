@@ -23,6 +23,7 @@ private:
 	ID3D11DepthStencilState *myDepthStencilState;
 	ID3D11DepthStencilView *myDepthStencilView;
 	ID3D11RasterizerState *myRasterState;
+	ID3D11RasterizerState *mySkyboxRasterState;
 	XMMATRIX myProjection;
 	XMMATRIX myWorld;
 	XMMATRIX myView;
@@ -50,6 +51,8 @@ public:
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetViewMatrix();
 	XMMATRIX GetWorldMatrix();
+	void SetRegularRaster();
+	void SetSkyboxRaster();
 
 };
 

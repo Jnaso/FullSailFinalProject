@@ -6,6 +6,7 @@ Graphics::Graphics(InputManager* input)
 	myDX = nullptr;
 	myPlayer = nullptr; 
 	Ground = nullptr;
+	Skybox = nullptr;
 	myLighting = nullptr;
 	myShaderManager = nullptr;
 	myCamera = nullptr;
@@ -66,6 +67,14 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
+
+	Skybox = new GameObject();
+	Skybox->Initialize("Assets/SkyBox.mesh", myDX->GetDevice());
+	if (!Skybox)
+	{
+		return false;
+	}
+
 
 	srand((unsigned int)time(NULL));
 	enemyCount = rand() % 25 + 10;
@@ -229,6 +238,13 @@ void Graphics::Shutdown()
 		Ground = nullptr;
 	}
 
+	if (Skybox)
+	{
+		Skybox->Shutdown();
+		delete Skybox;
+		Skybox = nullptr;
+	}
+
 	if (myCamera)
 	{
 		delete myCamera;
@@ -290,14 +306,28 @@ bool Graphics::Render(InputManager *myInput)
 	}
 	myDX->PassProjectionMatrix(projection);
 
+
 	////Manipulate matricies here
-	world = playerWorld;
 
 	camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3] };
 
+	XMVECTOR myCam = XMMatrixInverse(nullptr, XMMatrixTranspose(view)).r[3];
+	XMFLOAT4 skyboxPosition;
+	XMStoreFloat4(&skyboxPosition, myCam);
+
 	if (!myUI->GetUIElements()[3]->GetEnabled())
 	{
+		myDX->SetSkyboxRaster();
 
+		world = XMMatrixScaling(900.0f, 900.0f, 900.f);
+
+		Skybox->Render(myDX->GetDeviceContext());
+
+		myShaderManager->RenderSkyboxShader(myDX->GetDeviceContext(), Skybox->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myShaderManager->GetSkyBox());
+
+		myDX->SetRegularRaster();
+
+		world = playerWorld;
 		//world = XMMatrixTranslation(Player->GetPhysicsComponent()->GetPosition().x, Player->GetPhysicsComponent()->GetPosition().y, Player->GetPhysicsComponent()->GetPosition().z);
 		myPlayer->Render(myDX->GetDeviceContext());
 		if (debugCam)

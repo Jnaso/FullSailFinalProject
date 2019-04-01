@@ -4,6 +4,8 @@ ShaderManager::ShaderManager()
 {
 	myAnimatedShader = nullptr;
 	myStaticShader = nullptr;
+	mySkyboxShader = nullptr;
+	myRealSky = nullptr;
 }
 
 bool ShaderManager::Initialize(ID3D11Device* device)
@@ -32,6 +34,22 @@ bool ShaderManager::Initialize(ID3D11Device* device)
 	{
 		return false;
 	}
+
+	mySkyboxShader = new SkyboxShader();
+	if (!mySkyboxShader)
+	{
+		return false;
+	}
+
+	result = mySkyboxShader->Initialize(device);
+	if (!result)
+	{
+		return false;
+	}
+
+	CreateDDSTextureFromFile(device, L"Skybox.dds", nullptr, &myRealSky);
+
+	return true;
 }
 
 void ShaderManager::Shutdown()
@@ -48,6 +66,19 @@ void ShaderManager::Shutdown()
 		myStaticShader->Shutdown();
 		delete myStaticShader;
 		myStaticShader = nullptr;
+	}
+
+	if (mySkyboxShader)
+	{
+		mySkyboxShader->Shutdown();
+		delete mySkyboxShader;
+		mySkyboxShader = nullptr;
+	}
+
+	if (myRealSky)
+	{
+		myRealSky->Release();
+		myRealSky = 0;
 	}
 }
 
@@ -74,4 +105,21 @@ bool ShaderManager::RenderStaticShader(ID3D11DeviceContext *myContext, int indic
 	}
 
 	return true;
+}
+
+bool ShaderManager::RenderSkyboxShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture)
+{
+	bool result;
+	result = mySkyboxShader->Render(myContext, indicies, world, view, projection, texture);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+ID3D11ShaderResourceView* ShaderManager::GetSkyBox()
+{
+	return myRealSky;
 }
