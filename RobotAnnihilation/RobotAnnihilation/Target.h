@@ -9,7 +9,8 @@ class Target : public GameObject
 private:
 	bool readyToDestroy;
 	AABB myCollision;
-	
+	float velocity;
+
 public:
 	Target();
 
