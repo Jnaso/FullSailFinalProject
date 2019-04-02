@@ -503,5 +503,13 @@ inline bool RayToAABB(Ray r, AABB ab)
 	return true;
 }
 
+inline float RandomUniform()
+{
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = 0.2f - 1.0f;
+	float r = random * diff;
+	return 1.0f + r;
+}
+
 
 
