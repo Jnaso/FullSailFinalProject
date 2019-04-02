@@ -27,6 +27,7 @@
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="shaderstuff.cpp" />
     <ClCompile Include="XTime.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -60,6 +61,10 @@
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="XTime.h" />
+    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

@@ -7,8 +7,8 @@ GameManager::GameManager()
 	myInput = new InputManager();
 	myGraphics = new Graphics(myInput);
 	myPlayer = nullptr;
+	myEnemyManager = new EnemyManager();
 }
-
 
 GameManager::~GameManager()
 {
@@ -28,13 +28,15 @@ void GameManager::UpdateScoreText()
 {
 	
 	memset(displayString, '\0', sizeof(displayString));
-	_itoa_s(enemyCount, displayString, 65, 10);
+	_itoa_s(myEnemyManager->GetEnemyCount(), displayString, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_scoreText);
 	temp->SetText((const char*)displayString);
 }
 
 void GameManager::UpdateHealthText()
 {
+	std::string tempText = "Health: "/* + GetGraphicsManager()->GetHealth()*/;
+	tempText += this->GetHealth();
 	memset(displayString1, '\0', sizeof(displayString1));
 	_itoa_s(myPlayer->GetHealth(), displayString1, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);
@@ -103,25 +105,7 @@ void GameManager::Update(float delta)
 	}
 	myPlayer->Update(delta);
 
-	for (unsigned int i = 0; i < myTargets.size(); i++)
-	{
-		myTargets[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
-		if (myTargets[i]->Destroy())
-		{
-			Target *temp2;
-			myTargets[i]->Shutdown();
-			temp2 = myTargets[i];
-			myTargets.erase(myTargets.begin() + i);
-			delete temp2;
-			break;
-		}
-
-		if (SphereToAABB(*myTargets[i]->GetCollider(0), myPlayer->GetAABB()))
-		{
-			myPlayer->SetHealth(myPlayer->GetHealth() - 3);
-			std::cout << myPlayer->GetHealth() << std::endl;
-		}
-	}
+	myEnemyManager->Update(delta, myPlayer);
 
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
@@ -137,18 +121,17 @@ void GameManager::Update(float delta)
 		}
 
 
-		for (unsigned int j = 0; j < myTargets.size(); j++)
+		for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 		{
 
-			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myTargets[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 			{
-				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myTargets[j]->GetCollider(0), delta))
+				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 				{
 					//std::cout << "Boom, Collision!" << std::endl;
 					bullets[i]->SetDestroy();
-					myTargets[j]->SetDestroy();
-					enemyCount--;
-					std::cout << enemyCount << std::endl;
+					myEnemyManager->GetEnemies()[j]->SetDestroy();
+					std::cout << myEnemyManager->GetEnemyCount() << std::endl;
 				}
 			}
 		}
@@ -189,28 +172,22 @@ void GameManager::Update(float delta)
 
 	myGraphics->Update();
 
+
+
 	UpdateScoreText();
 	UpdateHealthText();
-
-	if (enemyCount <= 0)
-	{
-		m_YouWin = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
-	if (myPlayer->GetHealth() <= 0)
-	{
-		m_YouLose = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
 }
 
 bool GameManager::Render()
 {
-	return myGraphics->Render(myInput, myPlayer, bullets, myTargets, Obstacles);
+	//return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
+	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles);
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
+	
+
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 	myDX = myGraphics->GetGraphicsEngine();
 	myPlayer = new Player();
@@ -239,15 +216,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
-	srand((unsigned int)time(NULL));
-	enemyCount = rand() % 25 + 10;
-	for (unsigned int i = 0; i < enemyCount; i++)
-	{
-		myTargets.push_back(new Target());
-		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/RobotAttack.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, -1.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
-		myTargets[i]->AddAninimation("Assets/RobotAttack.anim", myDX->GetDevice(), 0);
-		myTargets[i]->SetAnimation(0);
-	}
+	myEnemyManager->Initialize(myDX->GetDevice());
 
 	unsigned int ObstaclesCount = rand() % 10 + 5;
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
@@ -261,7 +230,8 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	this->window = window;
-	return result;}
+	return result;
+}
 
 void GameManager::ShutDown()
 {
@@ -287,10 +257,11 @@ void GameManager::ShutDown()
 		myPlayer = nullptr;
 	}
 
-	for (int i = 0; i < myTargets.size(); i++)
+	if (myEnemyManager)
 	{
-		myTargets[i]->Shutdown();
-		delete myTargets[i];
-		myTargets[i] = nullptr;
+		myEnemyManager->Shutdown();
+		delete myEnemyManager;
+		myEnemyManager = nullptr;
 	}
+	
 }

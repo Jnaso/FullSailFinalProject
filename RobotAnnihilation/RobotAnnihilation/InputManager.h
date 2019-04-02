@@ -44,7 +44,6 @@
 #define _RMOUSE 257
 
 #pragma endregion
-#include "MathDefines.h"
 
 class InputManager
 {

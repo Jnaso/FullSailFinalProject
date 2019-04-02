@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Gun.h"
 #include "dxstuff.h"
+#include "EnemyManager.h"
 
 class GameManager
 {
@@ -18,13 +19,14 @@ class GameManager
 	UIManager* myUiManager;
 	HWND window;
 	
+	
 	char displayString[65];
 	char displayString1[65];
-
 	Player *myPlayer;
 	vector<Bullet*> bullets;
-	vector<Target*> myTargets;
-	unsigned int enemyCount;
+	EnemyManager *myEnemyManager;
+	//vector<Target*> myTargets;
+	//unsigned int enemyCount;
 
 	vector<GameObject*> Obstacles;
 
@@ -54,9 +56,10 @@ public:
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
 
+
 	void ShootBullets();
 
-	unsigned int GetEnemies() { return enemyCount; };
+	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
 	unsigned int GetHealth() { return myPlayer->GetHealth(); };
 };
 
