@@ -185,7 +185,7 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
-	bool result = myGraphics->Initialize(windowWidth, windowHeight, window);
+	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 	myDX = myGraphics->GetGraphicsEngine();
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
@@ -231,8 +231,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	this->window = window;
-	return result;
-}
+	return result;}
 
 void GameManager::ShutDown()
 {

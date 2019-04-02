@@ -33,7 +33,6 @@ const float NEAR_PLANE = 0.1f;
 class Graphics
 {
 private:
-	InputManager* myInput;
 	UIManager* myUI;
 	DX *myDX;
 	GameObject *Ground;
@@ -49,12 +48,10 @@ private:
 	bool debugCam;
 	float timeBetween;
 	XMFLOAT4 camPosition;
-	Sphere TargetSphe;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;
 	ID3D11RasterizerState*		spriteRasterState;
-
 	//2D Graphics Variables
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 	//Temporary (Hoping to make a function that adds to an array of unique_ptrs<>)
@@ -67,7 +64,7 @@ public:
 
 	void ShootBullet(HWND hwnd);
 
-	bool Initialize(int windowWidth, int windowHeight, HWND window);
+	bool Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput);
 
 	//UI Manager Function Pass Throughs
 	void CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
@@ -79,7 +76,6 @@ public:
 
 	DX* GetGraphicsEngine() { return myDX; }
 	UIManager* GetUIManager() { return myUI; }
-
 	Camera* GetCamera() { return myCamera; };
 };
 

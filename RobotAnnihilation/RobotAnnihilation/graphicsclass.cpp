@@ -14,10 +14,9 @@ Graphics::Graphics(InputManager* input)
 	timeBetween = timeGetTime();
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
-	myInput = input;
 }
 
-bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
+bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput)
 {
 	bool result;
 
@@ -39,7 +38,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
 
 	//Initialize the game object 
-
 	Ground = new GameObject();
 	Ground->Initialize("Assets/Ground.mesh", myDX->GetDevice());	
 	if (!Ground)
@@ -53,7 +51,6 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		return false;
 	}
-
 	//myTargets.push_back(new Target());
 	//myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
 
@@ -193,7 +190,6 @@ void Graphics::Shutdown()
 		delete myShaderManager;
 		myShaderManager = nullptr;
 	}
-
 	if (Ground)
 	{
 		Ground->Shutdown();
@@ -225,12 +221,10 @@ void Graphics::Shutdown()
 		delete myDebug;
 		myDebug = nullptr;
 	}
-
 	//Clean up for 2d graphics
 	if (m_spriteBatch) { m_spriteBatch.release(); }
 	if (m_arialFont) { m_arialFont.release(); }
 	if (m_comicSansFont) { m_comicSansFont.release(); }
-
 }
 
 //Called each frame 
