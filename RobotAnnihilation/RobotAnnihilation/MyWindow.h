@@ -8,6 +8,7 @@
 #include "XTime.h"
 #include "GameManager.h"
 #include <windowsx.h>
+#include <map>
 
 class MyWindow
 {
@@ -24,15 +25,26 @@ private:
 	void CreateWindows(int&, int&);
 	void ShutdownWindows();
 	
+	char tempT0[65];
+	char tempT1[65];
+
+	ID3D11Device* GetDevice();
 
 	bool paused = false;
 	bool m_done = false;
 	
-	char tempT0[65];
-	char tempT1[65];
+	UIElement* mainMenu[5];
+	UIElement* optionsMenu[5];
+	UIElement* playerUI[2];
+
+	//UI Functions For Function Pointers
+private:
+	void HideMainMenu();
+	void GameIsDone();
+	void ShowPlayerUI();
 public:
 	MyWindow();
-	void GameIsDone();
+	
 	bool Initialize();
 	void Shutdown();
 	void Render();

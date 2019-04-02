@@ -18,9 +18,9 @@ class GameManager
 	UIManager* myUiManager;
 	HWND window;
 	
+	
 	char displayString[65];
 	char displayString1[65];
-
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	vector<Target*> myTargets;
@@ -53,6 +53,7 @@ public:
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
+
 
 	void ShootBullets();
 

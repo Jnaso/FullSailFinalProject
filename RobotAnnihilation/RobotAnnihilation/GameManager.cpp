@@ -35,6 +35,8 @@ void GameManager::UpdateScoreText()
 
 void GameManager::UpdateHealthText()
 {
+	std::string tempText = "Health: "/* + GetGraphicsManager()->GetHealth()*/;
+	tempText += GetGraphicsManager()->GetHealth();
 	memset(displayString1, '\0', sizeof(displayString1));
 	_itoa_s(myPlayer->GetHealth(), displayString1, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);
@@ -163,20 +165,11 @@ void GameManager::Update(float delta)
 
 	myGraphics->Update();
 
+
+
 	UpdateScoreText();
 	UpdateHealthText();
-
-	if (enemyCount <= 0)
-	{
-		m_YouWin = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
-	if (myPlayer->GetHealth() <= 0)
-	{
-		m_YouLose = myGraphics->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50,50 }, F_ARIAL, "You WIN");
-		GetUIManager()->GetUIElements()[4]->SetEnabled(true);
-	}
-}
+	}}
 
 bool GameManager::Render()
 {
@@ -185,6 +178,8 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
+	
+
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 	myDX = myGraphics->GetGraphicsEngine();
 	myPlayer = new Player();
@@ -231,7 +226,8 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	this->window = window;
-	return result;}
+	return result;
+}
 
 void GameManager::ShutDown()
 {
