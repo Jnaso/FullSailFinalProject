@@ -2,7 +2,7 @@
 
 EnemyManager::EnemyManager()
 {
-	SeperationStrength = 1000.0f;
+	SeperationStrength = 300.0f;
 }
 
 void EnemyManager::Initialize(ID3D11Device *myDevice)
