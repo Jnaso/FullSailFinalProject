@@ -315,7 +315,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 		for (unsigned int i = 0; i < Obstacles.size(); i++)
 		{
-			world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
+			world = XMMatrixMultiply(XMMatrixScaling(1.0f, 3.0f, 1.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 2, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
 
 			Obstacles[i]->Render(myDX->GetDeviceContext());
 
@@ -369,9 +369,4 @@ void Graphics::Update(InputManager *myInput, float delta)
 	}
 
 	//system("CLS");
-}
-
-void Graphics::ShootBullet(HWND hwnd)
-{
-	
 }

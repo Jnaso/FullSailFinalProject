@@ -152,6 +152,33 @@ void GameManager::Update(float delta)
 				}
 			}
 		}
+		for (size_t j = 0; j < Obstacles.size(); j++)
+		{
+			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			{
+				for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
+				{
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *Obstacles[j]->GetCollider(k), delta))
+					{
+						bullets[i]->SetDestroy();
+					}
+				}
+			}
+		}
+	}
+	for (size_t i = 0; i < Obstacles.size(); i++)
+	{
+		if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+		{
+			for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); i++)
+			{
+				if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
+				{
+					std::cout << "Wait, no stop" << std::endl;
+					break;
+				}
+			}
+		}
 	}
 	myInput->GetMouseInput()->Acquire();
 	myInput->SetCurrMouseState();
@@ -227,7 +254,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles.push_back(new GameObject());
 		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
-		Obstacles[i]->AddCollider(Obstacles[i]->GetPhysicsComponent()->GetPosition(), 1.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 1.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 1.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 1.0f);
 	}
 
 	this->window = window;

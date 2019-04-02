@@ -376,6 +376,13 @@ struct Sphere
 	float3 center;
 };
 
+struct Capsule
+{
+	float radius;
+	float3 center;
+	float height;
+};
+
 inline float3 GetMin(AABB ab)
 {
 	return { ab.center.x - ab.dimensions.x, ab.center.y - ab.dimensions.y, ab.center.z - ab.dimensions.z };

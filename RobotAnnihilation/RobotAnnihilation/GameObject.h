@@ -73,5 +73,7 @@ public:
 
 	std::vector<Sound*>GetSounds() { return objectSounds; };
 	void AddSound(Sound* newSound) { objectSounds.push_back(newSound); };
+
+	std::vector<Sphere>GetColliders() { return colliders; }
 };
 
