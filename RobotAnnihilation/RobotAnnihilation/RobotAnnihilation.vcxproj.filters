@@ -1,220 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Precompiled Header">
-      <UniqueIdentifier>{d7c52cca-6a6c-4c7f-9dce-5be4cc364bb4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject &amp; Components">
-      <UniqueIdentifier>{60cfc353-3a35-4434-b082-1b750d3e2934}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DebugCamera.cpp" />
+    <ClCompile Include="Gun.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="allofthelights.cpp" />
+    <ClCompile Include="dxstuff.cpp" />
+    <ClCompile Include="graphicsclass.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="MyWindow.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RobotAnnihilation.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SkyboxShader.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="StaticShader.cpp" />
+    <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="Target.cpp" />
+    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
+    <ClCompile Include="shaderstuff.cpp" />
+    <ClCompile Include="XTime.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RobotAnnihilation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MathDefines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WICTextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="graphicsclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dxstuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shaderstuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="allofthelights.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XTime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UIManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UIElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneralIncludes.h">
-      <Filter>Precompiled Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Target.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-
-    <ClInclude Include="SkyboxShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-    <ClInclude Include="Gun.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>  </ItemGroup>  <ItemGroup>
-    <ClCompile Include="RobotAnnihilation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WICTextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="graphicsclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxstuff.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shaderstuff.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="allofthelights.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="XTime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MyWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UIManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UIElement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Target.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyboxShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-    <ClCompile Include="Gun.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="RobotAnnihilation.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="DebugCamera.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="allofthelights.h" />
+    <ClInclude Include="dxstuff.h" />
+    <ClInclude Include="GeneralIncludes.h" />
+    <ClInclude Include="graphicsclass.h" />
+    <ClInclude Include="Gun.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="header.h" />
+    <ClInclude Include="MathDefines.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="MyWindow.h" />
+    <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RobotAnnihilation.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="shaderstuff.h" />
+    <ClInclude Include="SkyboxShader.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="StaticShader.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="UIManager.h" />
+    <ClInclude Include="WICTextureLoader.h" />
+    <ClInclude Include="XTime.h" />
+    <ClInclude Include="EnemyManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="RobotAnnihilation.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ResourceCompile Include="RobotAnnihilation.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShader.vs" />
-    <None Include="PixelShader.ps" />
-    <None Include="VertexShaderStatic.vs" />
-    <None Include="NonNormalPixelShader.ps" />
+    <Image Include="RobotAnnihilation.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="NonAnimationVertexShader.vs" />
-    <None Include="Skybox.vs" />
+    <None Include="NonNormalPixelShader.ps" />
+    <None Include="PixelShader.ps" />
     <None Include="Skybox.ps" />
+    <None Include="Skybox.vs" />
+    <None Include="VertexShader.vs" />
+    <None Include="VertexShaderStatic.vs" />
   </ItemGroup>
 </Project>
