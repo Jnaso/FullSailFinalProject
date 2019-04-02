@@ -174,7 +174,6 @@ void GameManager::Update(float delta)
 			{
 				if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
 				{
-					std::cout << "Wait, no stop" << std::endl;
 					break;
 				}
 			}
@@ -245,7 +244,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	for (unsigned int i = 0; i < enemyCount; i++)
 	{
 		myTargets.push_back(new Target());
-		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
+		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/RobotAttack.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, -1.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
+		myTargets[i]->AddAninimation("Assets/RobotAttack.anim", myDX->GetDevice(), 0);
+		myTargets[i]->SetAnimation(0);
 	}
 
 	unsigned int ObstaclesCount = rand() % 10 + 5;
