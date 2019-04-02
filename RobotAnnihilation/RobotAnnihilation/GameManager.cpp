@@ -155,7 +155,7 @@ void GameManager::Update(float delta)
 bool GameManager::Render()
 {
 	//return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
-	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies());
+	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles);
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -229,10 +229,11 @@ void GameManager::ShutDown()
 		myPlayer = nullptr;
 	}
 
-	for (int i = 0; i < myTargets.size(); i++)
+	if (myEnemyManager)
 	{
 		myEnemyManager->Shutdown();
 		delete myEnemyManager;
 		myEnemyManager = nullptr;
 	}
+	
 }
