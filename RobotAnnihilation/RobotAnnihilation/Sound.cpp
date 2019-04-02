@@ -240,7 +240,7 @@ bool Sound::PlayWaveFile()
 		return false;
 	}
 
-	result = mySecondary->SetVolume(DSBVOLUME_MAX);
+	result = mySecondary->SetVolume(-3000);
 	if (FAILED(result))
 	{
 		return false;

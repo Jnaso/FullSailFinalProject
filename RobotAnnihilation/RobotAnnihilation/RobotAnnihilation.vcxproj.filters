@@ -62,6 +62,9 @@
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="XTime.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />
