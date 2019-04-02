@@ -36,7 +36,7 @@ void GameManager::UpdateScoreText()
 void GameManager::UpdateHealthText()
 {
 	std::string tempText = "Health: "/* + GetGraphicsManager()->GetHealth()*/;
-	tempText += GetGraphicsManager()->GetHealth();
+	tempText += this->GetHealth();
 	memset(displayString1, '\0', sizeof(displayString1));
 	_itoa_s(myPlayer->GetHealth(), displayString1, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);
@@ -169,7 +169,7 @@ void GameManager::Update(float delta)
 
 	UpdateScoreText();
 	UpdateHealthText();
-	}}
+}
 
 bool GameManager::Render()
 {

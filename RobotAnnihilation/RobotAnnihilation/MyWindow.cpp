@@ -32,7 +32,8 @@ bool MyWindow::Run()
 
 	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
 	{
-		gameManager->GetGraphicsManager()->ShootBullet(myWindow);
+		//gameManager->GetGraphicsManager()->ShootBullet(myWindow);
+		gameManager->ShootBullets();
 	}
 
 	//Render every frame and stop if anything goes wrong 
