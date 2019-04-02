@@ -234,7 +234,7 @@ void Graphics::Shutdown()
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets, vector<GameObject*> Obstacles)
 {
 	XMMATRIX world, view, projection;
 	bool result;
@@ -317,6 +317,15 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 			myTargets[i]->Render(myDX->GetDeviceContext());
 
 			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		}
+
+		for (unsigned int i = 0; i < Obstacles.size(); i++)
+		{
+			world = XMMatrixMultiply(XMMatrixScaling(1.0f, 1.0f, 1.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
+
+			Obstacles[i]->Render(myDX->GetDeviceContext());
+
+			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Obstacles[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Obstacles[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 		}
 	}
 

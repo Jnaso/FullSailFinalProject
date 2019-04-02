@@ -26,6 +26,8 @@ class GameManager
 	vector<Target*> myTargets;
 	unsigned int enemyCount;
 
+	vector<GameObject*> Obstacles;
+
 public:
 	GameManager();
 	~GameManager();

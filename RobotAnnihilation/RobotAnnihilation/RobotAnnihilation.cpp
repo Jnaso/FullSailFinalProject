@@ -6,13 +6,44 @@
 #include "graphicsclass.h"
 #include "XTime.h"
 #include "MyWindow.h"
+#include <stdio.h>
+#include <DbgHelp.h>
+#include <time.h>
+
+#pragma comment(lib, "dbghelp.lib")
 
 #define MAX_LOADSTRING 100
 
+LONG WINAPI errorFunc(_EXCEPTION_POINTERS* pExceptionInfo)
+{
+	struct tm newTime;
+	time_t ltime;
+	wchar_t buff[100] = { 0 };
+
+	ltime = time(&ltime);
+	localtime_s(&newTime, &ltime);
+
+	wcsftime(buff, sizeof(buff), L"%A_%b%d_%I%M%p.mdmp", &newTime);
+
+	HANDLE hfile = ::CreateFileW(buff, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hfile != INVALID_HANDLE_VALUE)
+	{
+		_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
+
+		ExInfo.ThreadId = ::GetCurrentThreadId();
+		ExInfo.ExceptionPointers = pExceptionInfo;
+		ExInfo.ClientPointers = NULL;
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hfile, MiniDumpNormal, &ExInfo, NULL, NULL);
+		::CloseHandle(hfile);
+	}
+	return 0;
+}
 
 //Main function, Initializes the system class which and calls the run if nothing goes wrong, returns if anything breaks or if there is a shutdown
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
+
+	SetUnhandledExceptionFilter(errorFunc);
 
 #ifndef NDEBUG
 	AllocConsole();

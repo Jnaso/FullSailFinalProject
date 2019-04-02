@@ -98,7 +98,6 @@ struct float3
 
 	inline void operator+=(const float3& value)
 	{
-		float3 newVal;
 		this->x += value.x;
 		this->y += value.y;
 		this->z += value.z;

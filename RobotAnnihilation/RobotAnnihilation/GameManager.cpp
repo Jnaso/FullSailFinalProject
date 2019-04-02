@@ -180,7 +180,7 @@ void GameManager::Update(float delta)
 
 bool GameManager::Render()
 {
-	return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
+	return myGraphics->Render(myInput, myPlayer, bullets, myTargets, Obstacles);
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -220,6 +220,16 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		myTargets.push_back(new Target());
 		myTargets[i]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
 	}
+
+	unsigned int ObstaclesCount = rand() % 10 + 5;
+	for (unsigned int i = 0; i < ObstaclesCount; i++)
+	{
+		Obstacles.push_back(new GameObject());
+		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
+		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
+		Obstacles[i]->AddCollider(Obstacles[i]->GetPhysicsComponent()->GetPosition(), 1.0f);
+	}
+
 	this->window = window;
 	return result;
 }
