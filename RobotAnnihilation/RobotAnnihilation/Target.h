@@ -3,6 +3,7 @@
 #define _TARGET_H_
 
 #include "GameObject.h"
+#include "Player.h"
 
 class Target : public GameObject
 {
@@ -10,6 +11,8 @@ private:
 	bool readyToDestroy;
 	AABB myCollision;
 	float velocity;
+	float timeBetweenAttacks;
+	bool attacking;
 
 public:
 	Target();
@@ -17,8 +20,9 @@ public:
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
 	bool Destroy();
 	void SetDestroy();
-	void Update(float delta, float3 forward);
+	void Update(float delta, float3 forward, Player *myPlayer);
 	AABB GetAABB();
+	void Attack(Player *myPlayer);
 };
 
 #endif // !_TARGET_H_

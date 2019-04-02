@@ -2,7 +2,7 @@
 
 EnemyManager::EnemyManager()
 {
-	SeperationStrength = 25.0f;
+	SeperationStrength = 1000.0f;
 }
 
 void EnemyManager::Initialize(ID3D11Device *myDevice)
@@ -36,7 +36,7 @@ void EnemyManager::Update(float delta, Player *myPlayer)
 		accel *= delta;
 		myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z});
 
-		myEnemies[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition());
+		myEnemies[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition(), myPlayer);
 		if (myEnemies[i]->Destroy())
 		{
 			Target *temp;

@@ -19,7 +19,7 @@ private:
 	float3 AverageForward;
 	float flockRadius;
 
-	const float safeRadius = 75.0f;
+	const float safeRadius = 1.0f;
 
 public:
 	EnemyManager();
