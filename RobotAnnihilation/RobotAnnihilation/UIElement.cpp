@@ -83,7 +83,6 @@ ImageElement::ImageElement(RECT srcRect, bool interactable, bool enabled, float2
 }
 void ImageElement::Update()
 {
-
 }
 void ImageElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch)
 {
@@ -128,7 +127,10 @@ void ButtonElement::Update()
 			}
 			if (this->m_input->GetKeyState(_LMOUSE))
 			{
-				this->m_OnMouseClick();
+				if (m_OnMouseClick)
+				{
+					this->m_OnMouseClick();
+				}
 			}
 		}
 	}

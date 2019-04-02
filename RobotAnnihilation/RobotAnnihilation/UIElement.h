@@ -51,7 +51,6 @@ public:
 		float2 temp = { m_pos.x, m_pos.y };
 		return temp;
 	}
-
 	void SetPos(float2 value) 
 	{ 
 		m_destRect.right = static_cast<LONG>(value.x + GetSize().x);

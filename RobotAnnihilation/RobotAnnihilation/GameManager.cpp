@@ -25,6 +25,7 @@ KEYSTATE GameManager::GetKeyState(int keyCode)
 
 void GameManager::UpdateScoreText()
 {
+	
 	memset(displayString, '\0', sizeof(displayString));
 	_itoa_s(GetGraphicsManager()->GetEnemies(), displayString, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_scoreText);
@@ -33,6 +34,8 @@ void GameManager::UpdateScoreText()
 
 void GameManager::UpdateHealthText()
 {
+	std::string tempText = "Health: "/* + GetGraphicsManager()->GetHealth()*/;
+	tempText += GetGraphicsManager()->GetHealth();
 	memset(displayString1, '\0', sizeof(displayString1));
 	_itoa_s(GetGraphicsManager()->GetHealth(), displayString1, 65, 10);
 	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);

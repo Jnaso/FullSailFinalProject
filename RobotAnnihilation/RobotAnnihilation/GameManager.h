@@ -15,9 +15,9 @@ class GameManager
 	InputManager *myInput;
 	UIManager* myUiManager;
 	
+	
 	char displayString[65];
 	char displayString1[65];
-
 public:
 	GameManager();
 	~GameManager();
