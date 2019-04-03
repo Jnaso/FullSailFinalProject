@@ -150,6 +150,21 @@ void GameManager::Update(float delta)
 
 	UpdateScoreText();
 	UpdateHealthText();
+
+	if (GetHealth() <= 0)
+	{
+		if (!m_YouLose)
+		{
+			m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
+		}
+	}
+	if (GetEnemies() <= 0)
+	{
+		if (!m_YouWin)
+		{
+			m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
+		}
+	}
 }
 
 bool GameManager::Render()
