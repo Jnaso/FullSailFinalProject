@@ -20,6 +20,9 @@ class GameManager
 	char displayString[65];
 	char displayString1[65];
 	char displayString2[65];
+
+	std::string numberToChr;
+
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
