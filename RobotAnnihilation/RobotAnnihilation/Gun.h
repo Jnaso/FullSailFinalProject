@@ -2,6 +2,11 @@
 #include "Model.h"
 class Gun
 {
+public:
+	enum GunClass
+	{
+		PISTOL, SUBMACHINE, MACHINE, COUNT
+	};
 protected:
 	float FireRate;
 	float DamageAmount;
@@ -9,7 +14,7 @@ protected:
 	float3 ShootPos;
 
 	Model* gunModel;
-
+	GunClass gunClass;
 public:
 	Gun();
 	~Gun();
@@ -22,10 +27,13 @@ public:
 	float GetFireRate() { return FireRate; };
 	void SetFireRate(float NewFireRate) { FireRate = NewFireRate; };
 
-	float GetDamageAmount() { return FireRate; };
+	float GetDamageAmount() { return DamageAmount; };
 	void SetDamageAmount(float damage) { DamageAmount = damage; };
 
 	float3 GetShootPos() { return ShootPos; };
 	void SetShootPos(float3 newPos) { ShootPos = newPos; };
+
+	GunClass GetGunClass() { return gunClass; };
+	void SetGunClass(GunClass newGun) { gunClass = newGun; };
 };
 

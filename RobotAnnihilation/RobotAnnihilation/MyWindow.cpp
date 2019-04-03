@@ -408,8 +408,14 @@ bool MyWindow::Initialize()
 
 	playerUI[3] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, "Health: ");
 
+	playerUI[4] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{0, 100}, F_ARIAL, "Current Weapon: ");
 
-	#pragma endregion
+	memset(tempT2, '\0', sizeof(tempT2));
+	int tempIn = 0;
+	_itoa_s(tempIn, tempT2, 65, 10);
+	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, (const char*)tempT2);
+	
+#pragma endregion
 	
 	return true;
 }
@@ -529,5 +535,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 void MyWindow::Update(float delta)
 {
-	gameManager->Update(delta);
+	gameManager->Update(delta, timer.TotalTime());
 }

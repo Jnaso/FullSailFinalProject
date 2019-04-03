@@ -11,29 +11,27 @@
 class GameManager
 {
 	DX* myDX;
-	// Replace int with GameObjects when implemented
-	std::vector<GameObject*> GameObjects;
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
-	UIManager* myUiManager;
 	HWND window;
 	
 	
 	char displayString[65];
 	char displayString1[65];
+	char displayString2[65];
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
-	//vector<Target*> myTargets;
-	//unsigned int enemyCount;
 
 	vector<GameObject*> Obstacles;
+
+	vector<GameObject*> Pickups;
 
 public:
 	GameManager();
 	~GameManager();
-	void Update(float delta);
+	void Update(float delta, float total);
 
 	bool Render();
 
@@ -45,12 +43,17 @@ public:
 
 	UIElement* m_scoreText;
 	UIElement* m_healthText;
+	UIElement* m_timerText;
 
 	UIElement* m_YouLose;
 	UIElement* m_YouWin;
 
+	UIElement* m_weapon;
+
 	void UpdateScoreText();
 	void UpdateHealthText();
+	void UpdateWeaponText();
+	void UpdateTimerText(float time);
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
@@ -61,5 +64,7 @@ public:
 
 	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
 	unsigned int GetHealth() { return myPlayer->GetHealth(); };
+
+	void SpawnPickup(float3 pos);
 };
 

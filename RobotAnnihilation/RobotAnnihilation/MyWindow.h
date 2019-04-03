@@ -27,6 +27,7 @@ private:
 	
 	char tempT0[65];
 	char tempT1[65];
+	char tempT2[65];
 
 	ID3D11Device* GetDevice();
 
@@ -35,7 +36,7 @@ private:
 	
 	UIElement* mainMenu[5];
 	UIElement* optionsMenu[5];
-	UIElement* playerUI[4];
+	UIElement* playerUI[6];
 	UIElement* pauseMenu[4];
 
 	//UI Functions For Function Pointers

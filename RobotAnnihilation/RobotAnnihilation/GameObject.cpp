@@ -53,7 +53,12 @@ std::vector<float4x4> GameObject::Flatten(std::vector<float4x4> joints, std::vec
 void GameObject::Update(float delta)
 {
 	ObjectPhysics->Update(delta);
-	currentAnimation->Update(delta);
+	lifeTime -= delta;
+	totalTime += delta;
+	if (currentAnimation)	
+	{
+		currentAnimation->Update(delta);
+	}
 }
 
 void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, int index)

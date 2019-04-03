@@ -14,6 +14,8 @@ private:
 	float timeBetweenAttacks;
 	bool attacking;
 
+	float health = 100;
+
 public:
 	Target();
 
@@ -23,6 +25,9 @@ public:
 	void Update(float delta, float3 forward, Player *myPlayer);
 	AABB GetAABB();
 	void Attack(Player *myPlayer);
+
+	float GetHealth() { return health; }
+	void SubHealth(float newHealth) { health -= newHealth; }
 };
 
 #endif // !_TARGET_H_
