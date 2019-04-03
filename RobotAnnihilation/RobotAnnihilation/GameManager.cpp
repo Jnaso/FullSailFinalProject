@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-
-
 GameManager::GameManager()
 {
 	myInput = new InputManager();

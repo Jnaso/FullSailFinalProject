@@ -56,11 +56,11 @@ void Frustum::Construct(float screenDepth, XMMATRIX projection, XMMATRIX view)
 	XMStoreFloat4(&myPlanes[5], XMPlaneNormalize(XMLoadFloat4(&myPlanes[5])));
 }
 
-bool Frustum::CheckSphere(float3 center, float radius)
+bool Frustum::CheckSphere(Sphere sphe)
 {
 	for (unsigned int i = 0; i < 6; i++)
 	{
-		if (XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&myPlanes[i]), XMVectorSet(center.x, center.y, center.z, 1.0f))) < -radius)
+		if (XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&myPlanes[i]), XMVectorSet(sphe.center.x, sphe.center.y, sphe.center.z, 1.0f))) < -sphe.radius)
 		{
 			return false;
 		}
