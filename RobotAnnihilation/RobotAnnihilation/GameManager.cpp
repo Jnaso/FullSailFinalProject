@@ -164,6 +164,9 @@ void GameManager::Update(float delta, float total)
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
 						bullets[i]->SetDestroy();
+						myEnemyManager->GetEnemies()[j]->AddSound(new Sound((char*)"Assets/HitSound.wav"));
+						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->Initialize(window);
+						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->PlayWaveFile();
 						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
