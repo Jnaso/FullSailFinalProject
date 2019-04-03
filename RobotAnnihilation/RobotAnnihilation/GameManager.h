@@ -14,7 +14,6 @@ class GameManager
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
-	UIManager* myUiManager;
 	HWND window;
 	
 	
