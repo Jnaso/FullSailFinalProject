@@ -394,7 +394,7 @@ bool MyWindow::Initialize()
 
 
 
-
+	
 
 	memset(tempT0, '\0', sizeof(tempT0));
 	_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
@@ -413,7 +413,10 @@ bool MyWindow::Initialize()
 	memset(tempT2, '\0', sizeof(tempT2));
 	int tempIn = 0;
 	_itoa_s(tempIn, tempT2, 65, 10);
-	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, (const char*)tempT2);
+	
+	numToChr = std::to_string(tempIn);
+	const char* tempT100 = numToChr.c_str();
+	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 	
 #pragma endregion
 	

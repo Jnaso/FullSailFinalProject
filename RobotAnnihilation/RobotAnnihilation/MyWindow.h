@@ -33,6 +33,8 @@ private:
 
 	bool paused = false;
 	bool m_done = false;
+
+	std::string numToChr;
 	
 	UIElement* mainMenu[5];
 	UIElement* optionsMenu[5];
@@ -41,6 +43,8 @@ private:
 
 	//UI Functions For Function Pointers
 private:
+	
+
 	void HideMainMenu();
 	void ShowMainMenu();
 
