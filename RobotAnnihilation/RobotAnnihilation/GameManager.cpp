@@ -68,6 +68,15 @@ void GameManager::ShootBullets()
 	}
 }
 
+void GameManager::SpawnPickup(float3 pos)
+{
+	Pickups.push_back(new GameObject());
+	Pickups[Pickups.size() - 1]->Initialize("Assets/HealthPickup.mesh", myDX->GetDevice());
+	Pickups[Pickups.size() - 1]->SetLifeTime(10.0f);
+	Pickups[Pickups.size() - 1]->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
+	Pickups[Pickups.size() - 1]->AddCollider(Pickups[Pickups.size() - 1]->GetPhysicsComponent()->GetPosition(), 1.0f);
+}
+
 void GameManager::Update(float delta)
 {
 	myGraphics->Update(myInput, delta);
@@ -123,15 +132,24 @@ void GameManager::Update(float delta)
 
 		for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 		{
-
 			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 			{
 				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 				{
 					//std::cout << "Boom, Collision!" << std::endl;
 					bullets[i]->SetDestroy();
-					myEnemyManager->GetEnemies()[j]->SetDestroy();
-					std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+					myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
+					if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
+					{
+						int chance = rand() % 100;
+						if (chance < 100)
+						{
+							float3 pos = myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition();
+							SpawnPickup(pos);
+						}
+						myEnemyManager->GetEnemies()[j]->SetDestroy();
+						std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+					}
 				}
 			}
 		}
@@ -153,22 +171,39 @@ void GameManager::Update(float delta)
 	{
 		if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 		{
-			for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); i++)
+			for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
 			{
 				if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
 				{
-					break;
+					
 				}
+			}
+		}
+	}
+	for (size_t i = 0; i < Pickups.size(); i++)
+	{
+		Pickups[i]->Update(delta);
+		if (Pickups[i]->GetLifeTime() <= 0)
+		{
+			Pickups.erase(Pickups.begin() + i);
+			--i;
+		}
+	}
+	for (size_t i = 0; i < Pickups.size(); i++)
+	{
+		std::cout << DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) << std::endl;
+		if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+		{
+			if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
+			{
+				myPlayer->SetHealth(myPlayer->GetHealth() + 25);
+				Pickups.erase(Pickups.begin() + i);
+				--i;
 			}
 		}
 	}
 	myInput->GetMouseInput()->Acquire();
 	myInput->SetCurrMouseState();
-	for (unsigned int i = 0; i < GameObjects.size(); i++)
-	{
-		// Uncomment when GameObjects have been implemented
-		//GameObjects[i].Update(delta);
-	}
 
 	myGraphics->Update();
 
@@ -181,15 +216,16 @@ void GameManager::Update(float delta)
 bool GameManager::Render()
 {
 	//return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
-	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles);
+	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
-	
 
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
+
 	myDX = myGraphics->GetGraphicsEngine();
+
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
 	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);

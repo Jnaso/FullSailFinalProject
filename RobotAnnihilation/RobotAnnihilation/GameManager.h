@@ -11,8 +11,6 @@
 class GameManager
 {
 	DX* myDX;
-	// Replace int with GameObjects when implemented
-	std::vector<GameObject*> GameObjects;
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
@@ -25,10 +23,10 @@ class GameManager
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
-	//vector<Target*> myTargets;
-	//unsigned int enemyCount;
 
 	vector<GameObject*> Obstacles;
+
+	vector<GameObject*> Pickups;
 
 public:
 	GameManager();
@@ -61,5 +59,7 @@ public:
 
 	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
 	unsigned int GetHealth() { return myPlayer->GetHealth(); };
+
+	void SpawnPickup(float3 pos);
 };
 

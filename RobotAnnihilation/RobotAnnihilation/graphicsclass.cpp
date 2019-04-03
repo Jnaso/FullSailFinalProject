@@ -228,7 +228,7 @@ void Graphics::Shutdown()
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets, vector<GameObject*> Obstacles)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets, vector<GameObject*> Obstacles, vector<GameObject*> Pickups)
 {
 	XMMATRIX world, view, projection;
 	bool result;
@@ -322,6 +322,15 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 			Obstacles[i]->Render(myDX->GetDeviceContext());
 
 			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Obstacles[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Obstacles[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+		}
+
+		for (unsigned int i = 0; i < Pickups.size(); i++)
+		{
+			world = XMMatrixMultiply(XMMatrixMultiply(XMMatrixTranslation(0, sin(Pickups[i]->GetTotalTime() * 10.0f * .25 + 1.5), 0),XMMatrixRotationY(Pickups[i]->GetTotalTime())), XMMatrixTranslation(Pickups[i]->GetPhysicsComponent()->GetPosition().x, Pickups[i]->GetPhysicsComponent()->GetPosition().y, Pickups[i]->GetPhysicsComponent()->GetPosition().z));
+
+			Pickups[i]->Render(myDX->GetDeviceContext());
+
+			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Pickups[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Pickups[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 		}
 	}
 

@@ -22,7 +22,7 @@ public:
 	float GetFireRate() { return FireRate; };
 	void SetFireRate(float NewFireRate) { FireRate = NewFireRate; };
 
-	float GetDamageAmount() { return FireRate; };
+	float GetDamageAmount() { return DamageAmount; };
 	void SetDamageAmount(float damage) { DamageAmount = damage; };
 
 	float3 GetShootPos() { return ShootPos; };

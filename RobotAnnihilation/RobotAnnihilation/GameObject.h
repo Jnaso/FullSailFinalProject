@@ -39,6 +39,9 @@ protected:
 	std::vector<float4x4> AnimationJoints;
 	std::vector<int32_t> AnimationParents;
 
+	float lifeTime = 0.0f;
+	float totalTime = 0.0f;
+
 public:
 	GameObject();
 	~GameObject();
@@ -75,5 +78,11 @@ public:
 	void AddSound(Sound* newSound) { objectSounds.push_back(newSound); };
 
 	std::vector<Sphere>GetColliders() { return colliders; }
+
+	float GetLifeTime() { return lifeTime; }
+	void SetLifeTime(float newLife) { lifeTime = newLife; }
+
+	float GetTotalTime() { return totalTime; }
+	void SetTotalTime(float newLife) { totalTime = newLife; }
 };
 
