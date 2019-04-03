@@ -106,6 +106,12 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	myColors[0] = {1.0f, 0.0f, 0.0f, 1.0f};
 	myColors[1] = {0.0f, 0.0f, 1.0f, 1.0f};
 
+	myFrustum = new Frustum();
+	if (!myFrustum)
+	{
+		return false;
+	}
+
 	//Create UI Manager
 	myUI = new UIManager(myInput, myDX->GetDevice(), myDX->GetDeviceContext());
 	if (!myUI)
@@ -221,6 +227,13 @@ void Graphics::Shutdown()
 		delete myDebug;
 		myDebug = nullptr;
 	}
+
+	if (myFrustum)
+	{
+		delete myFrustum;
+		myFrustum = nullptr;
+	}
+
 	//Clean up for 2d graphics
 	if (m_spriteBatch) { m_spriteBatch.release(); }
 	if (m_arialFont) { m_arialFont.release(); }
@@ -230,8 +243,9 @@ void Graphics::Shutdown()
 //Called each frame 
 bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Target*> myTargets, vector<GameObject*> Obstacles)
 {
-	XMMATRIX world, view, projection;
-	bool result;
+	XMMATRIX world, view, projection, frustumView;
+	bool result, render;
+	unsigned int renderCount = 0;
 
 	HRESULT hr;
 	
@@ -247,10 +261,9 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 	{
 		myCamera->PassInViewMatrix(view);
 	}
+	myCamera->PassInViewMatrix(frustumView);
+
 	myDX->PassProjectionMatrix(projection);
-
-
-	////Manipulate matricies here
 
 	camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3] };
 
@@ -305,24 +318,37 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Ground->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
+		myFrustum->Construct(FAR_PLANE, projection, frustumView);
+		
 		for (unsigned int i = 0; i < myTargets.size(); i++)
 		{
-			world = XMMatrixMultiply(XMMatrixTranslation(0.0f, -1.0f, 0.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
 
-			myTargets[i]->Render(myDX->GetDeviceContext());
+			render = myFrustum->CheckSphere(*myTargets[i]->GetCollider(0));
 
-			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+			if (render)
+			{
+				world = XMMatrixMultiply(XMMatrixTranslation(0.0f, -1.0f, 0.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
+
+				myTargets[i]->Render(myDX->GetDeviceContext());
+
+				result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+				//renderCount++;
+			}
 
 			//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myTargets[i]->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myTargets[i]->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 		}
 
+
 		for (unsigned int i = 0; i < Obstacles.size(); i++)
 		{
-			world = XMMatrixMultiply(XMMatrixScaling(1.0f, 3.0f, 1.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 2, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
+			render = myFrustum->CheckSphere(*Obstacles[i]->GetCollider(0));
+			if (render)
+			{
+				world = XMMatrixMultiply(XMMatrixScaling(1.0f, 3.0f, 1.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 2, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
 
-			Obstacles[i]->Render(myDX->GetDeviceContext());
-
-			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Obstacles[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Obstacles[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+				Obstacles[i]->Render(myDX->GetDeviceContext());
+				result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Obstacles[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Obstacles[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+			}
 		}
 	}
 
@@ -339,6 +365,8 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 	
 	//Present the swap chain 
 	myDX->PresentScreen();
+
+	//modelList.clear();
 
 	return true;
 }

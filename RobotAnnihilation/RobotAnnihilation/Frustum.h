@@ -16,7 +16,7 @@ public:
 
 	void Construct(float screenDepth, XMMATRIX projection, XMMATRIX view);
 	
-	bool CheckSphere(float3 center, float radius);
+	bool CheckSphere(Sphere sphe);
 };
 
 #endif // !_FRUSTUM_H_
