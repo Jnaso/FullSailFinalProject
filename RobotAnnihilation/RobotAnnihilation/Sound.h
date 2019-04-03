@@ -50,6 +50,7 @@ private:
 	IDirectSoundBuffer *myPrimary;
 	IDirectSoundBuffer8 *mySecondary;
 	char* soundFile;
+	int volume;
 
 	bool InitializeDirectSound(HWND window);
 	void ShutdownDirectSound();
@@ -57,7 +58,7 @@ private:
 	void ShutdownWaveFile(IDirectSoundBuffer8**);
 
 public:
-	Sound(char *filename);
+	Sound(char *filename, int v = -3000);
 
 	bool Initialize(HWND window);
 	void Shutdown();

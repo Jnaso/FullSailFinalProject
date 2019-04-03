@@ -383,6 +383,12 @@ struct Capsule
 	float height;
 };
 
+struct Segment
+{
+	float3 start;
+	float3 end;
+};
+
 inline float3 GetMin(AABB ab)
 {
 	return { ab.center.x - ab.dimensions.x, ab.center.y - ab.dimensions.y, ab.center.z - ab.dimensions.z };
@@ -507,6 +513,35 @@ inline bool RayToAABB(Ray r, AABB ab)
 	}
 
 	return true;
+}
+
+inline bool pointCircle(float3 point, Sphere sphe)
+{
+	float distX = point.x - sphe.center.x;
+	float distY = point.y - sphe.center.y;
+	float distZ = point.z - sphe.center.z;
+	float distance = sqrtf(pow(distX, 2) + pow(distY, 2) + pow(distZ, 2));
+
+	if (distance <= sphe.radius)
+	{
+		return true;
+	}
+
+	return false;
+
+}
+
+inline bool lineCircle(Segment seg, Sphere sphe)
+{
+	bool inside1 = pointCircle(seg.start, sphe);
+	bool inside2 = pointCircle(seg.end, sphe);
+
+	if (inside1 || inside2)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 inline float RandomUniform()

@@ -10,7 +10,6 @@ Bullet::Bullet(float life)
 
 bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 forward, float3 position)
 {
-
 	GetModelComponent()->Initialize(fileName, myDevice);
 	if (!GetModelComponent())
 	{

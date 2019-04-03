@@ -28,6 +28,7 @@
     <ClCompile Include="shaderstuff.cpp" />
     <ClCompile Include="XTime.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="Frustum.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -65,6 +66,7 @@
     <ClInclude Include="EnemyManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Frustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

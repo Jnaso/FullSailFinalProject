@@ -19,6 +19,7 @@
 #include "UIManager.h"
 #include "Bullet.h"
 #include "Target.h"
+#include "Frustum.h"
 #include <string.h>
 
 //Full screen flag 
@@ -44,6 +45,7 @@ private:
 	Lighting *myLighting;
 	Camera *myCamera;
 	DebugCamera *myDebug;
+	Frustum *myFrustum;
 	XMFLOAT4 myPosition[2];
 	XMFLOAT4 myColors[2];
 	XMMATRIX playerWorld;
@@ -62,6 +64,7 @@ private:
 	//Temporary (Hoping to make a function that adds to an array of unique_ptrs<>)
 	std::unique_ptr<DirectX::SpriteFont> m_arialFont;
 	std::unique_ptr<DirectX::SpriteFont> m_comicSansFont;
+
 
 public:
 	void Update(InputManager *, float delta);
