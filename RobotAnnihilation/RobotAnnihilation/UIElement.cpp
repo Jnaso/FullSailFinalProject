@@ -127,10 +127,11 @@ void ButtonElement::Update()
 			}
 			if (this->m_input->GetKeyState(_LMOUSE))
 			{
-				if (m_OnMouseClick)
+				if (m_OnMouseClick != nullptr)
 				{
 					this->m_OnMouseClick();
 				}
+				return;
 			}
 		}
 	}

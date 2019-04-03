@@ -26,6 +26,7 @@ bool MyWindow::Run()
 	if (gameManager->GetKeyState((int)'P'))
 	{
 		paused = !paused;
+		SetPauseMenu(paused);
 	}
 
 	//ShowCursor(paused);
@@ -142,9 +143,30 @@ ID3D11Device * MyWindow::GetDevice()
 
 void MyWindow::HideMainMenu()
 {
+	gameManager->GetUIManager()->m_mainMenu = false;
 	for (unsigned int i = 0; i < 5; i++)
 	{
 		mainMenu[i]->SetEnabled(false);
+		mainMenu[i]->SetInteractable(false);
+	}
+}
+
+void MyWindow::ShowMainMenu()
+{
+	gameManager->GetUIManager()->m_mainMenu = true;
+	for (unsigned int i = 0; i < 5; i++)
+	{
+		mainMenu[i]->SetEnabled(true);
+		mainMenu[i]->SetInteractable(true);
+	}
+}
+
+void MyWindow::SetPauseMenu(bool value)
+{
+	gameManager->GetUIManager()->m_pauseMenu = value;
+	for (unsigned int i = 0; i < ARRAYSIZE(pauseMenu); i++)
+	{
+		pauseMenu[i]->SetEnabled(value);
 	}
 }
 
@@ -155,11 +177,15 @@ void MyWindow::GameIsDone()
 
 void MyWindow::ShowPlayerUI()
 {
-	for (unsigned int i = 0; i < 2; i++)
+	for (unsigned int i = 0; i < ARRAYSIZE(playerUI); i++)
 	{
 		playerUI[i]->SetEnabled(true);
 	}
 }
+
+#define BUTTONSIZE float2{200,50}
+#define CENTERX screenW * 0.5f
+#define CENTERY screenH * 0.5f
 
 bool MyWindow::Initialize()
 {
@@ -216,20 +242,21 @@ bool MyWindow::Initialize()
 	#pragma region UIElement Creation
 	//ENABLE AFTER GAMEPLAY IMPLEMENTATION
 
-	//Text
+
+	
+	#pragma region Main_Menu
 	UIElement* robotAnnText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 50, 50 }, F_COMICSANS, "Robot Annihilation");
 	robotAnnText->SetPos(float2{ (screenW * 0.5f) - 50, robotAnnText->m_pos.y });
 	mainMenu[0] = robotAnnText;
-	
+
 	//Images
 	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });
 	mainMenuBkrnd->SetPos(float2{ 0.0f, 0.0f });
 	mainMenu[1] = mainMenuBkrnd;
-	
-	//Buttons Setup
-	#pragma region Start_Button
+
 	UIElement* sButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, this->GetDevice(), 0, "Start");
+	#pragma region Start_Button
 	ButtonElement* startButton = static_cast<ButtonElement*>(sButton);
 	if (startButton)
 	{
@@ -242,16 +269,17 @@ bool MyWindow::Initialize()
 		{
 			HideMainMenu();
 			ShowPlayerUI();
+			SetPaused(false);
 		};
 
 		startButton->SetSize(float2{ 200, 50 });
 		startButton->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f) });
 	}
-	mainMenu[2] = startButton;
 	#pragma endregion
+	mainMenu[2] = startButton;
 
-	#pragma region Options_Button
 	UIElement* oButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, this->GetDevice(), 0, "Options");
+	#pragma region Options_Button
 	ButtonElement* optionsButton = static_cast<ButtonElement*>(oButton);
 	if (optionsButton)
 	{
@@ -265,11 +293,11 @@ bool MyWindow::Initialize()
 		optionsButton->SetSize(float2{ 200, 50 });
 		optionsButton->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f) + startButton->GetSize().y });
 	}
-	mainMenu[3] = optionsButton;
 	#pragma endregion
+	mainMenu[3] = optionsButton;
 
-	#pragma region Quit_Button
 	UIElement* qButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, this->GetDevice(), 0, "Quit");
+	#pragma region Quit_Button
 	ButtonElement* quitButton1 = static_cast<ButtonElement*>(qButton);
 	if (quitButton1)
 	{
@@ -283,20 +311,106 @@ bool MyWindow::Initialize()
 		quitButton1->SetSize(float2{ 200, 50 });
 		quitButton1->SetPos(float2{ (screenW * 0.5f), (screenH * 0.5f) + (startButton->GetSize().y * 2) });
 	}
+	#pragma endregion  
 	mainMenu[4] = quitButton1;
 	#pragma endregion
 
-	//UIElement Adjustments
+	#pragma region Pause_Menu
+	UIElement* rButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Resume");
+	#pragma region Resume_Button
+	ButtonElement* resumeButton = static_cast<ButtonElement*>(rButton);
+	if (resumeButton)
+	{
+		resumeButton->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		resumeButton->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		resumeButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		resumeButton->m_OnMouseClick = [this]()
+		{
+			this->SetPaused(false);
+			SetPauseMenu(false);
+		};
+		resumeButton->SetSize(float2{ 200,50 });
+		resumeButton->SetPos(float2{ screenW * 0.5f, screenH * 0.5f });
+	}
+	#pragma endregion
+	pauseMenu[0] = rButton;
+
+	UIElement* oButton1 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Options");
+	#pragma region Options_Button
+	ButtonElement* optionsButton1 = static_cast<ButtonElement*>(oButton1);
+	if (optionsButton1)
+	{
+		optionsButton1->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		optionsButton1->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		optionsButton1->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		optionsButton1->m_OnMouseClick = [this]()
+		{
+			//Open Options Menu
+		};
+		optionsButton1->SetSize(BUTTONSIZE);
+		optionsButton1->SetPos(float2{ CENTERX, CENTERY + 50 });
+	}
+	#pragma endregion
+	pauseMenu[1] = optionsButton1;
+
+	UIElement* qButton2 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Quit");
+	#pragma region Pause_Quit_Button
+	ButtonElement* quitButton2 = static_cast<ButtonElement*>(qButton2);
+	if (quitButton2)
+	{
+		quitButton2->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		quitButton2->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		quitButton2->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		quitButton2->m_OnMouseClick = [this]()
+		{
+			GameIsDone();
+		};
+		quitButton2->SetSize(BUTTONSIZE);
+		quitButton2->SetPos(float2{ CENTERX, CENTERY + 100 });
+	}
+	#pragma endregion
+	pauseMenu[2] = quitButton2;
+
+	UIElement* mButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Main Menu");
+	#pragma region MainMenu_Button
+	ButtonElement* mainMenuButton = static_cast<ButtonElement*>(mButton);
+	if (mainMenuButton)
+	{
+		mainMenuButton->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+		mainMenuButton->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+		mainMenuButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+		mainMenuButton->m_OnMouseClick = [this]()
+		{
+			this->ShowMainMenu();
+			this->SetPauseMenu(false);
+		};
+		mainMenuButton->SetSize(BUTTONSIZE);
+		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 150 });
+	}
+	#pragma endregion
+	pauseMenu[3] = mainMenuButton;
+	#pragma endregion
+
+
+
+
+
 
 	memset(tempT0, '\0', sizeof(tempT0));
 	_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
-	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, (const char*)tempT0);
+	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 150,0 }, F_COMICSANS, (const char*)tempT0);
 
 	memset(tempT1, '\0', sizeof(tempT1));
 	_itoa_s(gameManager->GetHealth(), tempT1, 65, 10);
-	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, (const char*)tempT1);
-	#pragma endregion
+	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 100,50 }, F_COMICSANS, (const char*)tempT1);
 
+	playerUI[2] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, "Enemy Count:");
+
+	playerUI[3] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, "Health: ");
+
+
+	#pragma endregion
+	
 	return true;
 }
 

@@ -41,7 +41,7 @@ public:
 	void SetInteractable(bool value) { m_interactable = value; }
 	
 	bool GetEnabled() { return m_enabled; }
-	void SetEnabled(bool value) { m_enabled = value; }
+	void SetEnabled(bool value) {if (this != nullptr){m_enabled = value;}}
 	
 	bool GetMouseOver() { return m_mouseOver; }
 	void SetMouseOver(bool value) { m_mouseOver = value; }

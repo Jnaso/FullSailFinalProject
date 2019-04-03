@@ -25,6 +25,9 @@ private:
 
 public:
 	
+	bool m_mainMenu = true;
+	bool m_pauseMenu = false;
+
 	UIManager(InputManager* input, ID3D11Device* device, ID3D11DeviceContext* context);
 
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);

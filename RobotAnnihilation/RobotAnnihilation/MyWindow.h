@@ -35,11 +35,16 @@ private:
 	
 	UIElement* mainMenu[5];
 	UIElement* optionsMenu[5];
-	UIElement* playerUI[2];
+	UIElement* playerUI[4];
+	UIElement* pauseMenu[4];
 
 	//UI Functions For Function Pointers
 private:
 	void HideMainMenu();
+	void ShowMainMenu();
+
+	void SetPauseMenu(bool value);
+
 	void GameIsDone();
 	void ShowPlayerUI();
 public:
@@ -48,6 +53,9 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Render();
+
+	bool GetPaused() { return paused; }
+	void SetPaused(bool value) { paused = value; }
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 };
