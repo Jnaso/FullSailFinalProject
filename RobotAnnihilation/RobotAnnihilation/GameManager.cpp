@@ -60,6 +60,13 @@ void GameManager::UpdateWeaponText()
 	}
 }
 
+void GameManager::UpdateTimerText(float time)
+{
+	std::string temp = std::to_string(time);
+	TextElement* tempT = static_cast<TextElement*>(m_timerText);
+	tempT->SetText(temp.c_str());
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -95,7 +102,7 @@ void GameManager::SpawnPickup(float3 pos)
 	Pickups.push_back(newpickup);
 }
 
-void GameManager::Update(float delta)
+void GameManager::Update(float delta, float total)
 {
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
@@ -156,19 +163,20 @@ void GameManager::Update(float delta)
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
-						//std::cout << "Boom, Collision!" << std::endl;
 						bullets[i]->SetDestroy();
 						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
 							int chance = rand() % 100;
-							if (chance < 100)
+							if (chance < 25)
 							{
-								float3 pos = myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition();
-								SpawnPickup(pos);
+								SpawnPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
 							}
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
+#ifdef DEBUG
 							std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+#endif // DEBUG
+
 						}
 					}
 				}

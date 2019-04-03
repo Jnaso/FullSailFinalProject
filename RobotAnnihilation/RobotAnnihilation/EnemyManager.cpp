@@ -51,7 +51,10 @@ void EnemyManager::Update(float delta, Player *myPlayer)
 		if (SphereToAABB(*myEnemies[i]->GetCollider(0), myPlayer->GetAABB()))
 		{
 			myPlayer->SetHealth(myPlayer->GetHealth() - 3);
+#ifdef DEBUG
 			std::cout << myPlayer->GetHealth() << std::endl;
+#endif // DEBUG
+
 		}
 	}
 

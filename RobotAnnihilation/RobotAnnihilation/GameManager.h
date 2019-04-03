@@ -19,6 +19,7 @@ class GameManager
 	
 	char displayString[65];
 	char displayString1[65];
+	char displayString2[65];
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
@@ -30,7 +31,7 @@ class GameManager
 public:
 	GameManager();
 	~GameManager();
-	void Update(float delta);
+	void Update(float delta, float total);
 
 	bool Render();
 
@@ -42,6 +43,7 @@ public:
 
 	UIElement* m_scoreText;
 	UIElement* m_healthText;
+	UIElement* m_timerText;
 
 	UIElement* m_YouLose;
 	UIElement* m_YouWin;
@@ -51,6 +53,7 @@ public:
 	void UpdateScoreText();
 	void UpdateHealthText();
 	void UpdateWeaponText();
+	void UpdateTimerText(float time);
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
