@@ -1,12 +1,13 @@
 #include "Sound.h"
 
-Sound::Sound(char *filename)
+Sound::Sound(char *filename, int v)
 {
 	//Initialize pointers  
 	myDirectSound = nullptr;
 	myPrimary = nullptr;
 	mySecondary = nullptr;
 	soundFile = filename;
+	volume = v;
 }
 
 //Initializes the sound buffers and loads the sound from a file
@@ -240,7 +241,7 @@ bool Sound::PlayWaveFile()
 		return false;
 	}
 
-	result = mySecondary->SetVolume(-3000);
+	result = mySecondary->SetVolume(volume);
 	if (FAILED(result))
 	{
 		return false;
