@@ -23,7 +23,7 @@
 #include <string.h>
 
 //Full screen flag 
-const bool FULL_SCREEN = false;
+const bool FULL_SCREEN = true;
 //Vsync flag 
 const bool VSYNC_ENABLED = true;
 //Far plane 
