@@ -296,7 +296,7 @@ bool MyWindow::Initialize()
 	#pragma endregion
 	mainMenu[3] = optionsButton;
 
-	UIElement* qButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0, 0 }, this->GetDevice(), 0, "Quit");
+	UIElement* qButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0, 0 }, this->GetDevice(), 0, "Quit");
 	#pragma region Quit_Button
 	ButtonElement* quitButton1 = static_cast<ButtonElement*>(qButton);
 	if (quitButton1)
@@ -394,7 +394,7 @@ bool MyWindow::Initialize()
 
 
 
-	playerUI[2] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, "Enemy Count:");
+
 
 	memset(tempT0, '\0', sizeof(tempT0));
 	_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
@@ -404,6 +404,7 @@ bool MyWindow::Initialize()
 	_itoa_s(gameManager->GetHealth(), tempT1, 65, 10);
 	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 100,50 }, F_COMICSANS, (const char*)tempT1);
 
+	playerUI[2] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, "Enemy Count:");
 
 	playerUI[3] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, "Health: ");
 
