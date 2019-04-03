@@ -387,7 +387,7 @@ void Graphics::Update()
 
 void Graphics::Update(InputManager *myInput, float delta)
 {
-	if (!myUI->GetUIElements()[3]->GetEnabled())
+	if (!myUI->m_mainMenu && !myUI->m_pauseMenu)
 	{
 		if (debugCam)
 		{
