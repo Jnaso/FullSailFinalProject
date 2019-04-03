@@ -30,6 +30,8 @@ const float FAR_PLANE = 1000.0f;
 //Near plane
 const float NEAR_PLANE = 0.1f;
 
+
+
 class Graphics
 {
 private:
@@ -48,6 +50,9 @@ private:
 	bool debugCam;
 	float timeBetween;
 	XMFLOAT4 camPosition;
+
+	//Main Menu Bool
+	bool MAIN_MENU_OPEN = true;
 
 	ID3D11BlendState*			spriteBlendState;
 	ID3D11DepthStencilState*	spriteDepthState;
