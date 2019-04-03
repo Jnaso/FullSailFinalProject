@@ -509,6 +509,22 @@ inline bool RayToAABB(Ray r, AABB ab)
 	return true;
 }
 
+inline bool pointCircle(float3 point, Sphere sphe)
+{
+	float distX = point.x - sphe.center.x;
+	float distY = point.y - sphe.center.y;
+	float distZ = point.z - sphe.center.z;
+	float distance = sqrtf(pow(distX, 2) + pow(distY, 2) + pow(distZ, 2));
+
+	if (distance <= sphe.radius)
+	{
+		return true;
+	}
+
+	return false;
+
+}
+
 inline float RandomUniform()
 {
 	float random = ((float)rand()) / (float)RAND_MAX;

@@ -58,6 +58,8 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> m_arialFont;
 	std::unique_ptr<DirectX::SpriteFont> m_comicSansFont;
 
+	vector<GameObject*> modelList;
+
 public:
 	void Update(InputManager *, float delta);
 	Graphics(InputManager* input);
