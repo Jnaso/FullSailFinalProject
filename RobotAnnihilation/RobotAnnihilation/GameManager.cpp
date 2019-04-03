@@ -94,162 +94,165 @@ void GameManager::ShootBullets()
 
 void GameManager::SpawnPickup(float3 pos)
 {
-	Pickups.push_back(new GameObject());
-	Pickups[Pickups.size() - 1]->Initialize("Assets/HealthPickup.mesh", myDX->GetDevice());
-	Pickups[Pickups.size() - 1]->SetLifeTime(10.0f);
-	Pickups[Pickups.size() - 1]->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
-	Pickups[Pickups.size() - 1]->AddCollider(Pickups[Pickups.size() - 1]->GetPhysicsComponent()->GetPosition(), 1.0f);
+	GameObject* newpickup = new GameObject();
+	newpickup->Initialize("Assets/HealthPickup.mesh", myDX->GetDevice());
+	newpickup->SetLifeTime(15.0f);
+	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
+	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
+	Pickups.push_back(newpickup);
 }
 
-void GameManager::Update(float delta)
+void GameManager::Update(float delta, float total)
 {
-	myGraphics->Update(myInput, delta);
-	bool moving = false;
-	if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
-		moving = true;
-	}
-	if (moving)
-	{
-		myPlayer->SetAnimationLower(1);
-	}
-	else
-	{
-		myPlayer->SetAnimationLower(0);
-	}
-
-	myPlayer->GetPhysicsComponent()->SetForward(float3{ myGraphics->GetCamera()->GetCharDirection().m128_f32[0], myGraphics->GetCamera()->GetCharDirection().m128_f32[1], myGraphics->GetCamera()->GetCharDirection().m128_f32[2] });
-
-	if (myInput->GetKeyState((int)'1'))
-	{
-		myPlayer->SetCurrentGun(0);
-	}
-	if (myInput->GetKeyState((int)'2'))
-	{
-		myPlayer->SetCurrentGun(1);
-	}
-	if (myInput->GetKeyState((int)'3'))
-	{
-		myPlayer->SetCurrentGun(2);
-	}
-	if (myPlayer->getTimeLeft() >= 0)
-	{
-		myPlayer->SubTimeLeft(delta);
-	}
-	myPlayer->Update(delta);
-
-	myEnemyManager->Update(delta, myPlayer);
-
-	for (unsigned int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i]->Update(delta);
-		if (bullets[i]->Destroy() || bullets[i]->GetPhysicsComponent()->GetPosition().y <= 0.0f)
+		myGraphics->Update(myInput, delta);
+		bool moving = false;
+		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
 		{
-			Bullet *temp;
-			bullets[i]->Shutdown();
-			temp = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete temp;
-			break;
+			moving = true;
+		}
+		if (moving)
+		{
+			myPlayer->SetAnimationLower(1);
+		}
+		else
+		{
+			myPlayer->SetAnimationLower(0);
 		}
 
+		myPlayer->GetPhysicsComponent()->SetForward(float3{ myGraphics->GetCamera()->GetCharDirection().m128_f32[0], myGraphics->GetCamera()->GetCharDirection().m128_f32[1], myGraphics->GetCamera()->GetCharDirection().m128_f32[2] });
 
-		for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
+		if (myInput->GetKeyState((int)'1'))
 		{
-			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			myPlayer->SetCurrentGun(0);
+		}
+		if (myInput->GetKeyState((int)'2'))
+		{
+			myPlayer->SetCurrentGun(1);
+		}
+		if (myInput->GetKeyState((int)'3'))
+		{
+			myPlayer->SetCurrentGun(2);
+		}
+		if (myPlayer->getTimeLeft() >= 0)
+		{
+			myPlayer->SubTimeLeft(delta);
+		}
+		myPlayer->Update(delta);
+
+		myEnemyManager->Update(delta, myPlayer);
+
+		for (unsigned int i = 0; i < bullets.size(); i++)
+		{
+			bullets[i]->Update(delta);
+			if (bullets[i]->Destroy() || bullets[i]->GetPhysicsComponent()->GetPosition().y <= 0.0f)
 			{
-				if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
-				{
-					//std::cout << "Boom, Collision!" << std::endl;
-					bullets[i]->SetDestroy();
-					myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
-					if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
-					{
-						int chance = rand() % 100;
-						if (chance < 100)
-						{
-							float3 pos = myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition();
-							SpawnPickup(pos);
-						}
-						myEnemyManager->GetEnemies()[j]->SetDestroy();
-						std::cout << myEnemyManager->GetEnemyCount() << std::endl;
-					}
-				}
+				Bullet *temp;
+				bullets[i]->Shutdown();
+				temp = bullets[i];
+				bullets.erase(bullets.begin() + i);
+				delete temp;
+				break;
 			}
-		}
-		for (size_t j = 0; j < Obstacles.size(); j++)
-		{
-			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+
+
+			for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 			{
-				for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 				{
-					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *Obstacles[j]->GetCollider(k), delta))
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
 						bullets[i]->SetDestroy();
+						myEnemyManager->GetEnemies()[j]->AddSound(new Sound((char*)"Assets/HitSound.wav"));
+						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->Initialize(window);
+						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->PlayWaveFile();
+						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
+						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
+						{
+							int chance = rand() % 100;
+							if (chance < 25)
+							{
+								SpawnPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+							}
+							myEnemyManager->GetEnemies()[j]->SetDestroy();
+#ifdef DEBUG
+							std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+#endif // DEBUG
+
+						}
+					}
+				}
+			}
+			for (size_t j = 0; j < Obstacles.size(); j++)
+			{
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+				{
+					for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
+					{
+						if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *Obstacles[j]->GetCollider(k), delta))
+						{
+							bullets[i]->SetDestroy();
+						}
 					}
 				}
 			}
 		}
-	}
-	for (size_t i = 0; i < Obstacles.size(); i++)
-	{
-		if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+		for (size_t i = 0; i < Obstacles.size(); i++)
 		{
-			for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
+			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 2.0f)
 			{
-				if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
+				for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
 				{
-					
+					if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
+					{
+
+					}
 				}
 			}
 		}
-	}
-	for (size_t i = 0; i < Pickups.size(); i++)
-	{
-		Pickups[i]->Update(delta);
-		if (Pickups[i]->GetLifeTime() <= 0)
+		for (size_t i = 0; i < Pickups.size(); i++)
 		{
-			Pickups.erase(Pickups.begin() + i);
-			--i;
-		}
-	}
-	for (size_t i = 0; i < Pickups.size(); i++)
-	{
-		std::cout << DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) << std::endl;
-		if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
-		{
-			if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
+			Pickups[i]->Update(delta);
+			if (Pickups[i]->GetLifeTime() <= 0)
 			{
-				myPlayer->SetHealth(myPlayer->GetHealth() + 25);
 				Pickups.erase(Pickups.begin() + i);
 				--i;
 			}
 		}
-	}
-	myInput->GetMouseInput()->Acquire();
-	myInput->SetCurrMouseState();
-
-	myGraphics->Update();
-
-
-
-	UpdateScoreText();
-	UpdateHealthText();
-	UpdateWeaponText();
-
-
-	if (GetHealth() <= 0)
-	{
-		if (!m_YouLose)
+		for (size_t i = 0; i < Pickups.size(); i++)
 		{
-			m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
+			if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+			{
+				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
+				{
+					myPlayer->SetHealth(myPlayer->GetHealth() + 25);
+					Pickups.erase(Pickups.begin() + i);
+					--i;
+				}
+			}
 		}
-	}
-	if (GetEnemies() <= 0)
-	{
-		if (!m_YouWin)
+		myInput->GetMouseInput()->Acquire();
+		myInput->SetCurrMouseState();
+		myGraphics->Update();
+		UpdateScoreText();
+		UpdateHealthText();
+		UpdateWeaponText();
+		//UpdateTimerText(total);
+
+		if (GetHealth() <= 0)
 		{
-			m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
+			if (!m_YouLose)
+			{
+				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
+			}
+		}
+		if (GetEnemies() <= 0)
+		{
+			if (!m_YouWin)
+			{
+				m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
+			}
 		}
 	}
 }

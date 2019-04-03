@@ -538,5 +538,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 void MyWindow::Update(float delta)
 {
-	gameManager->Update(delta);
+	gameManager->Update(delta, timer.TotalTime());
 }

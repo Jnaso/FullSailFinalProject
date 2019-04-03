@@ -14,7 +14,6 @@ class GameManager
 	//Game Classes
 	Graphics *myGraphics;
 	InputManager *myInput;
-	UIManager* myUiManager;
 	HWND window;
 	
 	
@@ -32,7 +31,7 @@ class GameManager
 public:
 	GameManager();
 	~GameManager();
-	void Update(float delta);
+	void Update(float delta, float total);
 
 	bool Render();
 
