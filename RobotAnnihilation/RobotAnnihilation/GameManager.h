@@ -47,8 +47,11 @@ public:
 	UIElement* m_YouLose;
 	UIElement* m_YouWin;
 
+	UIElement* m_weapon;
+
 	void UpdateScoreText();
 	void UpdateHealthText();
+	void UpdateWeaponText();
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();

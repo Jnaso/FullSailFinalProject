@@ -43,6 +43,23 @@ void GameManager::UpdateHealthText()
 	temp->SetText((const char*)displayString1);
 }
 
+void GameManager::UpdateWeaponText()
+{
+	TextElement* temp = static_cast<TextElement*>(m_weapon);
+	switch (myPlayer->GetCurrentGun()->GetGunClass())
+	{
+	case Gun::PISTOL:
+		temp->SetText("Current Weapon: Pistol");
+		break;
+	case Gun::SUBMACHINE:
+		temp->SetText("Current Weapon: Sub-Machine Gun");
+		break;
+	case Gun::MACHINE:
+		temp->SetText("Current Weapon: Machine Gun");
+		break;
+	}
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -211,6 +228,7 @@ void GameManager::Update(float delta)
 
 	UpdateScoreText();
 	UpdateHealthText();
+	UpdateWeaponText();
 
 	if (GetHealth() <= 0)
 	{
@@ -251,14 +269,17 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(0);
 	Gun* Pistol = new Gun();
+	Pistol->SetGunClass(Gun::PISTOL);
 	Pistol->SetFireRate(0.5f);
 	Pistol->SetDamageAmount(25);
 	myPlayer->AddGun(Pistol);
 	Gun* MachineGun = new Gun();
+	MachineGun->SetGunClass(Gun::MACHINE);
 	MachineGun->SetFireRate(0.3f);
 	MachineGun->SetDamageAmount(35);
 	myPlayer->AddGun(MachineGun);
 	Gun* SubMachineGun = new Gun();
+	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
 	SubMachineGun->SetFireRate(0.15f);
 	SubMachineGun->SetDamageAmount(30);
 	myPlayer->AddGun(SubMachineGun);

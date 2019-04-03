@@ -408,6 +408,7 @@ bool MyWindow::Initialize()
 
 	playerUI[3] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, "Health: ");
 
+	playerUI[4] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{0, 100}, F_ARIAL, "Current Weapon: ");
 
 	#pragma endregion
 	
