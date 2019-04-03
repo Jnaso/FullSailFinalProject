@@ -73,7 +73,7 @@ void UIManager::Update()
 UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
 {
 	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
-	m_UIElements.insert(m_UIElements.begin(), temp);
+	m_UIElements.push_back(temp);
 	++textCount;
 	return temp;
 }

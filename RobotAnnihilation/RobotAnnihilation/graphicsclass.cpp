@@ -258,7 +258,8 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 	XMFLOAT4 skyboxPosition;
 	XMStoreFloat4(&skyboxPosition, myCam);
 
-	if (!myUI->GetUIElements()[3]->GetEnabled())
+	//if (!myUI->GetUIElements()[4]->GetEnabled())
+	if (!myUI->m_mainMenu && !myUI->m_pauseMenu)
 	{
 		myDX->SetSkyboxRaster();
 
@@ -327,7 +328,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 	if (!debugCam)
 	{
-		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_FrontToBack, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 		 
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 		
