@@ -235,6 +235,7 @@ void GameManager::Update(float delta, float total)
 		UpdateScoreText();
 		UpdateHealthText();
 		UpdateWeaponText();
+		//UpdateTimerText(total);
 
 		if (GetHealth() <= 0)
 		{
