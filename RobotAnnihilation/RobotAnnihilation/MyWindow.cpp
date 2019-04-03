@@ -31,7 +31,7 @@ bool MyWindow::Run()
 
 	//ShowCursor(paused);
 
-	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0])
+	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0] && (!gameManager->GetUIManager()->m_mainMenu && !gameManager->GetUIManager()->m_pauseMenu))
 	{
 		//gameManager->GetGraphicsManager()->ShootBullet(myWindow);
 		gameManager->ShootBullets();

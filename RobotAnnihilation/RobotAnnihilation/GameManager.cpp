@@ -60,9 +60,9 @@ void GameManager::UpdateWeaponText()
 
 void GameManager::UpdateTimerText(float time)
 {
-	std::string temp = std::to_string(time);
+	numberToChr = std::to_string(time);
 	TextElement* tempT = static_cast<TextElement*>(m_timerText);
-	tempT->SetText(temp.c_str());
+	tempT->SetText(numberToChr.c_str());
 }
 
 InputManager * GameManager::GetInputManager()
@@ -236,7 +236,7 @@ void GameManager::Update(float delta, float total)
 		UpdateScoreText();
 		UpdateHealthText();
 		UpdateWeaponText();
-		//UpdateTimerText(total);
+		UpdateTimerText(total);
 
 		if (GetHealth() <= 0)
 		{
