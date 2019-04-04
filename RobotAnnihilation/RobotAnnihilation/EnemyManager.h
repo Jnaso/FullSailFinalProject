@@ -39,6 +39,8 @@ public:
 	unsigned int GetEnemyCount();
 	float3 CalculateCohesion(Target *myT);
 	float3 CalculateSeperation(Target &myT);
+
+	void StartNewRound();
 };
 
 #endif // !_ENEMYMANAGER_H_

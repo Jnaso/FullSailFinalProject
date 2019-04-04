@@ -247,10 +247,11 @@ void GameManager::Update(float delta, float total)
 		}
 		if (GetEnemies() <= 0)
 		{
-			if (!m_YouWin)
+			/*if (!m_YouWin)
 			{
 				m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
-			}
+			}*/
+			myEnemyManager->StartNewRound();
 		}
 	}
 }
