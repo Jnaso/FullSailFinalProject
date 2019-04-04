@@ -9,12 +9,22 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
 	enemyCount = rand() % 25 + 10;
-	for (unsigned int i = 0; i < enemyCount; i++)
+
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f };
+	}
+
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		myEnemies.push_back(new Target());
-		myEnemies[i]->Initialize(myDevice, "Assets/RobotAttack.mesh", float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f });
-		myEnemies[i]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[i]);
+		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		currentEnemies++;
+		TotalEnemiesSpawned++;
 	}
+
+	this->myDevice = myDevice;
 }
 
 void EnemyManager::Shutdown()
@@ -31,6 +41,18 @@ void EnemyManager::Update(float delta, Player *myPlayer)
 {
 	float3 accel;
 	float accelMulti = 0;
+	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
+	{
+		myEnemies.push_back(new Target());
+		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		TotalEnemiesSpawned++;
+		timeBetween = 0;
+	}
+	else
+	{
+		timeBetween += delta;
+	}
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
 		accel = CalculateSeperation(*myEnemies[i]);
@@ -58,7 +80,7 @@ void EnemyManager::Update(float delta, Player *myPlayer)
 		}
 	}
 
-	enemyCount = myEnemies.size();
+	currentEnemies = myEnemies.size();
 }
 
 vector<Target*> EnemyManager::GetEnemies()
@@ -68,7 +90,7 @@ vector<Target*> EnemyManager::GetEnemies()
 
 unsigned int EnemyManager::GetEnemyCount()
 {
-	return enemyCount;
+	return currentEnemies;
 }
 
 float3 EnemyManager::CalculateCohesion(Target * myT)

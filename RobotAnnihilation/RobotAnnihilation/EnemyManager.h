@@ -13,6 +13,8 @@ class EnemyManager
 private:
 	vector<Target *> myEnemies;
 	unsigned int enemyCount;
+	unsigned int currentEnemies = 0;
+	float timeBetween = 0.0f;
 	float CohesionStrength;
 	float SeperationStrength;
 	float3 AveragePosition;
@@ -20,6 +22,11 @@ private:
 	float flockRadius;
 
 	const float safeRadius = 1.0f;
+
+	float3 SpawnPoints[4];
+
+	ID3D11Device* myDevice;
+	unsigned int TotalEnemiesSpawned = 0;
 
 public:
 	EnemyManager();
