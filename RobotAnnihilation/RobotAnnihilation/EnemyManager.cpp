@@ -2,7 +2,8 @@
 
 EnemyManager::EnemyManager()
 {
-	SeperationStrength = 300.0f;
+	SeperationStrength = 500.0f;
+	SeperationObstacleStrength = 500.0f;
 }
 
 void EnemyManager::Initialize(ID3D11Device *myDevice)
@@ -27,13 +28,14 @@ void EnemyManager::Shutdown()
 	}
 }
 
-void EnemyManager::Update(float delta, Player *myPlayer)
+void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles)
 {
 	float3 accel;
 	float accelMulti = 0;
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
 		accel = CalculateSeperation(*myEnemies[i]);
+		accel += CalculateObstacleSeperation(*myEnemies[i], obstacles);
 		accel *= delta;
 		myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z});
 
@@ -134,5 +136,45 @@ float3 EnemyManager::CalculateSeperation(Target &myT)
 	}
 
 	return sum * SeperationStrength;
+}
+
+float3 EnemyManager::CalculateObstacleSeperation(Target & myT, vector<GameObject*> obstacles)
+{
+	float3 sum = { 0, 0, 0 };
+
+	for (unsigned int i = 0; i < obstacles.size(); i++)
+	{
+		float3 myV;
+		myV.x = myT.GetPhysicsComponent()->GetPosition().x - obstacles[i]->GetPhysicsComponent()->GetPosition().x;
+		myV.y = myT.GetPhysicsComponent()->GetPosition().y - obstacles[i]->GetPhysicsComponent()->GetPosition().y;
+		myV.z = myT.GetPhysicsComponent()->GetPosition().z - obstacles[i]->GetPhysicsComponent()->GetPosition().z;
+		float distance = sqrtf(pow(myV.x, 2) + pow(myV.y, 2) + pow(myV.z, 2));
+		float safeDistance = safeRadius + safeObstacleRadius;
+
+		if (distance < safeDistance)
+		{
+			myV.x /= distance;
+			myV.y /= distance;
+			myV.z /= distance;
+
+			float multiple = (safeDistance - distance) / safeDistance;
+
+			myV.x *= multiple;
+			myV.y *= multiple;
+			myV.z *= multiple;
+			sum += myV;
+		}
+	}
+
+	float distanceSum = sqrtf(pow(sum.x, 2) + pow(sum.y, 2) + pow(sum.z, 2));
+
+	if (distanceSum > 1.0f)
+	{
+		sum.x /= distanceSum;
+		sum.y /= distanceSum;
+		sum.z /= distanceSum;
+	}
+
+	return sum * SeperationObstacleStrength;
 }
 
