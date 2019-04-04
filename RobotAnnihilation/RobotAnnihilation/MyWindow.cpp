@@ -8,6 +8,13 @@ MyWindow::MyWindow()
 bool MyWindow::Run()
 {
 	bool result;
+	static int frameCounter = 0;
+	frameCounter++;
+	if (frameCounter==10 && showFPS)
+	{
+		ShowFPS();
+		frameCounter = 0;
+	}
 
 	timer.Signal();
 	if (!paused)
@@ -23,10 +30,15 @@ bool MyWindow::Run()
 	}
 
 	//if (gameManager->GetKeyState((int)'P') & 1)
-	if (gameManager->GetKeyState((int)'P'))
+	if (gameManager->GetKeyState((int)'P') & 1)
 	{
 		paused = !paused;
 		SetPauseMenu(paused);
+	}
+
+	if (gameManager->GetKeyState((int)'L') & 1)
+	{
+		showFPS = !showFPS;
 	}
 
 	//ShowCursor(paused);
@@ -181,6 +193,56 @@ void MyWindow::ShowPlayerUI()
 	{
 		playerUI[i]->SetEnabled(true);
 	}
+}
+
+void MyWindow::ShowFPS()
+{	
+	numberToChr = std::to_string((int)FPS);
+	TextElement* tempT = static_cast<TextElement*>(m_FPSText);
+	tempT->SetText(numberToChr.c_str());
+}
+
+void MyWindow::CalcFPS()
+{
+	static const int NUM_SAMPLES = 100;
+	static float frameTimes[NUM_SAMPLES];
+	static int currentFrame = 0;
+
+	static float prevTicks = GetTickCount64();
+	float currTicks;
+
+	currTicks = GetTickCount64();
+
+	_frameTime = currTicks - prevTicks;
+	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
+
+	prevTicks = currTicks;
+
+	int count;
+	if (currentFrame < NUM_SAMPLES)
+	{
+		count = currentFrame;
+	}
+	else
+	{
+		count = NUM_SAMPLES;
+	}
+	float frameTimeAvg = 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		frameTimeAvg += frameTimes[i];
+	}
+	frameTimeAvg /= count;
+	if (frameTimeAvg > 0)
+	{
+		FPS = 1000.0f / frameTimeAvg;
+	}
+	else
+	{
+		FPS = 60.0f;
+	}
+
+	currentFrame++;
 }
 
 #define BUTTONSIZE float2{200,50}
@@ -419,6 +481,8 @@ bool MyWindow::Initialize()
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 	
 #pragma endregion
+
+	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "poopoo");
 	
 	return true;
 }
@@ -458,6 +522,8 @@ void MyWindow::Render()
 		}
 		else
 		{
+			CalcFPS();
+			//std::cout << FPS << std::endl;
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
