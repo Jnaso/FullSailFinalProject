@@ -92,10 +92,10 @@ class TextElement : public UIElement
 {
 private:
 	int m_font;
-	const char* m_text;
+	char* m_text = new char[256];
 
 public:
-	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
+	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, char* text);
 
 	void Update();
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
@@ -103,9 +103,15 @@ public:
 	int GetFont() { return m_font; }
 	void SetFont(int value) { m_font = value; }
 
-	const char* GetText() { return m_text; }
-	void SetText(const char* value) { m_text = value; }
+	char* GetText() { return m_text; }
+	void SetText(char* value) { m_text = value; }
+	void SetText(std::string value) 
+	{
+		memcpy(m_text, value.c_str(), 256);
+		//m_text = (char*)value.c_str(); 
+	}
 
+	~TextElement();
 };
 
 class ImageElement : public UIElement

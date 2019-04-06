@@ -396,28 +396,20 @@ bool MyWindow::Initialize()
 
 	
 
-	memset(tempT0, '\0', sizeof(tempT0));
-	_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
-	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 150,0 }, F_COMICSANS, (const char*)tempT0);
+	//memset(tempT0, '\0', sizeof(tempT0));
+	//_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
+	std::string EnemyTxt = "Enemies: " + std::to_string(gameManager->GetEnemies());
+	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, EnemyTxt);
 
-	memset(tempT1, '\0', sizeof(tempT1));
-	_itoa_s(gameManager->GetHealth(), tempT1, 65, 10);
-	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 100,50 }, F_COMICSANS, (const char*)tempT1);
+	std::string healthTxt = "Health: " + std::to_string(gameManager->GetPlayer()->GetHealth());
+	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, healthTxt);
 
-	playerUI[2] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, "Enemy Count:");
+	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{0, 100}, F_ARIAL, "Current Weapon: ");
 
-	playerUI[3] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, "Health: ");
+	std::string timerTxt = "Total Time: ";
+	playerUI[3] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, timerTxt);
 
-	playerUI[4] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{0, 100}, F_ARIAL, "Current Weapon: ");
 
-	memset(tempT2, '\0', sizeof(tempT2));
-	int tempIn = 0;
-	_itoa_s(tempIn, tempT2, 65, 10);
-	
-	numToChr = std::to_string(tempIn);
-	const char* tempT100 = numToChr.c_str();
-	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
-	
 #pragma endregion
 	
 	return true;

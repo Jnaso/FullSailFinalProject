@@ -24,21 +24,16 @@ KEYSTATE GameManager::GetKeyState(int keyCode)
 
 void GameManager::UpdateScoreText()
 {
-	
-	memset(displayString, '\0', sizeof(displayString));
-	_itoa_s(myEnemyManager->GetEnemyCount(), displayString, 65, 10);
+	std::string enemyText = "Enemies Left: " + std::to_string(myEnemyManager->GetEnemyCount());
 	TextElement* temp = dynamic_cast<TextElement*>(m_scoreText);
-	temp->SetText((const char*)displayString);
+	temp->SetText(enemyText);
 }
 
 void GameManager::UpdateHealthText()
 {
-	std::string tempText = "Health: "/* + GetGraphicsManager()->GetHealth()*/;
-	tempText += this->GetHealth();
-	memset(displayString1, '\0', sizeof(displayString1));
-	_itoa_s(myPlayer->GetHealth(), displayString1, 65, 10);
+	std::string healthText = "Health: " + std::to_string(myPlayer->GetHealth());
 	TextElement* temp = dynamic_cast<TextElement*>(m_healthText);
-	temp->SetText((const char*)displayString1);
+	temp->SetText(healthText);
 }
 
 void GameManager::UpdateWeaponText()
@@ -60,9 +55,8 @@ void GameManager::UpdateWeaponText()
 
 void GameManager::UpdateTimerText(float time)
 {
-	numberToChr = std::to_string(time);
 	TextElement* tempT = static_cast<TextElement*>(m_timerText);
-	tempT->SetText(numberToChr.c_str());
+	tempT->SetText( "Total Time: " + std::to_string(static_cast<int>(time)) );
 }
 
 InputManager * GameManager::GetInputManager()

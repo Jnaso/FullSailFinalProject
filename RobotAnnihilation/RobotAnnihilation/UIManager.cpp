@@ -72,8 +72,16 @@ void UIManager::Update()
 
 UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
 {
-	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, text);
-	m_UIElements.push_back(temp);
+	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, (char*)text);
+	m_UIElements.insert(m_UIElements.begin(),temp);
+	++textCount;
+	return temp;
+}
+
+UIElement * UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, std::string text)
+{
+	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, (char*)text.c_str());
+	m_UIElements.insert(m_UIElements.begin(), temp);
 	++textCount;
 	return temp;
 }
