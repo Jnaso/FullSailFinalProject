@@ -133,7 +133,7 @@ void GameManager::Update(float delta, float total)
 		}
 		myPlayer->Update(delta);
 
-		myEnemyManager->Update(delta, myPlayer);
+		myEnemyManager->Update(delta, myPlayer, Obstacles);
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
