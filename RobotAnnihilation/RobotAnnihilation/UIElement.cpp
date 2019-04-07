@@ -19,13 +19,12 @@ UIElement::~UIElement()
 #pragma endregion
 
 #pragma region Text_Child_Class
-TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text)
+TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, char* text)
 	: UIElement(srcRect, interactable, enabled, pos)
 {
 	m_font = font;
-	m_text = text;
+	memcpy(m_text, text, 256);
 }
-
 void TextElement::Update()
 {
 }
@@ -42,6 +41,10 @@ void TextElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::uniq
 			comicSans->DrawString(batch.get(), this->m_text, this->m_pos);
 		}
 	}
+}
+TextElement::~TextElement()
+{
+	delete[] m_text;
 }
 #pragma endregion
 
@@ -107,7 +110,7 @@ ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, floa
 	m_input = input;
 	//Create Text Element
 	//If Constructor recevies defaults will be Arial font and blank text
-	m_buttonText = new TextElement(RECT{ 0,0,0,0 }, false, true, pos, font, text);
+	m_buttonText = new TextElement(RECT{ 0,0,0,0 }, false, true, pos, font, (char*)text);
 	
 }
 

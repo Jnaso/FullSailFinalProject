@@ -67,6 +67,7 @@ public:
 
 	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
 	unsigned int GetHealth() { return myPlayer->GetHealth(); };
+	Player* GetPlayer() { return myPlayer; }
 
 	void SpawnPickup(float3 pos);
 };

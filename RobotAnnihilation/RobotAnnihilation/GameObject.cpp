@@ -54,7 +54,7 @@ void GameObject::Update(float delta)
 {
 	ObjectPhysics->Update(delta);
 	lifeTime -= delta;
-	totalTime += delta;
+	totalTime += .025f;
 	if (currentAnimation)	
 	{
 		currentAnimation->Update(delta);
