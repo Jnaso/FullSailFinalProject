@@ -2,7 +2,7 @@
 
 EnemyManager::EnemyManager()
 {
-	SeperationStrength = 500.0f;
+	SeperationStrength = 200.0f;
 	SeperationObstacleStrength = 500.0f;
 }
 

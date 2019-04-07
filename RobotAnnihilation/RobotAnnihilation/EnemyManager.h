@@ -21,7 +21,7 @@ private:
 	float flockRadius;
 
 	const float safeRadius = 1.0f;
-	const float safeObstacleRadius = 8.0f;
+	const float safeObstacleRadius = 10.0f;
 
 public:
 	EnemyManager();
