@@ -51,7 +51,7 @@ void EnemyManager::Shutdown()
 	}
 }
 
-=
+
 void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
 {
 	float3 accel;

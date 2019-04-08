@@ -13,8 +13,14 @@ protected:
 	float velocity;
 	bool attacking;
 	float health = 100;
+	float timeBetweenAttacks;
+	float timeBetweenDamage;
 
 public:
+	enum DamageType
+	{
+		Gun, Melee, Count
+	};
 	Enemy();
 	bool Destroy();
 	void SetDestroy();
@@ -23,7 +29,8 @@ public:
 
 
 	float GetHealth() { return health; }
-	void SubHealth(float newHealth) { health -= newHealth; }
+	void SubHealth(float newHealth, DamageType dmg, HWND window);
 };
+
 
 #endif // !_ENEMY_H_

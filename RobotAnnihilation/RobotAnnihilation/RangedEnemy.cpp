@@ -35,6 +35,8 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 	GameObject::Update(delta);
 	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
 
+	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+
 	startTime += delta;
 
 	if (startTime > 5.0f)
