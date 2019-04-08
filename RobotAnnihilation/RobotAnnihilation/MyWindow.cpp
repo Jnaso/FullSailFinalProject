@@ -10,7 +10,7 @@ bool MyWindow::Run()
 	bool result;
 	static int frameCounter = 0;
 	frameCounter++;
-	if (frameCounter==10 && showFPS)
+	if (frameCounter==10)
 	{
 		ShowFPS();
 		frameCounter = 0;
@@ -30,15 +30,16 @@ bool MyWindow::Run()
 	}
 
 	//if (gameManager->GetKeyState((int)'P') & 1)
-	if (gameManager->GetKeyState((int)'P') & 1)
+	if (gameManager->GetKeyState((int)'P'))
 	{
 		paused = !paused;
 		SetPauseMenu(paused);
 	}
 
-	if (gameManager->GetKeyState((int)'L') & 1)
+	if (gameManager->GetKeyState((int)'L'))
 	{
 		showFPS = !showFPS;
+		m_FPSText->SetEnabled(showFPS);
 	}
 
 	//ShowCursor(paused);
@@ -207,11 +208,21 @@ void MyWindow::CalcFPS()
 	static const int NUM_SAMPLES = 100;
 	static float frameTimes[NUM_SAMPLES];
 	static int currentFrame = 0;
+	static float prevTicks = 0;
 
-	static float prevTicks = GetTickCount64();
+#ifdef WIN64
+	prevTicks = GetTickCount64();
+#else
+	prevTicks = GetTickCount();
+#endif // WIN64
+
 	float currTicks;
 
+#ifdef WIN64
 	currTicks = GetTickCount64();
+#else
+	currTicks = GetTickCount();
+#endif // WIN64
 
 	_frameTime = currTicks - prevTicks;
 	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
@@ -479,10 +490,10 @@ bool MyWindow::Initialize()
 	numToChr = std::to_string(tempIn);
 	const char* tempT100 = numToChr.c_str();
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
-	
-#pragma endregion
 
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "poopoo");
+
+#pragma endregion
 	
 	return true;
 }
@@ -523,7 +534,6 @@ void MyWindow::Render()
 		else
 		{
 			CalcFPS();
-			//std::cout << FPS << std::endl;
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)
