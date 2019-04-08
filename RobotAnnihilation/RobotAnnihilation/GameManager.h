@@ -21,6 +21,9 @@ class GameManager
 	char displayString1[65];
 	char displayString2[65];
 
+	bool betweenRounds = false;
+	float countDown = 0.0f;
+
 	std::string numberToChr;
 
 	Player *myPlayer;

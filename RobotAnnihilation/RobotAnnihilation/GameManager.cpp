@@ -245,13 +245,25 @@ void GameManager::Update(float delta, float total)
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
 			}
 		}
-		if (GetEnemies() <= 0)
+		if (GetEnemies() <= 0 && !betweenRounds)
 		{
 			/*if (!m_YouWin)
 			{
 				m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
 			}*/
-			myEnemyManager->StartNewRound();
+			//myEnemyManager->StartNewRound();
+			countDown = 5.0f;
+			betweenRounds = true;
+		}
+		if (countDown > 0.0f && betweenRounds)
+		{
+			countDown -= delta;
+			if (countDown < 0.0f)
+			{
+				myEnemyManager->StartNewRound();
+				betweenRounds = false;
+				countDown = 0;
+			}
 		}
 	}
 }
