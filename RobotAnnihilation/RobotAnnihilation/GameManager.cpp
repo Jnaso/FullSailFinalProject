@@ -135,6 +135,10 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->MeleeAttack(2);
 		}
+		if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
+		{
+			ShootBullets();
+		}
 		myPlayer->Update(delta);
 
 		myEnemyManager->Update(delta, myPlayer);
@@ -160,10 +164,10 @@ void GameManager::Update(float delta, float total)
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
 						bullets[i]->SetDestroy();
-						myEnemyManager->GetEnemies()[j]->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+						/*myEnemyManager->GetEnemies()[j]->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
 						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->Initialize(window);
-						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->PlayWaveFile();
-						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount());
+						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->PlayWaveFile();*/
+						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
 							int chance = rand() % 100;
@@ -214,10 +218,8 @@ void GameManager::Update(float delta, float total)
 			{
 				Pickups.erase(Pickups.begin() + i);
 				--i;
+				continue;
 			}
-		}
-		for (size_t i = 0; i < Pickups.size(); i++)
-		{
 			if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
 			{
 				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
@@ -225,6 +227,38 @@ void GameManager::Update(float delta, float total)
 					myPlayer->SetHealth(myPlayer->GetHealth() + 25);
 					Pickups.erase(Pickups.begin() + i);
 					--i;
+					continue;
+				}
+			}
+		}
+		for (size_t i = 0; i < myEnemyManager->GetEnemies().size(); i++)
+		{
+			if (DitanceFloat3(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f && myPlayer->isAttacking())
+			{
+				float3 dot = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
+				dot.normalize();
+				float result = DotProduct(dot, myPlayer->GetPhysicsComponent()->GetForward() * -1);
+				if (result > 0.7f)
+				{
+
+					//myEnemyManager->GetEnemies()[i]->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+					myEnemyManager->GetEnemies()[i]->SubHealth(10, Target::DamageType::Melee, window);
+					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
+					{
+						int chance = rand() % 100;
+						if (chance < 25)
+						{
+							SpawnPickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
+						}
+						myEnemyManager->GetEnemies()[i]->SetDestroy();
+#ifdef DEBUG
+						std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+#endif // DEBUG
+					}
+					/*float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
+					dir.normalize();
+					dir = dir * 5;
+					myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->AddForce(dir);*/
 				}
 			}
 		}
@@ -275,7 +309,6 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
-
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 
 	myDX = myGraphics->GetGraphicsEngine();
@@ -302,7 +335,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddGun(MachineGun);
 	Gun* SubMachineGun = new Gun();
 	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
-	SubMachineGun->SetFireRate(0.15f);
+	SubMachineGun->SetFireRate(0.25f);
 	SubMachineGun->SetDamageAmount(30);
 	myPlayer->AddGun(SubMachineGun);
 	myPlayer->SetCurrentGun(0);

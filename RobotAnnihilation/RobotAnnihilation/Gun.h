@@ -10,6 +10,7 @@ public:
 protected:
 	float FireRate;
 	float DamageAmount;
+	float AmmoCount;
 
 	float3 ShootPos;
 

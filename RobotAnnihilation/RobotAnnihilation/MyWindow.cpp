@@ -42,14 +42,6 @@ bool MyWindow::Run()
 		m_FPSText->SetEnabled(showFPS);
 	}
 
-	//ShowCursor(paused);
-
-	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0] && (!gameManager->GetUIManager()->m_mainMenu && !gameManager->GetUIManager()->m_pauseMenu))
-	{
-		//gameManager->GetGraphicsManager()->ShootBullet(myWindow);
-		gameManager->ShootBullets();
-	}
-
 	//Render every frame and stop if anything goes wrong 
 	result = gameManager->Render();
 	if (!result)

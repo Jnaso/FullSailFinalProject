@@ -46,5 +46,7 @@ public:
 	void SetHealth(unsigned int newHeath) { health = newHeath; }
 
 	void MeleeAttack(int index);
+
+	bool isAttacking() { return PlayOnce; }
 };
 

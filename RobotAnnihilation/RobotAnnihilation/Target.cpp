@@ -63,6 +63,10 @@ void Target::Update(float delta, float3 forward, Player *myPlayer)
 	{
 		Attack(myPlayer);
 	}
+	if (timeBetweenDamage > 0)
+	{
+		timeBetweenDamage -= delta;
+	}
 }
 
 AABB Target::GetAABB()
@@ -76,6 +80,28 @@ void Target::Attack(Player *myPlayer)
 	{
 		myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
 		timeBetweenAttacks = timeGetTime();
+	}
+}
+
+void Target::SubHealth(float newHealth, DamageType dmg, HWND window)
+{
+	if (dmg == DamageType::Melee)
+	{
+		if (timeBetweenDamage <= 0)
+		{
+			this->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+			this->GetSounds()[this->GetSounds().size() - 1]->Initialize(window);
+			this->GetSounds()[this->GetSounds().size() - 1]->PlayWaveFile();
+			health -= newHealth;
+			timeBetweenDamage = 0.5f;
+		}
+	}
+	else if (dmg == DamageType::Gun)
+	{
+		this->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+		this->GetSounds()[this->GetSounds().size() - 1]->Initialize(window);
+		this->GetSounds()[this->GetSounds().size() - 1]->PlayWaveFile();
+		health -= newHealth;
 	}
 }
 
