@@ -15,6 +15,8 @@ private:
 	float timeBetweenDamage;
 	bool attacking;
 
+	unsigned int CurrencyGiven;
+
 	float health = 100;
 
 public:
@@ -33,6 +35,9 @@ public:
 
 	float GetHealth() { return health; }
 	void SubHealth(float newHealth, DamageType dmg, HWND window);
+
+	float GetCurrency() { return CurrencyGiven; }
+	void SetCurrency(unsigned int newCurr) { CurrencyGiven = newCurr; };
 };
 
 #endif // !_TARGET_H_

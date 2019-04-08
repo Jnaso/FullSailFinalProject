@@ -23,6 +23,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
+		myEnemies[myEnemies.size() - 1]->SetCurrency(10);
 		currentEnemies++;
 		TotalEnemiesSpawned++;
 	}
@@ -52,6 +53,7 @@ void EnemyManager::Update(float delta, Player *myPlayer)
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
+		myEnemies[myEnemies.size() - 1]->SetCurrency(10);
 		TotalEnemiesSpawned++;
 		timeBetween = 0;
 	}

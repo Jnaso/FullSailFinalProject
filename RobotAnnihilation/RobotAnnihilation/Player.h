@@ -15,6 +15,8 @@ protected:
 	AABB playerBox;
 	unsigned int health;
 
+	unsigned int CurrentPoints = 0;
+
 	bool PlayOnce = false;
 
 public:
@@ -48,5 +50,8 @@ public:
 	void MeleeAttack(int index);
 
 	bool isAttacking() { return PlayOnce; }
+
+	unsigned int GetPoints() { return CurrentPoints; }
+	void AddCurrency(unsigned int amount) { CurrentPoints += amount; }
 };
 
