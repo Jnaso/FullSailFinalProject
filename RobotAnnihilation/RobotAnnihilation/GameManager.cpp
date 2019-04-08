@@ -185,7 +185,10 @@ void GameManager::Update(float delta, float total)
 							{
 								SpawnPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
 							}
+							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency());
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
+
+							cout << myPlayer->GetPoints();
 #ifdef DEBUG
 							std::cout << myEnemyManager->GetEnemyCount() << std::endl;
 #endif // DEBUG
@@ -261,14 +264,15 @@ void GameManager::Update(float delta, float total)
 							SpawnPickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
 						}
 						myEnemyManager->GetEnemies()[i]->SetDestroy();
-#ifdef DEBUG
-						std::cout << myEnemyManager->GetEnemyCount() << std::endl;
-#endif // DEBUG
+						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
+
+						cout << myPlayer->GetPoints();
+
 					}
-					/*float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
+					float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
 					dir.normalize();
-					dir = dir * 5;
-					myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->AddForce(dir);*/
+					//dir = dir * 5;
+					//myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->AddForce(dir * 2);
 				}
 			}
 		}
@@ -345,7 +349,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddGun(MachineGun);
 	Gun* SubMachineGun = new Gun();
 	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
-	SubMachineGun->SetFireRate(0.25f);
+	SubMachineGun->SetFireRate(0.05f);
 	SubMachineGun->SetDamageAmount(30);
 	myPlayer->AddGun(SubMachineGun);
 	myPlayer->SetCurrentGun(0);

@@ -12,6 +12,10 @@ class Target : public Enemy
 private:
 	float timeBetweenAttacks;
 	float timeBetweenDamage;
+	bool attacking;
+
+	float health = 100;
+
 public:
 	Target();
 

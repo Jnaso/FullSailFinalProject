@@ -16,6 +16,8 @@ protected:
 	float timeBetweenAttacks;
 	float timeBetweenDamage;
 
+	unsigned int CurrencyGiven;
+
 public:
 	enum DamageType
 	{
@@ -30,6 +32,9 @@ public:
 
 	float GetHealth() { return health; }
 	void SubHealth(float newHealth, DamageType dmg, HWND window);
+
+	float GetCurrency() { return CurrencyGiven; }
+	void SetCurrency(unsigned int newCurr) { CurrencyGiven = newCurr; };
 };
 
 
