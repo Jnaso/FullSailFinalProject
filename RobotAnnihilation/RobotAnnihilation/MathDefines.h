@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <dinput.h>
 #include <time.h>
+//#include <string>
 #include <stdlib.h>
 
 #pragma comment(lib, "d2d1.lib")
@@ -328,6 +329,11 @@ inline float3 XMVectortofloat3(XMVECTOR input)
 	return output;
 }
 
+inline float Magnitude(float3 v)
+{
+	return sqrtf(pow(v.x, 2) + pow(v.y, 2) + pow(v.z, 2));
+}
+
 inline float DitanceFloat3(float3 pos1, float3 pos2)
 {
 	return sqrtf(pow((pos2.x - pos1.x), 2) + pow((pos2.y - pos1.y), 2) + pow((pos2.z - pos1.z), 2));
@@ -542,6 +548,64 @@ inline bool lineCircle(Segment seg, Sphere sphe)
 	}
 
 	return false;
+}
+
+inline float3 ClosestPtPointAABB(float3 point, AABB ab)
+{
+	float3 q;
+	float3 max = { ab.center.x + ab.dimensions.x, ab.center.y + ab.dimensions.y, ab.center.z + ab.dimensions.z };
+	float3 min = { ab.center.x - ab.dimensions.x, ab.center.y - ab.dimensions.y, ab.center.z - ab.dimensions.z };
+
+	float v = point.x;
+	if (v < min.x) { v = min.x; }
+	if (v > max.x) { v = max.x; }
+	q.x = v;
+
+	v = point.y;
+	if (v < min.y) { v = min.y; }
+	if (v > max.y) { v = max.y; }
+	q.y = v;
+
+	v = point.z;
+	if (v < min.z) { v = min.z; }
+	if (v > max.z) { v = max.z; }
+	q.z = v;
+
+	return q;
+
+}
+
+inline float SqDistPointAABB(float3 p, AABB ab)
+{
+	float sqDist = 0.0f;
+	float3 max = { ab.center.x + ab.dimensions.x, ab.center.y + ab.dimensions.y, ab.center.z + ab.dimensions.z };
+	float3 min = { ab.center.x - ab.dimensions.x, ab.center.y - ab.dimensions.y, ab.center.z - ab.dimensions.z };
+
+	float v = p.x;
+	if (v < min.x) { sqDist += (min.x - v) * (min.x - v); }
+	if (v > max.x) { sqDist += (v - max.x) * ( v - max.x); }
+
+	v = p.y;
+	if (v < min.y) { sqDist += (min.y - v) * (min.y - v); }
+	if (v > max.y) { sqDist += (v - max.y) * (v - max.y); }
+
+	v = p.z;
+	if (v < min.z) { sqDist += (min.z - v) * (min.z - v); }
+	if (v > max.z) { sqDist += (v - max.z) * (v - max.z); }
+
+	return sqDist;
+}
+
+inline bool BetterSphereToAABB(Sphere s, AABB ab)
+{
+	float sqDist = SqDistPointAABB(s.center, ab);
+
+	return sqDist <= s.radius * s.radius;
+}
+
+inline float3 MultiplyByConstant(float c, float3 v)
+{
+	return { v.x * c, v.y * c, v.z * c };
 }
 
 inline float RandomUniform()

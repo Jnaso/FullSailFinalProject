@@ -10,16 +10,18 @@ private:
 	float3 velocity;
 	float lifeTime;
 	bool readyToDestroy;
+	std::string tag;
 
 public:
 	Bullet(float life = 2.0f);
 
-	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 forward, float3 position);
+	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 forward, float3 position, std::string t, float speed = -100.0f);
 	void Update(float delta);
 	void SetVelocity(float3 vel);
 	float3 GetVelocity();
 	bool Destroy();
 	void SetDestroy();
+	std::string GetTag();
 };
 
 #endif // !_BULLET_H_

@@ -4,30 +4,19 @@
 
 #include "GameObject.h"
 #include "Player.h"
+#include "Enemy.h"
 
-class Target : public GameObject
+class Target : public Enemy
 {
+
 private:
-	bool readyToDestroy;
-	AABB myCollision;
-	float velocity;
 	float timeBetweenAttacks;
-	bool attacking;
-
-	float health = 100;
-
 public:
 	Target();
 
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
-	bool Destroy();
-	void SetDestroy();
-	void Update(float delta, float3 forward, Player *myPlayer);
-	AABB GetAABB();
+	void Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice);
 	void Attack(Player *myPlayer);
-
-	float GetHealth() { return health; }
-	void SubHealth(float newHealth) { health -= newHealth; }
 };
 
 #endif // !_TARGET_H_

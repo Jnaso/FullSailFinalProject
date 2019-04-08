@@ -5,13 +5,14 @@
 #include <vector>
 #include "Target.h"
 #include "Player.h"
+#include "RangedEnemy.h"
 
 using namespace std;
 
 class EnemyManager
 {
 private:
-	vector<Target *> myEnemies;
+	vector<Enemy *> myEnemies;
 	unsigned int enemyCount;
 	unsigned int currentEnemies = 0;
 	float timeBetween = 0.0f;
@@ -35,9 +36,9 @@ public:
 
 	void Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles);
+	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice);
 
-	vector<Target *> GetEnemies();
+	vector<Enemy *> GetEnemies();
 	unsigned int GetEnemyCount();
 	float3 CalculateCohesion(Target *myT);
 	float3 CalculateSeperation(Target &myT);

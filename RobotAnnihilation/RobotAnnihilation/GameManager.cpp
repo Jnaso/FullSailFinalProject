@@ -76,7 +76,7 @@ void GameManager::ShootBullets()
 		float3 forward = float3{ myGraphics->GetCamera()->GetCamDirection().m128_f32[0], myGraphics->GetCamera()->GetCamDirection().m128_f32[1], myGraphics->GetCamera()->GetCamDirection().m128_f32[2] };
 		float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.5f, myPlayer->GetPhysicsComponent()->GetPosition().z };
 		bullets.push_back(new Bullet());
-		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward * -1, playerPos);
+		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward * -1, playerPos, "Player");
 		myPlayer->AddSound(new Sound((char*)"Gunshot.wav"));
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
@@ -133,7 +133,7 @@ void GameManager::Update(float delta, float total)
 		}
 		myPlayer->Update(delta);
 
-		myEnemyManager->Update(delta, myPlayer, Obstacles);
+		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice());
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
@@ -148,10 +148,20 @@ void GameManager::Update(float delta, float total)
 				break;
 			}
 
+			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f && bullets[i]->GetTag() == "Enemy")
+			{
+				if (BetterSphereToAABB(*bullets[i]->GetCollider(0), myPlayer->GetAABB()))
+				{
+					std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
+					bullets[i]->SetDestroy();
+					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+				}
+			}
+
 
 			for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 			{
-				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f && bullets[i]->GetTag() == "Player")
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
@@ -292,6 +302,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 	myEnemyManager->Initialize(myDX->GetDevice());
+
+	playerSphere.center = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f, myPlayer->GetPhysicsComponent()->GetPosition().z };
+	playerSphere.radius = 1.0f;
 
 	unsigned int ObstaclesCount = rand() % 10 + 5;
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
