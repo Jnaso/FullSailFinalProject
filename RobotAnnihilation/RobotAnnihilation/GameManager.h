@@ -23,6 +23,7 @@ class GameManager
 
 	bool betweenRounds = false;
 	float countDown = 0.0f;
+	unsigned int currentRound = 0;
 
 	std::string numberToChr;
 

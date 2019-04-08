@@ -263,6 +263,7 @@ void GameManager::Update(float delta, float total)
 				myEnemyManager->StartNewRound();
 				betweenRounds = false;
 				countDown = 0;
+				currentRound++;
 			}
 		}
 	}
@@ -311,6 +312,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 	myEnemyManager->Initialize(myDX->GetDevice());
+	currentRound++;
 
 	unsigned int ObstaclesCount = rand() % 10 + 5;
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
