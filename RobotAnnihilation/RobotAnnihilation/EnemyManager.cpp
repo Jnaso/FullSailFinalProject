@@ -16,11 +16,20 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f };
 	}
 
-	for (unsigned int i = 0; i < 1; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
-		myEnemies.push_back(new RangedEnemy());
-		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", {30.0f, 2.0f, 30.0f});
-		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		if (rand() % 3 == 0)
+		{
+			myEnemies.push_back(new RangedEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
+		else
+		{
+			myEnemies.push_back(new Target());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
 		currentEnemies++;
 		TotalEnemiesSpawned++;
 	}
@@ -42,18 +51,27 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 {
 	float3 accel;
 	float accelMulti = 0;
-	/*if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
+	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
 	{
-		myEnemies.push_back(new Target());
-		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
-		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		if (rand() % 3 == 0)
+		{
+			myEnemies.push_back(new RangedEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
+		else
+		{
+			myEnemies.push_back(new Target());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
 		TotalEnemiesSpawned++;
 		timeBetween = 0;
 	}
 	else
 	{
 		timeBetween += delta;
-	}*/
+	}
 	Target *currEnemy;
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
