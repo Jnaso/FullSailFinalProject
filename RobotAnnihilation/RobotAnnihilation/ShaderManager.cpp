@@ -47,7 +47,7 @@ bool ShaderManager::Initialize(ID3D11Device* device)
 		return false;
 	}
 
-	CreateDDSTextureFromFile(device, L"Skybox.dds", nullptr, &myRealSky);
+	CreateDDSTextureFromFile(device, L"SkyboxDDS.dds", nullptr, &myRealSky);
 
 	return true;
 }
