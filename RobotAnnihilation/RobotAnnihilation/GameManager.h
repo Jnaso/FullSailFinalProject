@@ -30,6 +30,7 @@ class GameManager
 	Player *myPlayer;
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
+	Sphere playerSphere;
 
 	vector<GameObject*> Obstacles;
 

@@ -2,8 +2,8 @@
 
 Target::Target() 
 {
-	GameObject::GameObject();
-	readyToDestroy = false;
+	Enemy::Enemy();
+	timeBetweenAttacks = 3.0f;
 }
 
 bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 position)
@@ -18,7 +18,7 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 	GetPhysicsComponent()->SetMass(5.0f);
 	GetPhysicsComponent()->SetDamping(0.99f);
 
-	AddCollider(GetPhysicsComponent()->GetPosition(), 0.5f);
+	AddCollider(GetPhysicsComponent()->GetPosition(), 0.7f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = RandomUniform();
@@ -28,22 +28,12 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 	return true;
 }
 
-bool Target::Destroy()
-{
-	return readyToDestroy;
-}
-
-void Target::SetDestroy()
-{
-	readyToDestroy = true;
-}
-
-void Target::Update(float delta, float3 forward, Player *myPlayer)
+void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
 {
 	if (!attacking)
 	{
 		GameObject::Update(delta);
-		float3 forward2 = forward - GetPhysicsComponent()->GetPosition();
+		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
 		GetPhysicsComponent()->SetForward(forward2);
 		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
 		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
@@ -67,11 +57,6 @@ void Target::Update(float delta, float3 forward, Player *myPlayer)
 	{
 		timeBetweenDamage -= delta;
 	}
-}
-
-AABB Target::GetAABB()
-{
-	return myCollision;
 }
 
 void Target::Attack(Player *myPlayer)

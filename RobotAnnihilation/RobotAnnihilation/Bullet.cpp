@@ -8,7 +8,7 @@ Bullet::Bullet(float life)
 	lifeTime = life;
 }
 
-bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 forward, float3 position)
+bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 forward, float3 position, std::string t, float speed)
 {
 	GetModelComponent()->Initialize(fileName, myDevice);
 	if (!GetModelComponent())
@@ -18,7 +18,7 @@ bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 f
 
 	GetPhysicsComponent()->SetForward(forward);
 	GetPhysicsComponent()->SetPosition(position);
-	velocity = forward * -100.0f;
+	velocity = forward * speed;
 	GetPhysicsComponent()->SetLifeTime(lifeTime);
 	GetPhysicsComponent()->SetVelocity(velocity);
 	GetPhysicsComponent()->SetAccel({ 0, -1.0f, 0 });
@@ -26,6 +26,8 @@ bool Bullet::Initialize(ID3D11Device * myDevice, const char * fileName, float3 f
 	GetPhysicsComponent()->SetDamping(0.99f);
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.4f);
+
+	tag = t;
 
 	return true;
 }
@@ -61,4 +63,9 @@ bool Bullet::Destroy()
 void Bullet::SetDestroy()
 {
 	readyToDestroy = true;
+}
+
+std::string Bullet::GetTag()
+{
+	return tag;
 }

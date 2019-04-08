@@ -18,9 +18,19 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		myEnemies.push_back(new Target());
-		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[i]);
-		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		
+		if (rand() % 3 == 0)
+		{
+			myEnemies.push_back(new RangedEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
+		else
+		{
+			myEnemies.push_back(new Target());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
@@ -41,15 +51,26 @@ void EnemyManager::Shutdown()
 	}
 }
 
-void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles)
+=
+void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
 {
 	float3 accel;
 	float accelMulti = 0;
 	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
 	{
-		myEnemies.push_back(new Target());
-		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
-		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+
+		if (rand() % 3 == 0)
+		{
+			myEnemies.push_back(new RangedEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
+		else
+		{
+			myEnemies.push_back(new Target());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		}
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
@@ -60,17 +81,22 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	{
 		timeBetween += delta;
 	}
+	Target *currEnemy;
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
-		accel = CalculateSeperation(*myEnemies[i]);
-		accel += CalculateObstacleSeperation(*myEnemies[i], obstacles);
-		accel *= delta;
-		myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z});
+		currEnemy = dynamic_cast<Target*>(myEnemies[i]);
+		if (currEnemy)
+		{
+			accel = CalculateSeperation(*currEnemy);
+			accel += CalculateObstacleSeperation(*currEnemy, obstacles);
+			accel *= delta;
+			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+		}
 
-		myEnemies[i]->Update(delta, myPlayer->GetPhysicsComponent()->GetPosition(), myPlayer);
+		myEnemies[i]->Update(delta, myPlayer, bullets, myDevice);
 		if (myEnemies[i]->Destroy())
 		{
-			Target *temp;
+			Enemy *temp;
 			myEnemies[i]->Shutdown();
 			temp = myEnemies[i];
 			myEnemies.erase(myEnemies.begin() + i);
@@ -91,7 +117,8 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	currentEnemies = myEnemies.size();
 }
 
-vector<Target*> EnemyManager::GetEnemies()
+
+vector<Enemy*> EnemyManager::GetEnemies()
 {
 	return myEnemies;
 }
