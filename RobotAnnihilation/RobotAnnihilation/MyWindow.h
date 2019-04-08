@@ -28,17 +28,23 @@ private:
 	char tempT0[65];
 	char tempT1[65];
 	char tempT2[65];
+	char tempT3[65];
 
 	ID3D11Device* GetDevice();
 
 	bool paused = false;
 	bool m_done = false;
+	bool showFPS = true;
+	float FPS;
+	float _frameTime;
+	UIElement* m_FPSText;
+	string numberToChr;
 
 	std::string numToChr;
 	
 	UIElement* mainMenu[5];
 	UIElement* optionsMenu[5];
-	UIElement* playerUI[4];
+	UIElement* playerUI[6];
 	UIElement* pauseMenu[4];
 
 	//UI Functions For Function Pointers
@@ -52,6 +58,9 @@ private:
 
 	void GameIsDone();
 	void ShowPlayerUI();
+	void ShowFPS();
+
+	void CalcFPS();
 public:
 	MyWindow();
 	

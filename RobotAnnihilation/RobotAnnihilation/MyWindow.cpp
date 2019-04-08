@@ -8,6 +8,13 @@ MyWindow::MyWindow()
 bool MyWindow::Run()
 {
 	bool result;
+	static int frameCounter = 0;
+	frameCounter++;
+	if (frameCounter==10)
+	{
+		ShowFPS();
+		frameCounter = 0;
+	}
 
 	timer.Signal();
 	if (!paused)
@@ -29,12 +36,10 @@ bool MyWindow::Run()
 		SetPauseMenu(paused);
 	}
 
-	//ShowCursor(paused);
-
-	if (gameManager->GetInputManager()->GetCurrMouseState().rgbButtons[0] && (!gameManager->GetUIManager()->m_mainMenu && !gameManager->GetUIManager()->m_pauseMenu))
+	if (gameManager->GetKeyState((int)'L'))
 	{
-		//gameManager->GetGraphicsManager()->ShootBullet(myWindow);
-		gameManager->ShootBullets();
+		showFPS = !showFPS;
+		m_FPSText->SetEnabled(showFPS);
 	}
 
 	//Render every frame and stop if anything goes wrong 
@@ -181,6 +186,66 @@ void MyWindow::ShowPlayerUI()
 	{
 		playerUI[i]->SetEnabled(true);
 	}
+}
+
+void MyWindow::ShowFPS()
+{	
+	numberToChr = std::to_string((int)FPS);
+	TextElement* tempT = static_cast<TextElement*>(m_FPSText);
+	tempT->SetText(numberToChr.c_str());
+}
+
+void MyWindow::CalcFPS()
+{
+	static const int NUM_SAMPLES = 100;
+	static float frameTimes[NUM_SAMPLES];
+	static int currentFrame = 0;
+	static float prevTicks = 0;
+
+#ifdef WIN64
+	prevTicks = GetTickCount64();
+#else
+	prevTicks = GetTickCount();
+#endif // WIN64
+
+	float currTicks;
+
+#ifdef WIN64
+	currTicks = GetTickCount64();
+#else
+	currTicks = GetTickCount();
+#endif // WIN64
+
+	_frameTime = currTicks - prevTicks;
+	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
+
+	prevTicks = currTicks;
+
+	int count;
+	if (currentFrame < NUM_SAMPLES)
+	{
+		count = currentFrame;
+	}
+	else
+	{
+		count = NUM_SAMPLES;
+	}
+	float frameTimeAvg = 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		frameTimeAvg += frameTimes[i];
+	}
+	frameTimeAvg /= count;
+	if (frameTimeAvg > 0)
+	{
+		FPS = 1000.0f / frameTimeAvg;
+	}
+	else
+	{
+		FPS = 60.0f;
+	}
+
+	currentFrame++;
 }
 
 #define BUTTONSIZE float2{200,50}
@@ -410,6 +475,16 @@ bool MyWindow::Initialize()
 	playerUI[3] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, timerTxt);
 
 
+	memset(tempT2, '\0', sizeof(tempT2));
+	int tempIn = 0;
+	_itoa_s(tempIn, tempT2, 65, 10);
+	
+	numToChr = std::to_string(tempIn);
+	const char* tempT100 = numToChr.c_str();
+	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
+
+	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "poopoo");
+
 #pragma endregion
 	
 	return true;
@@ -450,6 +525,7 @@ void MyWindow::Render()
 		}
 		else
 		{
+			CalcFPS();
 			result = Run();
 			//If something goes wrong, break out 
 			if (!result)

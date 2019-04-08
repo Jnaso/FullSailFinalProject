@@ -7,6 +7,7 @@ Player::Player()
 	objectModel = new Model();
 	ObjectPhysics = new PhysicsComponent();
 	health = 1000;
+	PrevUpperAnimation = nullptr;
 }
 
 
@@ -79,6 +80,15 @@ void Player::Update(float delta)
 	ObjectPhysics->Update(delta);
 	if (currentLowerAnimation != nullptr && currentUpperAnimation != nullptr)
 	{
+		if (PlayOnce)
+		{
+			if (currentUpperAnimation->GetFrameTime() + delta > currentUpperAnimation->GetAnimationClip().duration)
+			{
+				currentUpperAnimation->SetFrameTime(delta);
+				currentUpperAnimation = objectAnimations[1];
+				PlayOnce = false;
+			}
+		}
 		currentLowerAnimation->SetFrameTime(delta);
 		currentUpperAnimation->SetFrameTime(delta);
 		AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
@@ -212,4 +222,11 @@ void Player::SetAnimationUpper(int index)
 void Player::SetAnimationLower(int index)
 {
 	currentLowerAnimation = objectAnimations[index];
+}
+
+void Player::MeleeAttack(int index)
+{
+	PlayOnce = true;
+	PrevUpperAnimation = currentUpperAnimation;
+	currentUpperAnimation = objectAnimations[index];
 }

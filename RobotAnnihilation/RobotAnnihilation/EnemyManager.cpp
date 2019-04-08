@@ -21,6 +21,9 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		myEnemies.push_back(new Target());
 		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[i]);
 		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
 		currentEnemies++;
 		TotalEnemiesSpawned++;
 	}
@@ -47,6 +50,9 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 		myEnemies.push_back(new Target());
 		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
 		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
 		TotalEnemiesSpawned++;
 		timeBetween = 0;
 	}
@@ -199,4 +205,12 @@ float3 EnemyManager::CalculateObstacleSeperation(Target & myT, vector<GameObject
 
 	return sum * SeperationObstacleStrength;
 }
+
+void EnemyManager::StartNewRound()
+{
+	enemyCount += (rand() % 5 + 1);
+	TotalEnemiesSpawned = 0;
+}
+
+
 

@@ -42,6 +42,8 @@ public:
 	float3 CalculateCohesion(Target *myT);
 	float3 CalculateSeperation(Target &myT);
 	float3 CalculateObstacleSeperation(Target &myT, vector<GameObject*> obstacles);
+
+	void StartNewRound();
 };
 
 #endif // !_ENEMYMANAGER_H_

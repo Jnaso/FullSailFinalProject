@@ -178,6 +178,11 @@ struct float3
 		vecC.normalize();
 		vecB = vecC % vecA;
 	}
+
+	inline float Length()
+	{
+		return sqrtf(pow(this->x, 2) + pow(this->y, 2) + pow(this->z, 2));
+	}
 };
 
 struct float4
@@ -550,6 +555,11 @@ inline float RandomUniform()
 	float diff = 0.2f - 1.0f;
 	float r = random * diff;
 	return 1.0f + r;
+}
+
+inline float AngleBetweenVectors(float3 a, float3 b)
+{
+	return cos(DotProduct(a, b) / (a.Length() * b.Length()));
 }
 
 

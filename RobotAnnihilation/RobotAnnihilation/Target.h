@@ -12,11 +12,16 @@ private:
 	AABB myCollision;
 	float velocity;
 	float timeBetweenAttacks;
+	float timeBetweenDamage;
 	bool attacking;
 
 	float health = 100;
 
 public:
+	enum DamageType
+	{
+		Gun, Melee, Count
+	};
 	Target();
 
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
@@ -27,7 +32,7 @@ public:
 	void Attack(Player *myPlayer);
 
 	float GetHealth() { return health; }
-	void SubHealth(float newHealth) { health -= newHealth; }
+	void SubHealth(float newHealth, DamageType dmg, HWND window);
 };
 
 #endif // !_TARGET_H_
