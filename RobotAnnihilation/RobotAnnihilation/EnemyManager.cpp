@@ -158,3 +158,11 @@ float3 EnemyManager::CalculateSeperation(Target &myT)
 	return sum * SeperationStrength;
 }
 
+void EnemyManager::StartNewRound()
+{
+	enemyCount += (rand() % 5 + 1);
+	TotalEnemiesSpawned = 0;
+}
+
+
+
