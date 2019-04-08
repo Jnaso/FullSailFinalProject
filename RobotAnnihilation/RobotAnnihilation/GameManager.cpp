@@ -131,6 +131,10 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->SubTimeLeft(delta);
 		}
+		if (myInput->GetCurrMouseState().rgbButtons[1])
+		{
+			myPlayer->MeleeAttack(2);
+		}
 		myPlayer->Update(delta);
 
 		myEnemyManager->Update(delta, myPlayer);
@@ -280,11 +284,12 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
 	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
+	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
 	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -0.50, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(50);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
-	myPlayer->SetAnimationUpper(0);
+	myPlayer->SetAnimationUpper(1);
 	Gun* Pistol = new Gun();
 	Pistol->SetGunClass(Gun::PISTOL);
 	Pistol->SetFireRate(0.5f);

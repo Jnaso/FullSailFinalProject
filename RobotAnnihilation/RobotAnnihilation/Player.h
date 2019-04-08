@@ -6,6 +6,7 @@ class Player :
 {
 protected:
 	Animation* currentUpperAnimation;
+	Animation* PrevUpperAnimation;
 	Animation* currentLowerAnimation;
 
 	Gun* CurrentGun;
@@ -13,6 +14,8 @@ protected:
 	float timeLeft = 0.0f;
 	AABB playerBox;
 	unsigned int health;
+
+	bool PlayOnce = false;
 
 public:
 	Player();
@@ -41,5 +44,7 @@ public:
 
 	unsigned int GetHealth() { return health; };
 	void SetHealth(unsigned int newHeath) { health = newHeath; }
+
+	void MeleeAttack(int index);
 };
 
