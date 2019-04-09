@@ -67,7 +67,7 @@ private:
 
 
 public:
-	void Update(InputManager *, float delta);
+	void Update(InputManager *, float delta, Player *myPlayer);
 	Graphics(InputManager* input);
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput);

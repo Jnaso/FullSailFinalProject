@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "InputManager.h"
 #include "MathDefines.h"
+#include "Player.h"
 using namespace DirectX;
 
 class Camera
@@ -28,7 +29,7 @@ public:
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
-	void GetInput(InputManager *manager, float speed, XMMATRIX &);
+	void GetInput(InputManager *manager, float speed, XMMATRIX &, Player *myPlayer);
 
 
 	XMFLOAT3 GetPosition();
