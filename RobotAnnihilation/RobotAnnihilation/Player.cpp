@@ -8,6 +8,7 @@ Player::Player()
 	ObjectPhysics = new PhysicsComponent();
 	health = 1000;
 	PrevUpperAnimation = nullptr;
+	canMoveForward = true;
 }
 
 
@@ -61,6 +62,8 @@ bool Player::Initialize(const char * filePath, ID3D11Device * device)
 	playerBox.center.x = ObjectPhysics->GetPosition().x;
 	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
 	playerBox.center.z = ObjectPhysics->GetPosition().z;
+	forwardArrow.start = playerBox.center;
+	forwardArrow.end = GetPhysicsComponent()->GetForward();
 	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
 	return objectModel->Initialize(filePath, device);
 }
@@ -104,6 +107,8 @@ void Player::Update(float delta)
 	playerBox.center.x = ObjectPhysics->GetPosition().x;
 	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
 	playerBox.center.z = ObjectPhysics->GetPosition().z;
+	forwardArrow.start = playerBox.center;
+	forwardArrow.end = { forwardArrow.start.x + (GetPhysicsComponent()->GetForward().x * -1.0f), GetPhysicsComponent()->GetPosition().y + 2.0f,  forwardArrow.start.z + (GetPhysicsComponent()->GetForward().z * -1.0f)};
 }
 
 float4x4 LerpJoint(float4x4 frame1, float4x4 frame2, float ratio)

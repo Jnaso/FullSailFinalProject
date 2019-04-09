@@ -395,7 +395,7 @@ void Graphics::Update()
 	
 }
 
-void Graphics::Update(InputManager *myInput, float delta)
+void Graphics::Update(InputManager *myInput, float delta, Player *myPlayer)
 {
 	if (!myUI->m_mainMenu && !myUI->m_pauseMenu)
 	{
@@ -405,7 +405,7 @@ void Graphics::Update(InputManager *myInput, float delta)
 		}
 		else
 		{
-			myCamera->GetInput(myInput, delta, playerWorld);
+			myCamera->GetInput(myInput, delta, playerWorld, myPlayer);
 		}
 
 		if (myInput->GetKeyState((int)'O'))

@@ -114,7 +114,7 @@ void Camera::PassInViewMatrix(XMMATRIX &other)
 }
 
 //Move the camera based on input 
-void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
+void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Player *myPlayer)
 {
 	DIMOUSESTATE mouseCurrState = myInput->GetCurrMouseState();
 	//Speed of movement
@@ -122,10 +122,13 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player)
 	XMVECTOR desiredCharDir = XMVECTOR{0, 0, 0, 0};
 
 	//Update the chracter's direction and the camera's movement on each press 
-	if (myInput->GetKeyState((int)'W'))
+	if (myPlayer->canMoveForward)
 	{
-		desiredCharDir += XMVECTOR{ camforward.m128_f32[0] * time, 0.0f* time, camforward.m128_f32[2] * time, camforward.m128_f32[3] * time };
-		moveChar = true;
+		if (myInput->GetKeyState((int)'W'))
+		{
+			desiredCharDir += XMVECTOR{ camforward.m128_f32[0] * time, 0.0f* time, camforward.m128_f32[2] * time, camforward.m128_f32[3] * time };
+			moveChar = true;
+		}
 	}
 
 	if (myInput->GetKeyState((int)'S'))

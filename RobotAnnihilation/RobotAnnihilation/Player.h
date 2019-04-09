@@ -42,6 +42,8 @@ public:
 	void ReplaceGun(Gun* newGun, int index) { CurrentGuns[index] = newGun; };
 	void SetCurrentGun(int index) { CurrentGun = CurrentGuns[index]; };
 	Gun* GetCurrentGun() { return CurrentGun; };
+	Segment forwardArrow;
+	bool canMoveForward;
 
 	AABB GetAABB() { return playerBox; };
 

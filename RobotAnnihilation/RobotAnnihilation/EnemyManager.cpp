@@ -16,7 +16,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f };
 	}
 
-	for (unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 0; i++)
 	{
 		
 		if (rand() % 3 == 0)
@@ -57,7 +57,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 {
 	float3 accel;
 	float accelMulti = 0;
-	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
+	/*if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
 	{
 
 		if (rand() % 3 == 0)
@@ -82,7 +82,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	else
 	{
 		timeBetween += delta;
-	}
+	}*/
 	Target *currEnemy;
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{

@@ -116,7 +116,7 @@ void GameManager::Update(float delta, float total)
 {
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
-		myGraphics->Update(myInput, delta);
+		myGraphics->Update(myInput, delta, myPlayer);
 		bool moving = false;
 		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
 		{
@@ -178,6 +178,8 @@ void GameManager::Update(float delta, float total)
 			{
 				if (BetterSphereToAABB(*bullets[i]->GetCollider(0), myPlayer->GetAABB()))
 				{
+				
+					//std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
 					bullets[i]->SetDestroy();
 					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
 				}
@@ -191,6 +193,7 @@ void GameManager::Update(float delta, float total)
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
 						bullets[i]->SetDestroy();
+						
 						if (myPlayer->GetTimeDamage() > 0)
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
@@ -204,6 +207,7 @@ void GameManager::Update(float delta, float total)
 							int chance = rand() % 100;
 							if (chance < 25)
 							{
+								
 								if (chance < 10)
 								{
 									SpawnDamagePickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
@@ -218,6 +222,7 @@ void GameManager::Update(float delta, float total)
 
 							//cout << myPlayer->GetPoints();
 #ifdef DEBUG
+							
 							//std::cout << myEnemyManager->GetEnemyCount() << std::endl;
 #endif // DEBUG
 
@@ -239,19 +244,30 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 		}
+		bool allGood = true;
 		for (size_t i = 0; i < Obstacles.size(); i++)
 		{
-			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+			
+			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 12.0f)
 			{
 				for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
 				{
-					if (SphereToAABB(*Obstacles[i]->GetCollider(j), myPlayer->GetAABB()))
+					
+					if (lineCircle(myPlayer->forwardArrow, *Obstacles[i]->GetCollider(j)))
 					{
-
+						std::cout << "BoomBoom" << std::endl;
+						myPlayer->canMoveForward = false;
+						allGood = false;
 					}
 				}
 			}
 		}
+
+		if (allGood)
+		{
+			myPlayer->canMoveForward = true;
+		}
+
 		for (size_t i = 0; i < Pickups.size(); i++)
 		{
 			Pickups[i]->Update(delta);
@@ -265,6 +281,7 @@ void GameManager::Update(float delta, float total)
 			{
 				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
 				{
+					
 					if (Pickups[i]->GetType() == Pickup::PickupType::DAMAGE)
 					{
 						myPlayer->SetTimeDamage(30.0f);
@@ -288,6 +305,7 @@ void GameManager::Update(float delta, float total)
 				float result = DotProduct(dot, myPlayer->GetPhysicsComponent()->GetForward() * -1);
 				if (result > 0.7f)
 				{
+				
 					if (myPlayer->GetTimeDamage() > 0)
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Melee, window);
@@ -301,6 +319,7 @@ void GameManager::Update(float delta, float total)
 						int chance = rand() % 100;
 						if (chance < 25)
 						{
+							
 							if (chance < 10)
 							{
 								SpawnDamagePickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
@@ -311,6 +330,7 @@ void GameManager::Update(float delta, float total)
 							}
 						}
 						myEnemyManager->GetEnemies()[i]->SetDestroy();
+
 						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
 
 						cout << myPlayer->GetPoints();
@@ -406,6 +426,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddGun(MachineGun);
 	Gun* SubMachineGun = new Gun();
 	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
+
 	SubMachineGun->SetFireRate(0.05f);
 	SubMachineGun->SetDamageAmount(30);
 	myPlayer->AddGun(SubMachineGun);
@@ -426,9 +447,10 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles.push_back(new GameObject());
 		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 2.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 2.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 2.0f);
+
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
 	}
 
 	this->window = window;
