@@ -186,6 +186,8 @@ struct float3
 	}
 };
 
+using float3x3 = std::array< float3, 3 >;
+
 struct float4
 {
 	union
@@ -627,4 +629,59 @@ inline float AngleBetweenVectors(float3 a, float3 b)
 }
 
 
+float3x3 CreateRotationMatrixX(float angle)
+{
+	float newangle = angle * 3.14159 / 180;
+	float3x3 rotationMatrix;
+	rotationMatrix[0].x = 1;
+	rotationMatrix[0].y = 0;
+	rotationMatrix[0].z = 0;
+	rotationMatrix[1].x = 0;
+	rotationMatrix[1].y = cos(newangle);
+	rotationMatrix[1].z = -sin(newangle);
+	rotationMatrix[2].x = 0;
+	rotationMatrix[2].y = sin(newangle);
+	rotationMatrix[2].z = cos(newangle);
+	return rotationMatrix;
+}
 
+float3x3 CreateRotationMatrixY(float angle)
+{
+	float newangle = angle * 3.14159 / 180;
+	float3x3 rotationMatrix;
+	rotationMatrix[0].x = cos(newangle);
+	rotationMatrix[0].y = 0;
+	rotationMatrix[0].z = sin(newangle);
+	rotationMatrix[1].x = 0;
+	rotationMatrix[1].y = 1;
+	rotationMatrix[1].z = 0;
+	rotationMatrix[2].x = -sin(newangle);
+	rotationMatrix[2].y = 0;
+	rotationMatrix[2].z = cos(newangle);
+	return rotationMatrix;
+}
+
+float3x3 CreateRotationMatrixZ(float angle)
+{
+	float newangle = angle * 3.14159 / 180;
+	float3x3 rotationMatrix;
+	rotationMatrix[0].x = cos(newangle);
+	rotationMatrix[0].y = -sin(newangle);
+	rotationMatrix[0].z = 0;
+	rotationMatrix[1].x = sin(newangle);
+	rotationMatrix[1].y = cos(newangle);
+	rotationMatrix[1].z = 0;
+	rotationMatrix[2].x = 0;
+	rotationMatrix[2].y = 0;
+	rotationMatrix[2].z = 1;
+	return rotationMatrix;
+}
+
+float3 VectorMatrixMultiplication(float3x3 mat, float3 vec)
+{
+	float3 value;
+	value.x = (vec.x * mat[0].x) + (vec.y * mat[0].y) + (vec.z * mat[0].z);
+	value.y = (vec.x * mat[1].x) + (vec.y * mat[1].y) + (vec.z * mat[1].z);
+	value.z = (vec.x * mat[2].x) + (vec.y * mat[2].y) + (vec.z * mat[2].z);
+	return value;
+}
