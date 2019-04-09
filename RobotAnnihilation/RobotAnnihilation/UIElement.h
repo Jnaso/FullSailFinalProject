@@ -11,6 +11,10 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
+inline LONG LLerp(LONG l1, LONG l2, float r)
+{
+	return (l2 - l1) * r + l1;
+}
 
 class UIElement
 {
@@ -48,8 +52,15 @@ public:
 
 	float2 GetPos() 
 	{
-		float2 temp = { m_pos.x, m_pos.y };
-		return temp;
+		return { m_pos.x, m_pos.y };
+	}
+	float2 GetTopLeft()
+	{
+		return float2{ static_cast<float>(m_destRect.left), static_cast<float>(m_destRect.top) };
+	}
+	float2 GetBottomRight()
+	{
+		return float2{ static_cast<float>(m_destRect.right), static_cast<float>(m_destRect.bottom) };
 	}
 	void SetPos(float2 value) 
 	{ 
@@ -63,7 +74,7 @@ public:
 	
 	void SetSize(float2 value) 
 	{ 
-		m_destRect = RECT
+		m_destRect = 
 		{ 
 			static_cast<LONG>(m_pos.x), 
 			static_cast<LONG>(m_pos.y),
@@ -71,6 +82,60 @@ public:
 			static_cast<LONG>(m_pos.y + value.y)
 		}; 
 	}
+	void SetSize(LONG x, LONG y)
+	{
+		m_destRect = 
+		{
+			static_cast<LONG>(m_pos.x),
+			static_cast<LONG>(m_pos.y),
+			static_cast<LONG>(m_pos.x + x),
+			static_cast<LONG>(m_pos.y + y)
+		};
+	}
+	void SetSize(LONG x)
+	{
+		m_destRect = 
+		{
+			static_cast<LONG>(m_pos.x),
+			static_cast<LONG>(m_pos.y),
+			static_cast<LONG>(m_pos.x + x),
+			static_cast<LONG>(m_pos.y)
+		};
+	}
+
+	void SetTop(LONG top)
+	{
+		m_destRect.top = top;
+	}
+	void SetLeft(LONG left)
+	{
+		m_destRect.left = left;
+	}
+	void SetBottom(LONG bottom)
+	{
+		m_destRect.bottom = bottom;
+	}
+	void SetRight(LONG right)
+	{
+		m_destRect.right = right;
+	}
+
+	LONG GetTop() { return m_destRect.top; }
+	LONG GetLeft() { return m_destRect.left; }
+	LONG GetBottom() { return m_destRect.bottom; }
+	LONG GetRight() { return m_destRect.right; }
+
+	//Float value between 0 and 100
+	bool SetFillLinear(int value)
+	{
+		if (value < 0 || value > 100)
+		{
+			throw std::exception("Value is not between 0 or 100", value);
+		}
+
+		m_destRect.right = LLerp(m_destRect.left, m_destRect.right, value * .01f);
+	}
+
 	float2 GetSize() 
 	{ 
 		return float2
@@ -124,6 +189,8 @@ public:
 
 	void Update();
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch);
+
+
 
 	ID3D11ShaderResourceView* GetTexture() { return m_texture; }
 	void SetTexture(ID3D11ShaderResourceView* value) { m_texture = value; }
