@@ -241,7 +241,7 @@ void Graphics::Shutdown()
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<GameObject*> Pickups)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups)
 {
 	XMMATRIX world, view, projection, frustumView;
 	bool result, render;
@@ -327,7 +327,11 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 			if (render)
 			{
-				world = XMMatrixMultiply(XMMatrixTranslation(0.0f, -1.0f, 0.0f), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
+				float rotation = DotProduct((myTargets[i]->GetPhysicsComponent()->GetForward()), myPlayer->GetPhysicsComponent()->GetForward());
+				
+				//world = XMMatrixMultiply(XMMatrixRotationY(rotation), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
+				
+				world = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z);
 
 				myTargets[i]->Render(myDX->GetDeviceContext());
 
@@ -353,8 +357,14 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 		for (unsigned int i = 0; i < Pickups.size(); i++)
 		{
-			world = XMMatrixMultiply(XMMatrixMultiply(XMMatrixTranslation(0, sin(Pickups[i]->GetTotalTime() * 10.0f * .25 + 1.5), 0),XMMatrixRotationY(Pickups[i]->GetTotalTime())), XMMatrixTranslation(Pickups[i]->GetPhysicsComponent()->GetPosition().x, Pickups[i]->GetPhysicsComponent()->GetPosition().y, Pickups[i]->GetPhysicsComponent()->GetPosition().z));
-
+			if (Pickups[i]->GetType() == Pickup::PickupType::DAMAGE)
+			{
+				world = XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(1.25, 1.25, 1.25), XMMatrixMultiply(XMMatrixTranslation(0, sin(Pickups[i]->GetTotalTime() * 10.0f * .25 + 1.5), 0), XMMatrixRotationY(Pickups[i]->GetTotalTime()))), XMMatrixTranslation(Pickups[i]->GetPhysicsComponent()->GetPosition().x, Pickups[i]->GetPhysicsComponent()->GetPosition().y, Pickups[i]->GetPhysicsComponent()->GetPosition().z));
+			}
+			else
+			{
+				world = XMMatrixMultiply(XMMatrixMultiply(XMMatrixTranslation(0, sin(Pickups[i]->GetTotalTime() * 10.0f * .25 + 1.5), 0), XMMatrixRotationY(Pickups[i]->GetTotalTime())), XMMatrixTranslation(Pickups[i]->GetPhysicsComponent()->GetPosition().x, Pickups[i]->GetPhysicsComponent()->GetPosition().y, Pickups[i]->GetPhysicsComponent()->GetPosition().z));
+			}
 			Pickups[i]->Render(myDX->GetDeviceContext());
 
 			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Pickups[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Pickups[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());

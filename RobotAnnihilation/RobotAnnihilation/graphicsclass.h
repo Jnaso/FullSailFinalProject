@@ -10,6 +10,7 @@
 #include "allofthelights.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "Pickup.h"
 #include "Gun.h"
 #include "Camera.h"
 #include "InputManager.h"
@@ -77,7 +78,7 @@ public:
 	void CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath);
 
 	void Shutdown();
-	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<GameObject*> Pickups);
+	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups);
 	void Update();
 
 	DX* GetGraphicsEngine() { return myDX; }

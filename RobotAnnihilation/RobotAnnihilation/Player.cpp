@@ -93,6 +93,14 @@ void Player::Update(float delta)
 		currentUpperAnimation->SetFrameTime(delta);
 		AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
 	}
+	if (timeLeftDamage > 0)
+	{
+		timeLeftDamage -= delta;
+	}
+	if (timeLeftDamage <= 0)
+	{
+		timeLeftDamage = 0;
+	}
 	playerBox.center.x = ObjectPhysics->GetPosition().x;
 	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
 	playerBox.center.z = ObjectPhysics->GetPosition().z;

@@ -31,6 +31,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
+    <ClCompile Include="Pickup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="RangedEnemy.h" />
+    <ClInclude Include="Pickup.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

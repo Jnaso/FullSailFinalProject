@@ -12,6 +12,7 @@ protected:
 	Gun* CurrentGun;
 	std::vector<Gun*> CurrentGuns;
 	float timeLeft = 0.0f;
+	float timeLeftDamage = 0.0f;
 	AABB playerBox;
 	unsigned int health;
 
@@ -53,5 +54,9 @@ public:
 
 	unsigned int GetPoints() { return CurrentPoints; }
 	void AddCurrency(unsigned int amount) { CurrentPoints += amount; }
+
+	void SetTimeDamage(float damage) { timeLeftDamage = damage; }
+	float GetTimeDamage() { return timeLeftDamage; }
+	void SubTimeDamage(float damage) { timeLeftDamage -= damage; }
 };
 

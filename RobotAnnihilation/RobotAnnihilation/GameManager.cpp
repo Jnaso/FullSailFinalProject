@@ -59,6 +59,12 @@ void GameManager::UpdateTimerText(float time)
 	tempT->SetText( "Total Time: " + std::to_string(static_cast<int>(time)) );
 }
 
+void GameManager::UpdateDamageTimerText()
+{
+	TextElement* tempT = static_cast<TextElement*>(m_damagetimerText);
+	tempT->SetText("Double Damage: " + std::to_string(static_cast<int>(myPlayer->GetTimeDamage())));
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -84,11 +90,23 @@ void GameManager::ShootBullets()
 	}
 }
 
-void GameManager::SpawnPickup(float3 pos)
+void GameManager::SpawnHealthPickup(float3 pos)
 {
-	GameObject* newpickup = new GameObject();
+	Pickup* newpickup = new Pickup();
 	newpickup->Initialize("Assets/HealthPickup.mesh", myDX->GetDevice());
 	newpickup->SetLifeTime(15.0f);
+	newpickup->SetType(Pickup::PickupType::HEALTH);
+	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
+	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
+	Pickups.push_back(newpickup);
+}
+
+void GameManager::SpawnDamagePickup(float3 pos)
+{
+	Pickup* newpickup = new Pickup();
+	newpickup->Initialize("Assets/DamagePickup.mesh", myDX->GetDevice());
+	newpickup->SetLifeTime(15.0f);
+	newpickup->SetType(Pickup::PickupType::DAMAGE);
 	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
 	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
 	Pickups.push_back(newpickup);
@@ -160,7 +178,6 @@ void GameManager::Update(float delta, float total)
 			{
 				if (BetterSphereToAABB(*bullets[i]->GetCollider(0), myPlayer->GetAABB()))
 				{
-					std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
 					bullets[i]->SetDestroy();
 					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
 				}
@@ -174,23 +191,34 @@ void GameManager::Update(float delta, float total)
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
 						bullets[i]->SetDestroy();
-						/*myEnemyManager->GetEnemies()[j]->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
-						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->Initialize(window);
-						myEnemyManager->GetEnemies()[j]->GetSounds()[myEnemyManager->GetEnemies()[j]->GetSounds().size() - 1]->PlayWaveFile();*/
-						myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+						if (myPlayer->GetTimeDamage() > 0)
+						{
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+						}
+						else
+						{
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
 							int chance = rand() % 100;
 							if (chance < 25)
 							{
-								SpawnPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+								if (chance < 10)
+								{
+									SpawnDamagePickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+								}
+								else
+								{
+									SpawnHealthPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+								}
 							}
 							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency());
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 
-							cout << myPlayer->GetPoints();
+							//cout << myPlayer->GetPoints();
 #ifdef DEBUG
-							std::cout << myEnemyManager->GetEnemyCount() << std::endl;
+							//std::cout << myEnemyManager->GetEnemyCount() << std::endl;
 #endif // DEBUG
 
 						}
@@ -237,7 +265,14 @@ void GameManager::Update(float delta, float total)
 			{
 				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
 				{
-					myPlayer->SetHealth(myPlayer->GetHealth() + 25);
+					if (Pickups[i]->GetType() == Pickup::PickupType::DAMAGE)
+					{
+						myPlayer->SetTimeDamage(30.0f);
+					}
+					if (Pickups[i]->GetType() == Pickup::PickupType::HEALTH)
+					{
+						myPlayer->SetHealth(myPlayer->GetHealth() + 25);
+					}
 					Pickups.erase(Pickups.begin() + i);
 					--i;
 					continue;
@@ -253,15 +288,27 @@ void GameManager::Update(float delta, float total)
 				float result = DotProduct(dot, myPlayer->GetPhysicsComponent()->GetForward() * -1);
 				if (result > 0.7f)
 				{
-
-					//myEnemyManager->GetEnemies()[i]->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
-					myEnemyManager->GetEnemies()[i]->SubHealth(10, Target::DamageType::Melee, window);
+					if (myPlayer->GetTimeDamage() > 0)
+					{
+						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Melee, window);
+					}
+					else
+					{
+						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Melee, window);
+					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
 					{
 						int chance = rand() % 100;
 						if (chance < 25)
 						{
-							SpawnPickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
+							if (chance < 10)
+							{
+								SpawnDamagePickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
+							}
+							else
+							{
+								SpawnHealthPickup(myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition());
+							}
 						}
 						myEnemyManager->GetEnemies()[i]->SetDestroy();
 						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
@@ -271,8 +318,6 @@ void GameManager::Update(float delta, float total)
 					}
 					float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
 					dir.normalize();
-					//dir = dir * 5;
-					//myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->AddForce(dir * 2);
 				}
 			}
 		}
@@ -282,7 +327,19 @@ void GameManager::Update(float delta, float total)
 		UpdateScoreText();
 		UpdateHealthText();
 		UpdateWeaponText();
+		if (myPlayer->GetTimeDamage() > 0)
+		{
+			UpdateDamageTimerText();
+		}
 		UpdateTimerText(total);
+		if (myPlayer->GetTimeDamage() <= 0 && m_damagetimerText->GetEnabled())
+		{
+			m_damagetimerText->SetEnabled(false);
+		}
+		if (myPlayer->GetTimeDamage() > 0 && !m_damagetimerText->GetEnabled())
+		{
+			m_damagetimerText->SetEnabled(true);
+		}
 
 		if (GetHealth() <= 0)
 		{

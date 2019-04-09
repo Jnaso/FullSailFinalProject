@@ -7,6 +7,7 @@
 #include "Gun.h"
 #include "dxstuff.h"
 #include "EnemyManager.h"
+#include "Pickup.h"
 
 class GameManager
 {
@@ -34,7 +35,7 @@ class GameManager
 
 	vector<GameObject*> Obstacles;
 
-	vector<GameObject*> Pickups;
+	vector<Pickup*> Pickups;
 
 public:
 	GameManager();
@@ -52,6 +53,7 @@ public:
 	UIElement* m_scoreText;
 	UIElement* m_healthText;
 	UIElement* m_timerText;
+	UIElement* m_damagetimerText;
 
 	UIElement* m_YouLose;
 	UIElement* m_YouWin;
@@ -62,6 +64,7 @@ public:
 	void UpdateHealthText();
 	void UpdateWeaponText();
 	void UpdateTimerText(float time);
+	void UpdateDamageTimerText();
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
@@ -74,6 +77,7 @@ public:
 	unsigned int GetHealth() { return myPlayer->GetHealth(); };
 	Player* GetPlayer() { return myPlayer; }
 
-	void SpawnPickup(float3 pos);
+	void SpawnHealthPickup(float3 pos);
+	void SpawnDamagePickup(float3 pos);
 };
 

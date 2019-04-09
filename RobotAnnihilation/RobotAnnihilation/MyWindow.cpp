@@ -200,21 +200,9 @@ void MyWindow::CalcFPS()
 	static const int NUM_SAMPLES = 100;
 	static float frameTimes[NUM_SAMPLES];
 	static int currentFrame = 0;
-	static float prevTicks = 0;
+	static float prevTicks = GetTickCount();
 
-#ifdef WIN64
-	prevTicks = GetTickCount64();
-#else
-	prevTicks = GetTickCount();
-#endif // WIN64
-
-	float currTicks;
-
-#ifdef WIN64
-	currTicks = GetTickCount64();
-#else
-	currTicks = GetTickCount();
-#endif // WIN64
+	float currTicks = GetTickCount();
 
 	_frameTime = currTicks - prevTicks;
 	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
@@ -484,6 +472,8 @@ bool MyWindow::Initialize()
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "poopoo");
+
+	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
 
 #pragma endregion
 	
