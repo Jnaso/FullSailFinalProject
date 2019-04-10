@@ -18,7 +18,7 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 	GetPhysicsComponent()->SetMass(5.0f);
 	GetPhysicsComponent()->SetDamping(0.99f);
 
-	AddCollider(GetPhysicsComponent()->GetPosition(), 0.5f);
+	AddCollider(GetPhysicsComponent()->GetPosition(), 0.8f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = .6f;

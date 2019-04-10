@@ -427,7 +427,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	Gun* SubMachineGun = new Gun();
 	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
 
-	SubMachineGun->SetFireRate(0.05f);
+	SubMachineGun->SetFireRate(0.25f);
 	SubMachineGun->SetDamageAmount(30);
 	myPlayer->AddGun(SubMachineGun);
 	myPlayer->SetCurrentGun(0);

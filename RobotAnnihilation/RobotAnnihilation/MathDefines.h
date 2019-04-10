@@ -629,7 +629,7 @@ inline float AngleBetweenVectors(float3 a, float3 b)
 }
 
 
-float3x3 CreateRotationMatrixX(float angle)
+inline float3x3 CreateRotationMatrixX(float angle)
 {
 	float newangle = angle * 3.14159 / 180;
 	float3x3 rotationMatrix;
@@ -645,7 +645,7 @@ float3x3 CreateRotationMatrixX(float angle)
 	return rotationMatrix;
 }
 
-float3x3 CreateRotationMatrixY(float angle)
+inline float3x3 CreateRotationMatrixY(float angle)
 {
 	float newangle = angle * 3.14159 / 180;
 	float3x3 rotationMatrix;
@@ -661,7 +661,7 @@ float3x3 CreateRotationMatrixY(float angle)
 	return rotationMatrix;
 }
 
-float3x3 CreateRotationMatrixZ(float angle)
+inline float3x3 CreateRotationMatrixZ(float angle)
 {
 	float newangle = angle * 3.14159 / 180;
 	float3x3 rotationMatrix;
@@ -677,7 +677,7 @@ float3x3 CreateRotationMatrixZ(float angle)
 	return rotationMatrix;
 }
 
-float3 VectorMatrixMultiplication(float3x3 mat, float3 vec)
+inline float3 VectorMatrixMultiplication(float3x3 mat, float3 vec)
 {
 	float3 value;
 	value.x = (vec.x * mat[0].x) + (vec.y * mat[0].y) + (vec.z * mat[0].z);
