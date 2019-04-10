@@ -23,6 +23,8 @@ class GameManager
 	char displayString1[65];
 	char displayString2[65];
 
+	bool shopVisible = false;
+
 	std::string numberToChr;
 
 	Player *myPlayer;

@@ -81,7 +81,7 @@ UIElement* UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, 
 UIElement * UIManager::CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, std::string text)
 {
 	UIElement* temp = new TextElement(srcRect, interactable, enabled, pos, font, (char*)text.c_str());
-	m_UIElements.insert(m_UIElements.begin(), temp);
+	m_UIElements.insert(m_UIElements.begin() + textCount, temp);
 	++textCount;
 	return temp;
 }
