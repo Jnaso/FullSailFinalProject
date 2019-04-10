@@ -30,6 +30,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 			myEnemies.push_back(new Target());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
 			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotMove.anim", myDevice, 1);
 		}
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
@@ -71,6 +72,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies.push_back(new Target());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
 			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotMove.anim", myDevice, 1);
 		}
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);

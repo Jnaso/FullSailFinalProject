@@ -192,7 +192,7 @@ void MyWindow::ShowFPS()
 {	
 	numberToChr = std::to_string((int)FPS);
 	TextElement* tempT = static_cast<TextElement*>(m_FPSText);
-	tempT->SetText(numberToChr.c_str());
+	tempT->SetText("FPS: " + numberToChr);
 }
 
 void MyWindow::CalcFPS()
