@@ -330,7 +330,9 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 				XMVECTOR player = playerWorld.r[3];
 				player.m128_f32[1] += 2.0f;
 				XMMATRIX lookcopy = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z);
-				XMVECTOR z = XMVector4Normalize(XMVectorSubtract(player, lookcopy.r[3]));// { UserControlled.r[3].m128_f32[0] - TurnToResult.r[3].m128_f32[0], UserControlled.r[3].m128_f32[1] - TurnToResult.r[3].m128_f32[1], UserControlled.r[3].m128_f32[2] - TurnToResult.r[3].m128_f32[2], UserControlled.r[3].m128_f32[3] - TurnToResult.r[3].m128_f32[3] };
+				XMVECTOR zclamp = XMVectorSubtract(player, lookcopy.r[3]);
+				zclamp.m128_f32[1] = 0;
+				XMVECTOR z = XMVector4Normalize(zclamp);// { UserControlled.r[3].m128_f32[0] - TurnToResult.r[3].m128_f32[0], UserControlled.r[3].m128_f32[1] - TurnToResult.r[3].m128_f32[1], UserControlled.r[3].m128_f32[2] - TurnToResult.r[3].m128_f32[2], UserControlled.r[3].m128_f32[3] - TurnToResult.r[3].m128_f32[3] };
 				XMVECTOR up = { 0, 1, 0, 0 };
 				XMVECTOR x = XMVector4Normalize(XMVector3Cross(up, z));// { (up.m128_f32[1] * z.m128_f32[2]) - (up.m128_f32[2] * z.m128_f32[1]), (up.m128_f32[2] * z.m128_f32[0]) - (up.m128_f32[0] * z.m128_f32[2]), (up.m128_f32[0] * z.m128_f32[1]) - (up.m128_f32[1] * z.m128_f32[0]), 1 };
 				XMVECTOR y = XMVector4Normalize(XMVector3Cross(z, x));// { (z.m128_f32[1] * x.m128_f32[2]) - (z.m128_f32[2] * x.m128_f32[1]), (z.m128_f32[2] * x.m128_f32[0]) - (z.m128_f32[0] * x.m128_f32[2]), (z.m128_f32[0] * x.m128_f32[1]) - (z.m128_f32[1] * x.m128_f32[0]), 1 };
