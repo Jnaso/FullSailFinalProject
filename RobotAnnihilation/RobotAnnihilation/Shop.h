@@ -9,6 +9,15 @@
 class Shop
 {
 	UIManager* m_UIManager;
+	ID3D11Device* m_device;
+
+
+	int m_assultRifleLevel = 0;
+	int m_subMachineGunLevel = 0;
+	int m_pistolLevel = 0;
+	int m_meleeLevel = 0;
+
+	
 
 	enum STATS{DAMAGE,AMMO_COUNT,FIRE_RATE,COUNT};
 
@@ -35,17 +44,19 @@ class Shop
 	};
 	struct DescriptionBox
 	{
+		UIManager* m_UI;
 		float m_stats[STATS::COUNT];
 		int m_cost = 0;
 
-		ImageElement* m_shopBckgrnd = nullptr;
+		ImageElement* m_shopBckgrnd;
 
 		ImageElement* m_StatBars[STATS::COUNT];
-		ImageElement* m_weaponImage = nullptr;
+		ImageElement* m_weaponImage;
 
-		DescriptionBox()
+		DescriptionBox(UIManager* ui, ID3D11Device* device)
 		{
-			
+			const wchar_t* temp = L"ShopBkrnd.dds";
+			HRESULT hr = CreateDDSTextureFromFile(device, temp, nullptr, m_shopBckgrnd->GetTexture());
 		}
 
 		~DescriptionBox()
@@ -54,18 +65,26 @@ class Shop
 		}
 	};
 
-	std::map<std::string, ButtonElement*> m_buttons;
+	std::map<std::string, UIElement*> m_shopUI;
 	std::map<std::string, Item*> m_items;
 
 public:
 
+	//Variables For Stats Bar
+	float m_selectedStats[STATS::COUNT];
+	int m_selectedCost = 0;
+
 	
 
-	Shop(UIManager*);
+	Shop(UIManager*, ID3D11Device*);
+
+	
 
 	bool Initialize();
 
 	void Update();
+
+	void SetShopVisibility(bool);
 
 	~Shop();
 

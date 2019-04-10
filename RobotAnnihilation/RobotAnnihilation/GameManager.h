@@ -7,12 +7,14 @@
 #include "Gun.h"
 #include "dxstuff.h"
 #include "EnemyManager.h"
+#include "Shop.h"
 
 class GameManager
 {
 	DX* myDX;
-	//Game Classes
 	Graphics *myGraphics;
+	//Game Classes
+	Shop* myShop;
 	InputManager *myInput;
 	HWND window;
 	

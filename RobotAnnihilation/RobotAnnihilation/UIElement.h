@@ -190,9 +190,7 @@ public:
 	void Update();
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch);
 
-
-
-	ID3D11ShaderResourceView* GetTexture() { return m_texture; }
+	ID3D11ShaderResourceView** GetTexture() { return &m_texture; }
 	void SetTexture(ID3D11ShaderResourceView* value) { m_texture = value; }
 
 	~ImageElement();

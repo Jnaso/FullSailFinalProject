@@ -305,6 +305,19 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	this->window = window;
+
+	myShop = new Shop(GetUIManager(), myDX->GetDevice());
+	if (!myShop)
+	{
+		return false;
+	}
+
+	if (!myShop->Initialize())
+	{
+		return false;
+	}
+
+
 	return result;
 }
 
