@@ -145,6 +145,14 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->SetCurrentGun(2);
 		}
+
+		if (myInput->GetKeyState((int)'K'))
+		{
+			shopVisible = !shopVisible;
+			myShop->SetShopVisibility(!shopVisible);
+		}
+		myShop->Update();
+
 		if (myPlayer->getTimeLeft() >= 0)
 		{
 			myPlayer->SubTimeLeft(delta);
@@ -454,6 +462,19 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	}
 
 	this->window = window;
+
+	myShop = new Shop(GetUIManager(), myDX->GetDevice());
+	if (!myShop)
+	{
+		return false;
+	}
+
+	if (!myShop->Initialize())
+	{
+		return false;
+	}
+
+
 	return result;
 }
 
@@ -486,6 +507,12 @@ void GameManager::ShutDown()
 		myEnemyManager->Shutdown();
 		delete myEnemyManager;
 		myEnemyManager = nullptr;
+	}
+
+	if (myShop)
+	{
+		delete myShop;
+		myShop = nullptr;
 	}
 	
 }
