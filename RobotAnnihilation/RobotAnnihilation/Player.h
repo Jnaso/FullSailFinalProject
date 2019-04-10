@@ -15,6 +15,14 @@ protected:
 	float timeLeftDamage = 0.0f;
 	AABB playerBox;
 	unsigned int health;
+	Segment forwardArrow;
+	Segment backwardArrow;
+	Segment leftArrow;
+	Segment rightArrow;
+	bool canMoveForward;
+	bool canMoveBackward;
+	bool canMoveLeft;
+	bool canMoveRight;
 
 	unsigned int CurrentPoints = 0;
 
@@ -42,8 +50,20 @@ public:
 	void ReplaceGun(Gun* newGun, int index) { CurrentGuns[index] = newGun; };
 	void SetCurrentGun(int index) { CurrentGun = CurrentGuns[index]; };
 	Gun* GetCurrentGun() { return CurrentGun; };
-	Segment forwardArrow;
-	bool canMoveForward;
+
+	Segment GetForwardArrow();
+	Segment GetBackwardArrow();
+	Segment GetLeftArrow();
+	Segment GetRightArrow();
+	bool MoveForward();
+	bool MoveBackward();
+	bool MoveLeft();
+	bool MoveRight();
+
+	void SetForward(bool f);
+	void SetBackward(bool f);
+	void SetLeft(bool f);
+	void SetRight(bool f);
 
 	AABB GetAABB() { return playerBox; };
 
