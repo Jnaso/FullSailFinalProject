@@ -29,6 +29,7 @@ template <class T> inline void saferelease(T& t)
 #include <functional>
 #include <assert.h>
 #include <string>
+#include <map>
 
 //External Files
 #include "MathDefines.h"

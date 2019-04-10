@@ -7,13 +7,14 @@
 #include "Gun.h"
 #include "dxstuff.h"
 #include "EnemyManager.h"
+#include "Shop.h"
 #include "Pickup.h"
-
 class GameManager
 {
 	DX* myDX;
-	//Game Classes
 	Graphics *myGraphics;
+	//Game Classes
+	Shop* myShop;
 	InputManager *myInput;
 	HWND window;
 	
@@ -21,6 +22,7 @@ class GameManager
 	char displayString[65];
 	char displayString1[65];
 	char displayString2[65];
+	bool shopVisible = false;
 
 	bool betweenRounds = false;
 	float countDown = 0.0f;

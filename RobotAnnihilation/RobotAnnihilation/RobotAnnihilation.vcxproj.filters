@@ -29,6 +29,7 @@
     <ClCompile Include="XTime.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
     <ClCompile Include="Pickup.cpp" />
@@ -70,6 +71,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="Shop.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="RangedEnemy.h" />
     <ClInclude Include="Pickup.h" />

@@ -9,6 +9,9 @@ Player::Player()
 	health = 1000;
 	PrevUpperAnimation = nullptr;
 	canMoveForward = true;
+	canMoveBackward = true;
+	canMoveLeft = true;
+	canMoveRight = true;
 }
 
 
@@ -63,7 +66,10 @@ bool Player::Initialize(const char * filePath, ID3D11Device * device)
 	playerBox.center.y = ObjectPhysics->GetPosition().y + 2.0f;
 	playerBox.center.z = ObjectPhysics->GetPosition().z;
 	forwardArrow.start = playerBox.center;
-	forwardArrow.end = GetPhysicsComponent()->GetForward();
+	forwardArrow.end = GetPhysicsComponent()->GetForward() * -1.0f;
+	backwardArrow.start = playerBox.center;
+	backwardArrow.end = GetPhysicsComponent()->GetForward();
+	leftArrow.start = playerBox.center;
 	playerBox.dimensions = { 1.0f, 1.0f, 1.0f };
 	return objectModel->Initialize(filePath, device);
 }
@@ -109,6 +115,15 @@ void Player::Update(float delta)
 	playerBox.center.z = ObjectPhysics->GetPosition().z;
 	forwardArrow.start = playerBox.center;
 	forwardArrow.end = { forwardArrow.start.x + (GetPhysicsComponent()->GetForward().x * -1.0f), GetPhysicsComponent()->GetPosition().y + 2.0f,  forwardArrow.start.z + (GetPhysicsComponent()->GetForward().z * -1.0f)};
+	backwardArrow.start = playerBox.center;
+	backwardArrow.end = { backwardArrow.start.x + (GetPhysicsComponent()->GetForward().x), GetPhysicsComponent()->GetPosition().y + 2.0f,  backwardArrow.start.z + (GetPhysicsComponent()->GetForward().z) };
+	leftArrow.start = playerBox.center;
+	float3 leftForward = VectorMatrixMultiplication(CreateRotationMatrixY(-90.0f), GetPhysicsComponent()->GetForward());
+	leftArrow.end = { leftArrow.start.x - (leftForward.x), GetPhysicsComponent()->GetPosition().y + 2.0f,  leftArrow.start.z - (leftForward.z)};
+
+	rightArrow.start = playerBox.center;
+	float3 rightForward = VectorMatrixMultiplication(CreateRotationMatrixY(90.0f), GetPhysicsComponent()->GetForward());
+	rightArrow.end = { rightArrow.start.x - (rightForward.x), GetPhysicsComponent()->GetPosition().y + 2.0f,  rightArrow.start.z - (rightForward.z) };
 }
 
 float4x4 LerpJoint(float4x4 frame1, float4x4 frame2, float ratio)
@@ -235,6 +250,66 @@ void Player::SetAnimationUpper(int index)
 void Player::SetAnimationLower(int index)
 {
 	currentLowerAnimation = objectAnimations[index];
+}
+
+Segment Player::GetForwardArrow()
+{
+	return forwardArrow;
+}
+
+Segment Player::GetBackwardArrow()
+{
+	return backwardArrow;
+}
+
+Segment Player::GetLeftArrow()
+{
+	return leftArrow;
+}
+
+Segment Player::GetRightArrow()
+{
+	return rightArrow;
+}
+
+bool Player::MoveForward()
+{
+	return canMoveForward;
+}
+
+bool Player::MoveBackward()
+{
+	return canMoveBackward;
+}
+
+bool Player::MoveLeft()
+{
+	return canMoveLeft;
+}
+
+bool Player::MoveRight()
+{
+	return canMoveRight;
+}
+
+void Player::SetForward(bool f)
+{
+	canMoveForward = f;
+}
+
+void Player::SetBackward(bool f)
+{
+	canMoveBackward = f;
+}
+
+void Player::SetLeft(bool f)
+{
+	canMoveLeft = f;
+}
+
+void Player::SetRight(bool f)
+{
+	canMoveRight = f;
 }
 
 void Player::MeleeAttack(int index)
