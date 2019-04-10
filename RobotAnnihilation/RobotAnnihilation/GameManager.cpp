@@ -62,7 +62,7 @@ void GameManager::UpdateTimerText(float time)
 void GameManager::UpdateDamageTimerText()
 {
 	TextElement* tempT = static_cast<TextElement*>(m_damagetimerText);
-	tempT->SetText("Double Damage: " + std::to_string(static_cast<int>(myPlayer->GetTimeDamage())));
+	tempT->SetText("Damage Increase: " + std::to_string(static_cast<int>(myPlayer->GetTimeDamage())));
 }
 
 InputManager * GameManager::GetInputManager()

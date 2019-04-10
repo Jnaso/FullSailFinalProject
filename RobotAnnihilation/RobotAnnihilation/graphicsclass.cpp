@@ -327,11 +327,21 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 			if (render)
 			{
-				float rotation = DotProduct((myTargets[i]->GetPhysicsComponent()->GetForward()), myPlayer->GetPhysicsComponent()->GetForward());
-				
-				//world = XMMatrixMultiply(XMMatrixRotationY(rotation), XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
-				
-				world = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z);
+				XMVECTOR player = playerWorld.r[3];
+				player.m128_f32[1] += 2.0f;
+				XMMATRIX lookcopy = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z);
+				XMVECTOR z = XMVector4Normalize(XMVectorSubtract(player, lookcopy.r[3]));// { UserControlled.r[3].m128_f32[0] - TurnToResult.r[3].m128_f32[0], UserControlled.r[3].m128_f32[1] - TurnToResult.r[3].m128_f32[1], UserControlled.r[3].m128_f32[2] - TurnToResult.r[3].m128_f32[2], UserControlled.r[3].m128_f32[3] - TurnToResult.r[3].m128_f32[3] };
+				XMVECTOR up = { 0, 1, 0, 0 };
+				XMVECTOR x = XMVector4Normalize(XMVector3Cross(up, z));// { (up.m128_f32[1] * z.m128_f32[2]) - (up.m128_f32[2] * z.m128_f32[1]), (up.m128_f32[2] * z.m128_f32[0]) - (up.m128_f32[0] * z.m128_f32[2]), (up.m128_f32[0] * z.m128_f32[1]) - (up.m128_f32[1] * z.m128_f32[0]), 1 };
+				XMVECTOR y = XMVector4Normalize(XMVector3Cross(z, x));// { (z.m128_f32[1] * x.m128_f32[2]) - (z.m128_f32[2] * x.m128_f32[1]), (z.m128_f32[2] * x.m128_f32[0]) - (z.m128_f32[0] * x.m128_f32[2]), (z.m128_f32[0] * x.m128_f32[1]) - (z.m128_f32[1] * x.m128_f32[0]), 1 };
+				lookcopy.r[0] = x;// XMMatrixSet(x.m128_f32[0], x.m128_f32[1], x.m128_f32[2], x.m128_f32[3], y.m128_f32[0], y.m128_f32[1], y.m128_f32[2], y.m128_f32[3], z.m128_f32[0], z.m128_f32[1], z.m128_f32[2], z.m128_f32[2], myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z, world.r[3].m128_f32[3]);
+				lookcopy.r[1] = y;
+				lookcopy.r[2] = z;
+				lookcopy.r[3] = float3toXMVector(myTargets[i]->GetPhysicsComponent()->GetPosition());
+				lookcopy.r[3].m128_f32[1] -= 1.0f;// XMMatrixSet(x.m128_f32[0], x.m128_f32[1], x.m128_f32[2], x.m128_f32[3], y.m128_f32[0], y.m128_f32[1], y.m128_f32[2], y.m128_f32[3], z.m128_f32[0], z.m128_f32[1], z.m128_f32[2], z.m128_f32[2], myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y, myTargets[i]->GetPhysicsComponent()->GetPosition().z, world.r[3].m128_f32[3]);
+				world = lookcopy;
+
+				//world = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z));
 
 				myTargets[i]->Render(myDX->GetDeviceContext());
 
