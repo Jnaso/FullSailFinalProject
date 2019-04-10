@@ -252,29 +252,53 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 		}
-		bool allGood = true;
+
+		myPlayer->SetForward(true);
+		myPlayer->SetBackward(true);
+		myPlayer->SetLeft(true);
+		myPlayer->SetRight(true);
 		for (size_t i = 0; i < Obstacles.size(); i++)
 		{
-			
-			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 12.0f)
+			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
 			{
 				for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
 				{
-					
-					if (lineCircle(myPlayer->forwardArrow, *Obstacles[i]->GetCollider(j)))
+					if (lineCircle(myPlayer->GetForwardArrow(), *Obstacles[i]->GetCollider(j)))
 					{
-						std::cout << "BoomBoom" << std::endl;
-						myPlayer->canMoveForward = false;
-						allGood = false;
+						//std::cout << "BoomBoom" << std::endl;
+						myPlayer->SetForward(false);
+					}
+
+					if (lineCircle(myPlayer->GetBackwardArrow(), *Obstacles[i]->GetCollider(j)))
+					{
+						//std::cout << "BoomBoom" << std::endl;
+						myPlayer->SetBackward(false);
+					}
+
+					if (lineCircle(myPlayer->GetLeftArrow(), *Obstacles[i]->GetCollider(j)))
+					{
+						//std::cout << "BoomBoom" << std::endl;
+						myPlayer->SetLeft(false);
+					}
+
+					if (lineCircle(myPlayer->GetRightArrow(), *Obstacles[i]->GetCollider(j)))
+					{
+						//std::cout << "BoomBoom" << std::endl;
+						myPlayer->SetRight(false);
 					}
 				}
 			}
 		}
 
-		if (allGood)
+		/*if (allGood)
 		{
-			myPlayer->canMoveForward = true;
+			myPlayer->SetForward(true);
 		}
+
+		if (allGoodBack)
+		{
+			myPlayer->SetBackward(true);
+		}*/
 
 		for (size_t i = 0; i < Pickups.size(); i++)
 		{
@@ -456,9 +480,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
 
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 4.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 	}
 
 	this->window = window;
