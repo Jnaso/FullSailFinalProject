@@ -58,7 +58,7 @@ private:
 	void ShutdownWaveFile(IDirectSoundBuffer8**);
 
 public:
-	Sound(char *filename, int v = -3000);
+	Sound(char *filename, int v = -6000);
 
 	bool Initialize(HWND window);
 	void Shutdown();

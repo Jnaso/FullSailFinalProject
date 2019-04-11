@@ -167,7 +167,7 @@ void GameManager::Update(float delta, float total)
 		}
 		myPlayer->Update(delta);
 
-		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice());
+		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice(), window);
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
@@ -316,10 +316,16 @@ void GameManager::Update(float delta, float total)
 					
 					if (Pickups[i]->GetType() == Pickup::PickupType::DAMAGE)
 					{
+						myPlayer->AddSound(new Sound((char*)"Assets/DamagePickupStart.wav"));
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 						myPlayer->SetTimeDamage(30.0f);
 					}
 					if (Pickups[i]->GetType() == Pickup::PickupType::HEALTH)
 					{
+						myPlayer->AddSound(new Sound((char*)"Assets/HealthPickup.wav"));
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 						myPlayer->SetHealth(myPlayer->GetHealth() + 25);
 					}
 					Pickups.erase(Pickups.begin() + i);
@@ -386,6 +392,9 @@ void GameManager::Update(float delta, float total)
 		UpdateTimerText(total);
 		if (myPlayer->GetTimeDamage() <= 0 && m_damagetimerText->GetEnabled())
 		{
+			myPlayer->AddSound(new Sound((char*)"Assets/DamagePickupEnd1.wav"));
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 			m_damagetimerText->SetEnabled(false);
 		}
 		if (myPlayer->GetTimeDamage() > 0 && !m_damagetimerText->GetEnabled())
