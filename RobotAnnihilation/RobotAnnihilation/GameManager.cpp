@@ -324,6 +324,9 @@ void GameManager::Update(float delta, float total)
 					}
 					if (Pickups[i]->GetType() == Pickup::PickupType::HEALTH)
 					{
+						myPlayer->AddSound(new Sound((char*)"Assets/Boost.wav", 0));
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 						myPlayer->SetHealth(myPlayer->GetHealth() + 25);
 					}
 					Pickups.erase(Pickups.begin() + i);
