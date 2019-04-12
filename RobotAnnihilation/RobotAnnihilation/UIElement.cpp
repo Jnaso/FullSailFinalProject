@@ -25,7 +25,7 @@ TextElement::TextElement(RECT srcRect, bool interactable, bool enabled, float2 p
 	m_font = font;
 	memcpy(m_text, text, 256);
 }
-void TextElement::Update()
+void TextElement::Update(float time)
 {
 }
 void TextElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans)
@@ -84,7 +84,7 @@ ImageElement::ImageElement(RECT srcRect, bool interactable, bool enabled, float2
 		(int)m_pos.y + (int)dim.y	//Bottom
 	};
 }
-void ImageElement::Update()
+void ImageElement::Update(float time)
 {
 }
 void ImageElement::Render(std::unique_ptr<DirectX::SpriteBatch>& batch)
@@ -114,13 +114,14 @@ ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, floa
 	
 }
 
-void ButtonElement::Update()
+void ButtonElement::Update(float time)
 {
 	m_interactable = m_enabled;
 	m_buttonText->SetEnabled(m_enabled);
 	
 	if (m_interactable)
 	{
+		m_clickTimeLeft -= time;
 		PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
 		if (m_mouseOver)
 		{
@@ -132,7 +133,11 @@ void ButtonElement::Update()
 			{
 				if (m_OnMouseClick != nullptr)
 				{
-					this->m_OnMouseClick();
+					if (m_clickTimeLeft <= 0)
+					{
+						m_clickTimeLeft = CLICKTIME;
+						this->m_OnMouseClick();
+					}
 				}
 				return;
 			}

@@ -27,6 +27,7 @@ protected:
 public:
 	std::function<void()> m_OnMouseEnter = nullptr;
 	std::function<void()> m_OnMouseClick = nullptr;
+	std::function<void()> m_OnMouseExit = nullptr;
 
 	DirectX::SimpleMath::Vector2 m_pos;
 
@@ -149,7 +150,7 @@ public:
 
 
 	//Virtual Function
-	virtual void Update(/*Going to be a function pointer passed into the constructor and eventually a mesage manager*/) {}
+	virtual void Update(float time) {}
 	virtual void Render() {}
 };
 
@@ -162,7 +163,7 @@ private:
 public:
 	TextElement(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, char* text);
 
-	void Update();
+	void Update(float time);
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
 	int GetFont() { return m_font; }
@@ -187,7 +188,7 @@ private:
 public:
 	ImageElement(RECT srcRect, bool interactable, bool enabled, float2 pos, const char* filePath, ID3D11Device* device);
 
-	void Update();
+	void Update(float time);
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch);
 
 	ID3D11ShaderResourceView** GetTexture() { return &m_texture; }
@@ -198,11 +199,15 @@ public:
 
 class ButtonElement : public UIElement
 {
+	const float CLICKTIME = 0.5f;
+
 	enum TEXTURES{DEFAULT, MOUSEOVER, MOUSECLICK};
 
 	ID3D11ShaderResourceView* m_textures[3];
 	ID3D11Device* m_device;
 	InputManager* m_input;
+
+	float m_clickTimeLeft = 0.5f;
 
 public:
 	TextElement* m_buttonText = nullptr;
@@ -210,7 +215,7 @@ public:
 public:
 	ButtonElement(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device* device, InputManager* input, int font, const char* text);
 
-	void Update();
+	void Update(float time);
 	void RenderText(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
