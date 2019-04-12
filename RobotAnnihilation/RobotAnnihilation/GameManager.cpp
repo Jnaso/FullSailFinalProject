@@ -473,7 +473,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	playerSphere.center = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.0f, myPlayer->GetPhysicsComponent()->GetPosition().z };
 	playerSphere.radius = 1.0f;
 
-	unsigned int ObstaclesCount = 1;//rand() % 10 + 5;
+	unsigned int ObstaclesCount = rand() % 10 + 5;
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
 	{
 		Obstacles.push_back(new GameObject());
