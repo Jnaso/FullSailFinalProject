@@ -19,47 +19,6 @@ Player::~Player()
 {
 }
 
-//int GetParent(int index, std::vector<int32_t> parents)
-//{
-//	if (parents[index] == -1)
-//	{
-//		return -1;
-//	}
-//	if (parents[index] == 0)
-//	{
-//		return index;
-//	}
-//	else
-//	{
-//		return GetParent(parents[index], parents);
-//	}
-//}
-//
-//
-//float4x4 RecursiveJointCalc(unsigned int currentIndex, std::vector<float4x4>& joints, std::vector<int32_t>& parents)
-//{
-//	if (parents[currentIndex] == -1)
-//	{
-//		return joints[currentIndex];
-//	}
-//	else
-//	{
-//		return XMMatrixToFloat4x4(XMMatrixMultiply(Float4x4ToXMMatrix(joints[currentIndex]), Float4x4ToXMMatrix(RecursiveJointCalc(parents[currentIndex], joints, parents))));
-//	}
-//}
-//
-//std::vector<float4x4> Flatten(std::vector<float4x4> joints, std::vector<int32_t> parents)
-//{
-//	std::vector<float4x4> NewJoints;
-//	for (unsigned int i = 0; i < joints.size(); i++)
-//	{
-//		float4x4 joint = RecursiveJointCalc(i, joints, parents);
-//		NewJoints.push_back(joint);
-//	}
-//	return NewJoints;
-//}
-
-
 bool Player::Initialize(const char * filePath, ID3D11Device * device)
 {
 	playerBox.center.x = ObjectPhysics->GetPosition().x;
@@ -86,7 +45,14 @@ void Player::Shutdown()
 
 void Player::Update(float delta)
 {
+
 	ObjectPhysics->Update(delta);
+
+	if (GetPhysicsComponent()->GetPosition().y < 0.0f)
+	{
+		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 0.0f, GetPhysicsComponent()->GetPosition().z });
+	}
+
 	if (currentLowerAnimation != nullptr && currentUpperAnimation != nullptr)
 	{
 		if (PlayOnce)

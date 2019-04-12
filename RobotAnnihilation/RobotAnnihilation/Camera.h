@@ -36,6 +36,8 @@ public:
 	XMFLOAT3 GetRotation();
 	XMVECTOR GetCharDirection();
 	XMVECTOR GetCamDirection();
+	XMVECTOR desiredCharDir;
+	float upMovement;
 
 	void Update(XMFLOAT3 newLookAt);
 	void PassInViewMatrix(XMMATRIX&);
