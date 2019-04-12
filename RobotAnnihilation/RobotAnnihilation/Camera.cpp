@@ -22,6 +22,8 @@ Camera::Camera()
 	DefaultForward = { 0.0f, 0.0f, 1.0f, 0.0f };
 	camforward = { 0.0f, 0.0f, 1.0f, 0.0f };
 	camRight = { 1.0f, 0.0f, 0.0f, 0.0f };
+	desiredCharDir = XMVECTOR{ 0, 0, 0, 0 };
+	upMovement = 0.0f;
 }
 
 //Sets the position variables 
@@ -119,7 +121,7 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 	DIMOUSESTATE mouseCurrState = myInput->GetCurrMouseState();
 	//Speed of movement
 	bool moveChar = false;
-	XMVECTOR desiredCharDir = XMVECTOR{0, 0, 0, 0};
+	desiredCharDir = XMVECTOR{ 0, 0, 0, 0 };
 
 	//Update the chracter's direction and the camera's movement on each press 
 	if (myPlayer->MoveForward())
@@ -157,6 +159,29 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 			moveChar = true;
 		}
 	}
+
+	if (upMovement > 0.0f)
+	{
+		upMovement -= 0.3f;
+		moveChar = true;
+	}
+
+	if (myInput->GetKeyState(_SPACE) && upMovement <= 0.0f)
+	{
+		upMovement += 1.0f;
+		moveChar = true;
+	}
+
+	desiredCharDir.m128_f32[1] += upMovement;
+
+	if (myPlayer->GetPhysicsComponent()->GetPosition().y < 0.0f)
+	{
+		desiredCharDir.m128_f32[1] = 0.0f;
+		myPlayer->GetPhysicsComponent()->SetPosition({ myPlayer->GetPhysicsComponent()->GetPosition().x, 0.0f, myPlayer->GetPhysicsComponent()->GetPosition().z });
+		upMovement = 0.0f;
+		moveChar = true;
+	}
+
 	XMVECTOR copyvec = desiredCharDir;
 	desiredCharDir = XMVector4Normalize(copyvec);
 
@@ -228,7 +253,7 @@ void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, X
 	charPosition = charPosition + (destinationDirection * speed);
 
 	//Translate the character 
-	XMMATRIX Translation = XMMatrixTranslation(XMVectorGetX(charPosition), 0.0f, XMVectorGetZ(charPosition));
+	XMMATRIX Translation = XMMatrixTranslation(XMVectorGetX(charPosition), XMVectorGetY(charPosition), XMVectorGetZ(charPosition));
 	//Rotate the character(subtract by pi so player doesn't run backwards)
 	XMMATRIX rotation = XMMatrixRotationY(charDirAngle - 3.14159265f);
 

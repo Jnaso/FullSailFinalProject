@@ -546,10 +546,10 @@ inline bool pointCircle(float3 point, Sphere sphe)
 
 inline bool lineCircle(Segment seg, Sphere sphe)
 {
-	bool inside1 = pointCircle(seg.start, sphe);
+	//bool inside1 = pointCircle(seg.start, sphe);
 	bool inside2 = pointCircle(seg.end, sphe);
 
-	if (inside1 || inside2)
+	if (inside2)
 	{
 		return true;
 	}
