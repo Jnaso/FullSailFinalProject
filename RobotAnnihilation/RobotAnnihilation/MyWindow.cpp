@@ -475,6 +475,7 @@ bool MyWindow::Initialize()
 
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
 
+	gameManager->m_damagetimerText->SetEnabled(false);
 #pragma endregion
 	
 	return true;

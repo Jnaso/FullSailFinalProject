@@ -22,7 +22,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		if (rand() % 3 == 0)
 		{
 			myEnemies.push_back(new RangedEnemy());
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
 		}
 		else
@@ -54,13 +54,12 @@ void EnemyManager::Shutdown()
 }
 
 
-void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
+void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
 	float3 accel;
 	float accelMulti = 0;
 	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
 	{
-
 		if (rand() % 3 == 0)
 		{
 			myEnemies.push_back(new RangedEnemy());
@@ -96,7 +95,6 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel *= delta;
 			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
 		}
-
 		myEnemies[i]->Update(delta, myPlayer, bullets, myDevice);
 		if (myEnemies[i]->Destroy())
 		{
@@ -117,6 +115,9 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 
 		}
 	}
+	if (myEnemies.size() <= 1)
+		cout << endl;
+		
 
 	currentEnemies = myEnemies.size();
 }

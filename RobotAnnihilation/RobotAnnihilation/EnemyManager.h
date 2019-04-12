@@ -31,12 +31,14 @@ private:
 	ID3D11Device* myDevice;
 	unsigned int TotalEnemiesSpawned = 0;
 
+	std::vector<Sound*> EnemiesSounds;
+
 public:
 	EnemyManager();
 
 	void Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice);
+	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
 
 	vector<Enemy *> GetEnemies();
 	unsigned int GetEnemyCount();
@@ -45,6 +47,9 @@ public:
 	float3 CalculateObstacleSeperation(Target &myT, vector<GameObject*> obstacles);
 
 	void StartNewRound();
+
+	std::vector<Sound*>GetSounds() { return EnemiesSounds; };
+	void AddSound(Sound* newSound) { EnemiesSounds.push_back(newSound); };
 };
 
 #endif // !_ENEMYMANAGER_H_

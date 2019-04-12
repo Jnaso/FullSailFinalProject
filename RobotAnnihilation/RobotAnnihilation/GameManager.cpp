@@ -167,7 +167,7 @@ void GameManager::Update(float delta, float total)
 		}
 		myPlayer->Update(delta);
 
-		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice());
+		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice(), window);
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
@@ -185,8 +185,7 @@ void GameManager::Update(float delta, float total)
 			if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f && bullets[i]->GetTag() == "Enemy")
 			{
 				if (BetterSphereToAABB(*bullets[i]->GetCollider(0), myPlayer->GetAABB()))
-				{
-				
+				{				
 					//std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
 					bullets[i]->SetDestroy();
 					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
@@ -212,6 +211,9 @@ void GameManager::Update(float delta, float total)
 						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
+							myEnemyManager->AddSound(new Sound((char*)"Assets/Explosion.wav", 0));
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
 							int chance = rand() % 100;
 							if (chance < 25)
 							{
@@ -312,10 +314,12 @@ void GameManager::Update(float delta, float total)
 			if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
 			{
 				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
-				{
-					
+				{					
 					if (Pickups[i]->GetType() == Pickup::PickupType::DAMAGE)
 					{
+						myPlayer->AddSound(new Sound((char*)"Assets/DamagePickup.wav", 0));
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+						myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 						myPlayer->SetTimeDamage(30.0f);
 					}
 					if (Pickups[i]->GetType() == Pickup::PickupType::HEALTH)
@@ -386,6 +390,9 @@ void GameManager::Update(float delta, float total)
 		UpdateTimerText(total);
 		if (myPlayer->GetTimeDamage() <= 0 && m_damagetimerText->GetEnabled())
 		{
+			myPlayer->AddSound(new Sound((char*)"Assets/DamagePickupEnd.wav", 0));
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 			m_damagetimerText->SetEnabled(false);
 		}
 		if (myPlayer->GetTimeDamage() > 0 && !m_damagetimerText->GetEnabled())
