@@ -36,7 +36,7 @@ public:
 
 	void Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
+	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice);
 
 	vector<Enemy *> GetEnemies();
 	unsigned int GetEnemyCount();

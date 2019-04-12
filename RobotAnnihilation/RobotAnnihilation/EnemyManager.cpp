@@ -54,7 +54,7 @@ void EnemyManager::Shutdown()
 }
 
 
-void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
+void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
 {
 	float3 accel;
 	float accelMulti = 0;
@@ -100,9 +100,6 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 		myEnemies[i]->Update(delta, myPlayer, bullets, myDevice);
 		if (myEnemies[i]->Destroy())
 		{
-			myEnemies[i]->AddSound(new Sound((char*)"Assets/RobotDeath.wav"));
-			myEnemies[i]->GetSounds()[myEnemies[i]->GetSounds().size() - 1]->Initialize(window);
-			myEnemies[i]->GetSounds()[myEnemies[i]->GetSounds().size() - 1]->PlayWaveFile();
 			Enemy *temp;
 			myEnemies[i]->Shutdown();
 			temp = myEnemies[i];
