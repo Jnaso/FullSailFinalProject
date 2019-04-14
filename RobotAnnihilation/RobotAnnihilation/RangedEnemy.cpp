@@ -56,6 +56,7 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 	if (timeGetTime() >= timeBetweenAttacks + 3000)
 	{
 		float3 forward = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+		forward.y = forward.y + 2.0f;
 		if (rand() % 3 == 0)
 		{
 			float3 bulletV = forward * 3.0f;
@@ -63,9 +64,9 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 			float Offset = time * Magnitude(myPlayer->GetPhysicsComponent()->GetVelocity());
 			forward = { forward.x + Offset, forward.y, forward.z + Offset };
 		}
-		bullets.push_back(new Bullet());
-		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.5f, GetPhysicsComponent()->GetPosition().z };
-		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Sphere.mesh", forward, playerPos, "Enemy", 3.0f);
+		bullets.push_back(new Bullet(1.0f));
+		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + .5f, GetPhysicsComponent()->GetPosition().z };
+		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Sphere.mesh", forward, playerPos, "Enemy", 1.5f);
 		timeBetweenAttacks = timeGetTime();
 	}
 	
