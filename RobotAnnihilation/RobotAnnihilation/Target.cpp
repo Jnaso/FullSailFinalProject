@@ -63,7 +63,10 @@ void Target::Attack(Player *myPlayer)
 {
 	if (timeGetTime() >= timeBetweenAttacks + 1000)
 	{
-		myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
+		if (!myPlayer->GetInvincible())
+		{
+			myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
+		}
 		timeBetweenAttacks = timeGetTime();
 	}
 }

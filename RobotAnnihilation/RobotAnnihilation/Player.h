@@ -14,7 +14,8 @@ protected:
 	float timeLeft = 0.0f;
 	float timeLeftDamage = 0.0f;
 	AABB playerBox;
-	unsigned int health;
+	unsigned int health = 1000;
+	unsigned int MaxHealth = 1000;
 	Segment forwardArrow;
 	Segment backwardArrow;
 	Segment leftArrow;
@@ -27,6 +28,7 @@ protected:
 	unsigned int CurrentPoints = 0;
 
 	bool PlayOnce = false;
+	bool isInvincible = false;
 
 public:
 	Player();
@@ -48,8 +50,9 @@ public:
 
 	void AddGun(Gun* newGun) { CurrentGuns.push_back(newGun); };
 	void ReplaceGun(Gun* newGun, int index) { CurrentGuns[index] = newGun; };
-	void SetCurrentGun(int index) { CurrentGun = CurrentGuns[index]; };
+	void SetCurrentGun(int index) { if(index < CurrentGuns.size())CurrentGun = CurrentGuns[index]; };
 	Gun* GetCurrentGun() { return CurrentGun; };
+	std::vector<Gun*> GetCurrentGuns() { return CurrentGuns; };
 
 	Segment GetForwardArrow();
 	Segment GetBackwardArrow();
@@ -68,6 +71,7 @@ public:
 	AABB GetAABB() { return playerBox; };
 
 	unsigned int GetHealth() { return health; };
+	unsigned int GetMaxHealth() { return MaxHealth; };
 	void SetHealth(unsigned int newHeath) { health = newHeath; }
 
 	void MeleeAttack(int index);
@@ -80,5 +84,8 @@ public:
 	void SetTimeDamage(float damage) { timeLeftDamage = damage; }
 	float GetTimeDamage() { return timeLeftDamage; }
 	void SubTimeDamage(float damage) { timeLeftDamage -= damage; }
+
+	void FlipInvincible() { isInvincible = !isInvincible; }
+	bool GetInvincible() { return isInvincible; std::cout << isInvincible << std::endl; }
 };
 

@@ -5,8 +5,7 @@
 Player::Player()
 {
 	objectModel = new Model();
-	ObjectPhysics = new PhysicsComponent();
-	health = 1000;
+	ObjectPhysics = new PhysicsComponent();	
 	PrevUpperAnimation = nullptr;
 	canMoveForward = true;
 	canMoveBackward = true;

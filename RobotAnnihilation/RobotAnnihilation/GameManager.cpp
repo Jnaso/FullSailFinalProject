@@ -112,6 +112,14 @@ void GameManager::SpawnDamagePickup(float3 pos)
 	Pickups.push_back(newpickup);
 }
 
+void GameManager::EndRound()
+{
+	for (unsigned int i = 0; i < myEnemyManager->GetEnemies().size(); i++)
+	{
+		myEnemyManager->GetEnemies()[i]->SetDestroy();
+	}
+}
+
 void GameManager::Update(float delta, float total)
 {
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
@@ -188,7 +196,10 @@ void GameManager::Update(float delta, float total)
 				{				
 					//std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
 					bullets[i]->SetDestroy();
-					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+					if (!myPlayer->GetInvincible())
+					{
+						myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+					}
 				}
 			}
 
@@ -461,17 +472,16 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	Pistol->SetFireRate(0.5f);
 	Pistol->SetDamageAmount(25);
 	myPlayer->AddGun(Pistol);
-	Gun* MachineGun = new Gun();
-	MachineGun->SetGunClass(Gun::MACHINE);
-	MachineGun->SetFireRate(0.3f);
-	MachineGun->SetDamageAmount(35);
-	myPlayer->AddGun(MachineGun);
-	Gun* SubMachineGun = new Gun();
-	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
-
-	SubMachineGun->SetFireRate(0.25f);
-	SubMachineGun->SetDamageAmount(30);
-	myPlayer->AddGun(SubMachineGun);
+	//Gun* MachineGun = new Gun();
+	//MachineGun->SetGunClass(Gun::MACHINE);
+	//MachineGun->SetFireRate(0.3f);
+	//MachineGun->SetDamageAmount(35);
+	//myPlayer->AddGun(MachineGun);
+	//Gun* SubMachineGun = new Gun();
+	//SubMachineGun->SetGunClass(Gun::SUBMACHINE);
+	//SubMachineGun->SetFireRate(0.25f);
+	//SubMachineGun->SetDamageAmount(30);
+	//myPlayer->AddGun(SubMachineGun);
 	myPlayer->SetCurrentGun(0);
 	if (!myPlayer)
 	{
