@@ -18,6 +18,7 @@ bool MyWindow::Run()
 
 	timer.Signal();
 
+	//Subtract Time So Input Isnt checked every frame
 	keyPressTimer -= timer.Delta();
 	
 	if (!paused)
@@ -39,34 +40,37 @@ bool MyWindow::Run()
 			paused = !paused;
 			SetPauseMenu(paused);
 		}
-	}
 
 		if (gameManager->GetKeyState((int)'L'))
 		{
 			showFPS = !showFPS;
 			m_FPSText->SetEnabled(showFPS);
 		}
+		
+
+
+		if (gameManager->GetKeyState((int)'0')) {
+			gameManager->MaxHealth();
+		}
+
+		if (gameManager->GetKeyState((int)'9')) {
+			gameManager->FlipInvincible();
+		}
+
+		if (gameManager->GetKeyState((int)'8')) {
+			gameManager->AddMoney();
+		}
+
+		if (gameManager->GetKeyState((int)'7')) {
+			gameManager->UnlockAllGuns();
+		}
+
+		if (gameManager->GetKeyState((int)'6')) {
+			gameManager->EndRound();
+		}
+
+		//Make Sure This Is On The Bottom!!!!
 		keyPressTimer = DEFAULTKEYPRESST;
-	}
-
-	if (gameManager->GetKeyState((int)'0')){
-		gameManager->MaxHealth();
-	}
-
-	if (gameManager->GetKeyState((int)'9')){
-		gameManager->FlipInvincible();
-	}
-
-	if (gameManager->GetKeyState((int)'8')){
-		gameManager->AddMoney();
-	}
-
-	if (gameManager->GetKeyState((int)'7')){
-		gameManager->UnlockAllGuns();
-	}
-
-	if (gameManager->GetKeyState((int)'6')){
-		gameManager->EndRound();
 	}
 
 	//Render every frame and stop if anything goes wrong 
