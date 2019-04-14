@@ -17,11 +17,14 @@ bool MyWindow::Run()
 	}
 
 	timer.Signal();
+
+	keyPressTimer -= timer.Delta();
+	
 	if (!paused)
 	{
 		Update(timer.Delta());
 	}
-	gameManager->GetUIManager()->Update();
+	gameManager->GetUIManager()->Update(timer.Delta());
 
 	//If user presses escape, close the window 
 	//if (gameManager->GetKeyState(_ESCAPE))
@@ -29,17 +32,21 @@ bool MyWindow::Run()
 	//	return false;
 	//}
 
-	//if (gameManager->GetKeyState((int)'P') & 1)
-	if (gameManager->GetKeyState(_ESCAPE))
+	if (keyPressTimer <= 0)
 	{
-		paused = !paused;
-		SetPauseMenu(paused);
+		if (gameManager->GetKeyState(_ESCAPE))
+		{
+			paused = !paused;
+			SetPauseMenu(paused);
+		}
 	}
 
-	if (gameManager->GetKeyState((int)'L'))
-	{
-		showFPS = !showFPS;
-		m_FPSText->SetEnabled(showFPS);
+		if (gameManager->GetKeyState((int)'L'))
+		{
+			showFPS = !showFPS;
+			m_FPSText->SetEnabled(showFPS);
+		}
+		keyPressTimer = DEFAULTKEYPRESST;
 	}
 
 	if (gameManager->GetKeyState((int)'0')){

@@ -32,7 +32,7 @@ public:
 
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique_ptr<DirectX::SpriteFont>& arial, std::unique_ptr<DirectX::SpriteFont>& comicSans);
 
-	void Update();
+	void Update(float time);
 
 	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, const char* text);
 	UIElement* CreateText(RECT srcRect, bool interactable, bool enabled, float2 pos, int font, std::string text);
