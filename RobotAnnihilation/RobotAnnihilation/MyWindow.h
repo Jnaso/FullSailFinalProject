@@ -45,7 +45,7 @@ private:
 	UIElement* mainMenu[5];
 	UIElement* optionsMenu[5];
 	UIElement* playerUI[6];
-	UIElement* pauseMenu[4];
+	UIElement* pauseMenu[3];
 
 	//UI Functions For Function Pointers
 private:

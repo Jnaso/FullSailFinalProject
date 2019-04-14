@@ -24,13 +24,13 @@ bool MyWindow::Run()
 	gameManager->GetUIManager()->Update();
 
 	//If user presses escape, close the window 
-	if (gameManager->GetKeyState(_ESCAPE))
-	{
-		return false;
-	}
+	//if (gameManager->GetKeyState(_ESCAPE))
+	//{
+	//	return false;
+	//}
 
 	//if (gameManager->GetKeyState((int)'P') & 1)
-	if (gameManager->GetKeyState((int)'P'))
+	if (gameManager->GetKeyState(_ESCAPE))
 	{
 		paused = !paused;
 		SetPauseMenu(paused);
@@ -406,23 +406,23 @@ bool MyWindow::Initialize()
 	#pragma endregion
 	pauseMenu[1] = optionsButton1;
 
-	UIElement* qButton2 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Quit");
-	#pragma region Pause_Quit_Button
-	ButtonElement* quitButton2 = static_cast<ButtonElement*>(qButton2);
-	if (quitButton2)
-	{
-		quitButton2->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		quitButton2->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		quitButton2->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		quitButton2->m_OnMouseClick = [this]()
-		{
-			GameIsDone();
-		};
-		quitButton2->SetSize(BUTTONSIZE);
-		quitButton2->SetPos(float2{ CENTERX, CENTERY + 100 });
-	}
-	#pragma endregion
-	pauseMenu[2] = quitButton2;
+	//UIElement* qButton2 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Quit");
+	//#pragma region Pause_Quit_Button
+	//ButtonElement* quitButton2 = static_cast<ButtonElement*>(qButton2);
+	//if (quitButton2)
+	//{
+	//	quitButton2->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+	//	quitButton2->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+	//	quitButton2->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+	//	quitButton2->m_OnMouseClick = [this]()
+	//	{
+	//		GameIsDone();
+	//	};
+	//	quitButton2->SetSize(BUTTONSIZE);
+	//	quitButton2->SetPos(float2{ CENTERX, CENTERY + 100 });
+	//}
+	//#pragma endregion
+	//pauseMenu[2] = quitButton2;
 
 	UIElement* mButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Main Menu");
 	#pragma region MainMenu_Button
@@ -441,7 +441,7 @@ bool MyWindow::Initialize()
 		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 150 });
 	}
 	#pragma endregion
-	pauseMenu[3] = mainMenuButton;
+	pauseMenu[2] = mainMenuButton;
 	#pragma endregion
 
 
