@@ -13,8 +13,8 @@
 class MyWindow
 {
 private:
-	CONST FLOAT DEFAULTKEYPRESST = 0.25f;
-	float keyPressTimer;
+	const float DEFAULTKEYPRESST = 0.2f;
+	float keyPressTimer = 0.2f;
 
 	LPCWSTR myAppName;
 	HINSTANCE myInstance;

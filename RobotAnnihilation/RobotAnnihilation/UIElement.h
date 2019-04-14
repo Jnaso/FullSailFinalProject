@@ -200,6 +200,7 @@ public:
 class ButtonElement : public UIElement
 {
 	const float CLICKTIME = 0.5f;
+	float m_clickTimeLeft = 0.5f;
 
 	enum TEXTURES{DEFAULT, MOUSEOVER, MOUSECLICK};
 
@@ -207,7 +208,7 @@ class ButtonElement : public UIElement
 	ID3D11Device* m_device;
 	InputManager* m_input;
 
-	float m_clickTimeLeft = 0.5f;
+	
 
 public:
 	TextElement* m_buttonText = nullptr;

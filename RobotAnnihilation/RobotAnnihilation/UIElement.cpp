@@ -119,9 +119,14 @@ void ButtonElement::Update(float time)
 	m_interactable = m_enabled;
 	m_buttonText->SetEnabled(m_enabled);
 	
-	if (m_interactable)
+	if (this->m_enabled)
 	{
 		m_clickTimeLeft -= time;
+	}
+
+	if (m_interactable)
+	{
+		
 		PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
 		if (m_mouseOver)
 		{
@@ -129,17 +134,19 @@ void ButtonElement::Update(float time)
 			{
 				this->m_OnMouseEnter();
 			}
-			if (this->m_input->GetKeyState(_LMOUSE))
+			if (m_clickTimeLeft <= 0)
 			{
-				if (m_OnMouseClick != nullptr)
+				if (this->m_input->GetKeyState(_LMOUSE))
 				{
-					if (m_clickTimeLeft <= 0)
+					if (m_OnMouseClick != nullptr)
 					{
-						m_clickTimeLeft = CLICKTIME;
 						this->m_OnMouseClick();
 					}
+					m_clickTimeLeft = CLICKTIME;
+					m_input->SetKeyState(_LMOUSE, false);
+					return;
 				}
-				return;
+				
 			}
 		}
 	}

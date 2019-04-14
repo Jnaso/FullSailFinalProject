@@ -48,7 +48,6 @@ bool MyWindow::Run()
 		}
 		
 
-
 		if (gameManager->GetKeyState((int)'0')) {
 			gameManager->MaxHealth();
 		}
@@ -72,6 +71,7 @@ bool MyWindow::Run()
 		//Make Sure This Is On The Bottom!!!!
 		keyPressTimer = DEFAULTKEYPRESST;
 	}
+	
 
 	//Render every frame and stop if anything goes wrong 
 	result = gameManager->Render();
@@ -437,24 +437,6 @@ bool MyWindow::Initialize()
 	#pragma endregion
 	pauseMenu[1] = optionsButton1;
 
-	//UIElement* qButton2 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Quit");
-	//#pragma region Pause_Quit_Button
-	//ButtonElement* quitButton2 = static_cast<ButtonElement*>(qButton2);
-	//if (quitButton2)
-	//{
-	//	quitButton2->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-	//	quitButton2->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-	//	quitButton2->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-	//	quitButton2->m_OnMouseClick = [this]()
-	//	{
-	//		GameIsDone();
-	//	};
-	//	quitButton2->SetSize(BUTTONSIZE);
-	//	quitButton2->SetPos(float2{ CENTERX, CENTERY + 100 });
-	//}
-	//#pragma endregion
-	//pauseMenu[2] = quitButton2;
-
 	UIElement* mButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Main Menu");
 	#pragma region MainMenu_Button
 	ButtonElement* mainMenuButton = static_cast<ButtonElement*>(mButton);
@@ -469,7 +451,7 @@ bool MyWindow::Initialize()
 			this->SetPauseMenu(false);
 		};
 		mainMenuButton->SetSize(BUTTONSIZE);
-		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 150 });
+		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 100 });
 	}
 	#pragma endregion
 	pauseMenu[2] = mainMenuButton;
