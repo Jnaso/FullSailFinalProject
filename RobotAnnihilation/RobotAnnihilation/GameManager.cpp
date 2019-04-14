@@ -122,6 +122,7 @@ void GameManager::EndRound()
 
 void GameManager::Update(float delta, float total)
 {
+	keyPressTimer -= delta;
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
 		myGraphics->Update(myInput, delta, myPlayer);
@@ -154,10 +155,14 @@ void GameManager::Update(float delta, float total)
 			myPlayer->SetCurrentGun(2);
 		}
 
-		if (myInput->GetKeyState((int)'K'))
+		if (keyPressTimer <= 0)
 		{
-			shopVisible = !shopVisible;
-			myShop->SetShopVisibility(!shopVisible);
+			if (myInput->GetKeyState((int)'K'))
+			{
+				shopVisible = !shopVisible;
+				myShop->SetShopVisibility(!shopVisible);
+			}
+			keyPressTimer = DEFAULTKEYPRESST;
 		}
 		myShop->Update();
 

@@ -11,6 +11,9 @@
 #include "Pickup.h"
 class GameManager
 {
+	const float DEFAULTKEYPRESST = 0.01f;
+	float keyPressTimer = 0.01f;
+
 	DX* myDX;
 	Graphics *myGraphics;
 	//Game Classes
