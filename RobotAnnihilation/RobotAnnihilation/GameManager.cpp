@@ -65,6 +65,11 @@ void GameManager::UpdateDamageTimerText()
 	tempT->SetText("Damage Increase: " + std::to_string(static_cast<int>(myPlayer->GetTimeDamage())));
 }
 
+void GameManager::SetLowHealthImage(bool val)
+{
+	m_lowHealthImage->SetEnabled(val);
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -425,7 +430,17 @@ void GameManager::Update(float delta, float total)
 			{
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
 			}
+			myPlayer->SetHealth(0);
 		}
+		if (GetHealth() >= 0 && GetHealth() <= 100)
+		{
+			m_lowHealthImage->SetEnabled(true);
+		}
+		else
+		{
+			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
+		}
+
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
 			/*if (!m_YouWin)
@@ -523,6 +538,12 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	m_lowHealthImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/almostDead.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
+	if (tempImg)
+	{
+		tempImg->SetSize(1280, 720);
+	}
 
 	return result;
 }

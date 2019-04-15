@@ -61,6 +61,7 @@ private:
 
 	void GameIsDone();
 	void ShowPlayerUI();
+	void HidePlayerUI();
 	void ShowFPS();
 
 	void CalcFPS();

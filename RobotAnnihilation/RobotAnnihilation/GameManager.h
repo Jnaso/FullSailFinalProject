@@ -65,11 +65,15 @@ public:
 
 	UIElement* m_weapon;
 
+	UIElement* m_lowHealthImage;
+
+	//UI Modifier Functions
 	void UpdateScoreText();
 	void UpdateHealthText();
 	void UpdateWeaponText();
 	void UpdateTimerText(float time);
 	void UpdateDamageTimerText();
+	void SetLowHealthImage(bool val);
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();

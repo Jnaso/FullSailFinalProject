@@ -149,6 +149,7 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	}
 	CD3D11_BLEND_DESC bdesc = CD3D11_BLEND_DESC(CD3D11_DEFAULT());
 	bdesc.AlphaToCoverageEnable = true;
+	bdesc.IndependentBlendEnable = true;
 	hr = myDX->GetDevice()->CreateBlendState(&bdesc, &spriteBlendState);
 	if (FAILED(hr))
 	{

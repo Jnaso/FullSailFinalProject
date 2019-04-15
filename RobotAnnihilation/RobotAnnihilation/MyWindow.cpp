@@ -39,6 +39,7 @@ bool MyWindow::Run()
 		{
 			paused = !paused;
 			SetPauseMenu(paused);
+			gameManager->SetLowHealthImage(false);
 		}
 
 		if (gameManager->GetKeyState((int)'L'))
@@ -216,6 +217,14 @@ void MyWindow::ShowPlayerUI()
 	for (unsigned int i = 0; i < ARRAYSIZE(playerUI); i++)
 	{
 		playerUI[i]->SetEnabled(true);
+	}
+}
+
+void MyWindow::HidePlayerUI()
+{
+	for (unsigned int i = 0; i < ARRAYSIZE(playerUI); i++)
+	{
+		playerUI[i]->SetEnabled(false);
 	}
 }
 
@@ -449,6 +458,7 @@ bool MyWindow::Initialize()
 		{
 			this->ShowMainMenu();
 			this->SetPauseMenu(false);
+			this->HidePlayerUI();
 		};
 		mainMenuButton->SetSize(BUTTONSIZE);
 		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 100 });
