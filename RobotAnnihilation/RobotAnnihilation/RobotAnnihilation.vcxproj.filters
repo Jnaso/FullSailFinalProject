@@ -75,6 +75,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="RangedEnemy.h" />
     <ClInclude Include="Pickup.h" />
+    <ClInclude Include="Math_Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

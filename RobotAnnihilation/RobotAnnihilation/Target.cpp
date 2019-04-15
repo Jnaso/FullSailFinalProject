@@ -57,15 +57,28 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 	{
 		timeBetweenDamage -= delta;
 	}
+
+	if (timeGetTime() >= HurtTime + 200)
+	{
+		ImHurt = false;
+		HurtTime = 0.8f;
+	}
+
+	std::cout << ImHurt << std::endl;
 }
 
 void Target::Attack(Player *myPlayer)
 {
 	if (timeGetTime() >= timeBetweenAttacks + 1000)
 	{
-		myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
+		if (!myPlayer->GetInvincible())
+		{
+			myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
+		}
 		timeBetweenAttacks = timeGetTime();
 	}
 }
+
+
 
 

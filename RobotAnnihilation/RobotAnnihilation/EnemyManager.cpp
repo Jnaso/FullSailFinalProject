@@ -3,7 +3,7 @@
 EnemyManager::EnemyManager()
 {
 	SeperationStrength = 200.0f;
-	SeperationObstacleStrength = 500.0f;
+	SeperationObstacleStrength = 800.0f;
 }
 
 void EnemyManager::Initialize(ID3D11Device *myDevice)
@@ -13,7 +13,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 100.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 100.0f) + 5.0f };
+		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f };
 	}
 
 	for (unsigned int i = 0; i < 4; i++)

@@ -35,7 +35,7 @@ void UIManager::Render(std::unique_ptr<DirectX::SpriteBatch>& batch, std::unique
 	}
 }
 
-void UIManager::Update()
+void UIManager::Update(float time)
 {
 	#ifdef DEBUG
 	std::cout << "Mouse Position: {" << m_Input->GetMousePos().x << ", " << m_Input->GetMousePos().y << "}" << std::endl;
@@ -43,7 +43,7 @@ void UIManager::Update()
 
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
-		m_UIElements[i]->Update();
+		m_UIElements[i]->Update(time);
 	}
 	//for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	//{

@@ -15,6 +15,8 @@ protected:
 	float health = 100;
 	float timeBetweenAttacks;
 	float timeBetweenDamage;
+	float HurtTime = 0.8f;
+	bool ImHurt;
 
 	unsigned int CurrencyGiven;
 
@@ -35,6 +37,9 @@ public:
 
 	float GetCurrency() { return CurrencyGiven; }
 	void SetCurrency(unsigned int newCurr) { CurrencyGiven = newCurr; };
+
+	void SetHurt();
+	bool GetHurt();
 };
 
 

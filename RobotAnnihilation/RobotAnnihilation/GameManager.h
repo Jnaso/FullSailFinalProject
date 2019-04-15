@@ -11,6 +11,9 @@
 #include "Pickup.h"
 class GameManager
 {
+	const float DEFAULTKEYPRESST = 0.01f;
+	float keyPressTimer = 0.01f;
+
 	DX* myDX;
 	Graphics *myGraphics;
 	//Game Classes
@@ -81,5 +84,43 @@ public:
 
 	void SpawnHealthPickup(float3 pos);
 	void SpawnDamagePickup(float3 pos);
+
+#pragma region CheatCodes
+	void MaxHealth() { myPlayer->SetHealth(myPlayer->GetMaxHealth()); }
+	void FlipInvincible() { myPlayer->FlipInvincible(); }
+	void AddMoney() { myPlayer->AddCurrency(1000); }
+	void UnlockAllGuns() {
+		if (myPlayer->GetCurrentGuns().size() <=1)
+		{
+			Gun* MachineGun = new Gun();
+			MachineGun->SetGunClass(Gun::MACHINE);
+			MachineGun->SetFireRate(0.3f);
+			MachineGun->SetDamageAmount(35);
+			myPlayer->AddGun(MachineGun);
+			Gun* SubMachineGun = new Gun();
+			SubMachineGun->SetGunClass(Gun::SUBMACHINE);
+			SubMachineGun->SetFireRate(0.25f);
+			SubMachineGun->SetDamageAmount(30);
+			myPlayer->AddGun(SubMachineGun);
+		}
+		else if (myPlayer->GetCurrentGuns().size() <= 1 && myPlayer->GetCurrentGuns()[2]->GetGunClass() == Gun::GunClass::MACHINE)
+		{
+			Gun* SubMachineGun = new Gun();
+			SubMachineGun->SetGunClass(Gun::SUBMACHINE);
+			SubMachineGun->SetFireRate(0.25f);
+			SubMachineGun->SetDamageAmount(30);
+			myPlayer->AddGun(SubMachineGun);
+		}
+		else if (myPlayer->GetCurrentGuns().size() <= 1 && myPlayer->GetCurrentGuns()[2]->GetGunClass() == Gun::GunClass::SUBMACHINE)
+		{
+			Gun* MachineGun = new Gun();
+			MachineGun->SetGunClass(Gun::MACHINE);
+			MachineGun->SetFireRate(0.3f);
+			MachineGun->SetDamageAmount(35);
+			myPlayer->AddGun(MachineGun);
+		}
+	}
+	void EndRound();
+#pragma endregion
 };
 

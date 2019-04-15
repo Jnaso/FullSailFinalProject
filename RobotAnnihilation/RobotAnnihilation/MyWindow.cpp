@@ -17,30 +17,61 @@ bool MyWindow::Run()
 	}
 
 	timer.Signal();
+
+	//Subtract Time So Input Isnt checked every frame
+	keyPressTimer -= timer.Delta();
+	
 	if (!paused)
 	{
 		Update(timer.Delta());
 	}
-	gameManager->GetUIManager()->Update();
+	gameManager->GetUIManager()->Update(timer.Delta());
 
 	//If user presses escape, close the window 
-	if (gameManager->GetKeyState(_ESCAPE))
-	{
-		return false;
-	}
+	//if (gameManager->GetKeyState(_ESCAPE))
+	//{
+	//	return false;
+	//}
 
-	//if (gameManager->GetKeyState((int)'P') & 1)
-	if (gameManager->GetKeyState((int)'P'))
+	if (keyPressTimer <= 0)
 	{
-		paused = !paused;
-		SetPauseMenu(paused);
-	}
+		if (gameManager->GetKeyState(_ESCAPE))
+		{
+			paused = !paused;
+			SetPauseMenu(paused);
+		}
 
-	if (gameManager->GetKeyState((int)'L'))
-	{
-		showFPS = !showFPS;
-		m_FPSText->SetEnabled(showFPS);
+		if (gameManager->GetKeyState((int)'L'))
+		{
+			showFPS = !showFPS;
+			m_FPSText->SetEnabled(showFPS);
+		}
+		
+
+		if (gameManager->GetKeyState((int)'0')) {
+			gameManager->MaxHealth();
+		}
+
+		if (gameManager->GetKeyState((int)'9')) {
+			gameManager->FlipInvincible();
+		}
+
+		if (gameManager->GetKeyState((int)'8')) {
+			gameManager->AddMoney();
+		}
+
+		if (gameManager->GetKeyState((int)'7')) {
+			gameManager->UnlockAllGuns();
+		}
+
+		if (gameManager->GetKeyState((int)'6')) {
+			gameManager->EndRound();
+		}
+
+		//Make Sure This Is On The Bottom!!!!
+		keyPressTimer = DEFAULTKEYPRESST;
 	}
+	
 
 	//Render every frame and stop if anything goes wrong 
 	result = gameManager->Render();
@@ -406,24 +437,6 @@ bool MyWindow::Initialize()
 	#pragma endregion
 	pauseMenu[1] = optionsButton1;
 
-	UIElement* qButton2 = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Quit");
-	#pragma region Pause_Quit_Button
-	ButtonElement* quitButton2 = static_cast<ButtonElement*>(qButton2);
-	if (quitButton2)
-	{
-		quitButton2->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		quitButton2->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		quitButton2->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		quitButton2->m_OnMouseClick = [this]()
-		{
-			GameIsDone();
-		};
-		quitButton2->SetSize(BUTTONSIZE);
-		quitButton2->SetPos(float2{ CENTERX, CENTERY + 100 });
-	}
-	#pragma endregion
-	pauseMenu[2] = quitButton2;
-
 	UIElement* mButton = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), 0, "Main Menu");
 	#pragma region MainMenu_Button
 	ButtonElement* mainMenuButton = static_cast<ButtonElement*>(mButton);
@@ -438,10 +451,10 @@ bool MyWindow::Initialize()
 			this->SetPauseMenu(false);
 		};
 		mainMenuButton->SetSize(BUTTONSIZE);
-		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 150 });
+		mainMenuButton->SetPos(float2{ CENTERX, CENTERY + 100 });
 	}
 	#pragma endregion
-	pauseMenu[3] = mainMenuButton;
+	pauseMenu[2] = mainMenuButton;
 	#pragma endregion
 
 

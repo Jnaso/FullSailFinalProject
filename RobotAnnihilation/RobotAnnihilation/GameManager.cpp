@@ -112,8 +112,17 @@ void GameManager::SpawnDamagePickup(float3 pos)
 	Pickups.push_back(newpickup);
 }
 
+void GameManager::EndRound()
+{
+	for (unsigned int i = 0; i < myEnemyManager->GetEnemies().size(); i++)
+	{
+		myEnemyManager->GetEnemies()[i]->SetDestroy();
+	}
+}
+
 void GameManager::Update(float delta, float total)
 {
+	keyPressTimer -= delta;
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
 		myGraphics->Update(myInput, delta, myPlayer);
@@ -146,10 +155,14 @@ void GameManager::Update(float delta, float total)
 			myPlayer->SetCurrentGun(2);
 		}
 
-		if (myInput->GetKeyState((int)'K'))
+		if (keyPressTimer <= 0)
 		{
-			shopVisible = !shopVisible;
-			myShop->SetShopVisibility(!shopVisible);
+			if (myInput->GetKeyState((int)'K'))
+			{
+				shopVisible = !shopVisible;
+				myShop->SetShopVisibility(!shopVisible);
+			}
+			keyPressTimer = DEFAULTKEYPRESST;
 		}
 		myShop->Update();
 
@@ -188,7 +201,10 @@ void GameManager::Update(float delta, float total)
 				{				
 					//std::cout << "Boom, Boom, Boom, Boom, Boom, Boom, Boom, Boom" << std::endl;
 					bullets[i]->SetDestroy();
-					myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+					if (!myPlayer->GetInvincible())
+					{
+						myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+					}
 				}
 			}
 
@@ -204,10 +220,12 @@ void GameManager::Update(float delta, float total)
 						if (myPlayer->GetTimeDamage() > 0)
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						else
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
@@ -461,17 +479,16 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	Pistol->SetFireRate(0.5f);
 	Pistol->SetDamageAmount(25);
 	myPlayer->AddGun(Pistol);
-	Gun* MachineGun = new Gun();
-	MachineGun->SetGunClass(Gun::MACHINE);
-	MachineGun->SetFireRate(0.3f);
-	MachineGun->SetDamageAmount(35);
-	myPlayer->AddGun(MachineGun);
-	Gun* SubMachineGun = new Gun();
-	SubMachineGun->SetGunClass(Gun::SUBMACHINE);
-
-	SubMachineGun->SetFireRate(0.25f);
-	SubMachineGun->SetDamageAmount(30);
-	myPlayer->AddGun(SubMachineGun);
+	//Gun* MachineGun = new Gun();
+	//MachineGun->SetGunClass(Gun::MACHINE);
+	//MachineGun->SetFireRate(0.3f);
+	//MachineGun->SetDamageAmount(35);
+	//myPlayer->AddGun(MachineGun);
+	//Gun* SubMachineGun = new Gun();
+	//SubMachineGun->SetGunClass(Gun::SUBMACHINE);
+	//SubMachineGun->SetFireRate(0.25f);
+	//SubMachineGun->SetDamageAmount(30);
+	//myPlayer->AddGun(SubMachineGun);
 	myPlayer->SetCurrentGun(0);
 	if (!myPlayer)
 	{
