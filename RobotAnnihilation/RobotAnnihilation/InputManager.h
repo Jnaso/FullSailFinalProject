@@ -47,8 +47,6 @@
 
 class InputManager
 {
-private:
-
 	bool *m_keys;
 
 	IDirectInputDevice8* mouseinput;
@@ -65,7 +63,9 @@ public:
 	bool Initialize(HINSTANCE instance, HWND wind);
 
 	void SetKeyState(int keyCode, bool isPress);
+	void SetKetState(char keycode, bool isPressed);
 	KEYSTATE GetKeyState(int keyCode);
+	KEYSTATE GetKeyState(char keyCode);
 
 	//void SetMousePos(float x, float y);
 	IDirectInputDevice8* GetMouseInput();

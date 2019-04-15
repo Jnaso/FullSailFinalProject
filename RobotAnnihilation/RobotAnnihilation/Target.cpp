@@ -64,7 +64,6 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 		HurtTime = 0.8f;
 	}
 
-	std::cout << ImHurt << std::endl;
 }
 
 void Target::Attack(Player *myPlayer)

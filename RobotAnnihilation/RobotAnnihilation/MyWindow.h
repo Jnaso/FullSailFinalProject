@@ -52,7 +52,6 @@ private:
 
 	//UI Functions For Function Pointers
 private:
-	
 
 	void HideMainMenu();
 	void ShowMainMenu();

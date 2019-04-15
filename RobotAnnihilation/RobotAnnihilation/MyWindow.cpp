@@ -33,45 +33,44 @@ bool MyWindow::Run()
 	//	return false;
 	//}
 
-	if (keyPressTimer <= 0)
-	{
+
 		if (gameManager->GetKeyState(_ESCAPE))
 		{
 			paused = !paused;
+			gameManager->GetShopPtr()->SetShopVisibility(!paused);
 			SetPauseMenu(paused);
 			gameManager->SetLowHealthImage(false);
+			gameManager->SetKeyState(_ESCAPE, false);
 		}
-
-		if (gameManager->GetKeyState((int)'L'))
+		
+		if (gameManager->GetKeyState('L'))
 		{
 			showFPS = !showFPS;
 			m_FPSText->SetEnabled(showFPS);
+			gameManager->SetKeyState('L', false);
 		}
 		
-
-		if (gameManager->GetKeyState((int)'0')) {
-			gameManager->MaxHealth();
-		}
-
 		if (gameManager->GetKeyState((int)'9')) {
-			gameManager->FlipInvincible();
+			gameManager->FlipInvincible();  gameManager->SetKeyState('9', false);
 		}
-
 		if (gameManager->GetKeyState((int)'8')) {
-			gameManager->AddMoney();
+			gameManager->AddMoney();  gameManager->SetKeyState('8', false);
 		}
-
 		if (gameManager->GetKeyState((int)'7')) {
-			gameManager->UnlockAllGuns();
+			gameManager->UnlockAllGuns(); gameManager->SetKeyState('7', false);
 		}
-
 		if (gameManager->GetKeyState((int)'6')) {
-			gameManager->EndRound();
+			gameManager->EndRound(); gameManager->SetKeyState('6', false);
+		}
+		if (gameManager->GetKeyState((int)'0')){
+			gameManager->MaxHealth(); gameManager->SetKeyState('0', false);
 		}
 
-		//Make Sure This Is On The Bottom!!!!
-		keyPressTimer = DEFAULTKEYPRESST;
-	}
+		if (keyPressTimer <= 0)
+		{
+			//Make Sure This Is On The Bottom!!!!
+			keyPressTimer = DEFAULTKEYPRESST;
+		}
 	
 
 	//Render every frame and stop if anything goes wrong 
@@ -80,8 +79,6 @@ bool MyWindow::Run()
 	{
 		return false;
 	}
-
-	
 
 	return true;
 }
@@ -474,13 +471,15 @@ bool MyWindow::Initialize()
 
 	//memset(tempT0, '\0', sizeof(tempT0));
 	//_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
+
+	#pragma region Player_UI
 	std::string EnemyTxt = "Enemies: " + std::to_string(gameManager->GetEnemies());
 	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, EnemyTxt);
 
 	std::string healthTxt = "Health: " + std::to_string(gameManager->GetPlayer()->GetHealth());
 	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, healthTxt);
 
-	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{0, 100}, F_ARIAL, "Current Weapon: ");
+	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0, 100 }, F_ARIAL, "Current Weapon: ");
 
 	std::string timerTxt = "Total Time: ";
 	playerUI[3] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, timerTxt);
@@ -489,7 +488,7 @@ bool MyWindow::Initialize()
 	memset(tempT2, '\0', sizeof(tempT2));
 	int tempIn = 0;
 	_itoa_s(tempIn, tempT2, 65, 10);
-	
+
 	numToChr = std::to_string(tempIn);
 	const char* tempT100 = numToChr.c_str();
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
@@ -499,6 +498,8 @@ bool MyWindow::Initialize()
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
+	#pragma endregion
+
 #pragma endregion
 	
 	return true;
@@ -554,7 +555,7 @@ void MyWindow::Render()
 LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	float newx = 0;
-		float newy = 0;
+	float newy = 0;
 	switch (msg)
 	{
 	case WM_KEYDOWN:

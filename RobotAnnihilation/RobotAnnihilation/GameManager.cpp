@@ -160,16 +160,16 @@ void GameManager::Update(float delta, float total)
 			myPlayer->SetCurrentGun(2);
 		}
 
-		if (keyPressTimer <= 0)
+		#pragma region Shop_Controls
+		if (myInput->GetKeyState('K'))
 		{
-			if (myInput->GetKeyState((int)'K'))
-			{
-				shopVisible = !shopVisible;
-				myShop->SetShopVisibility(!shopVisible);
-			}
-			keyPressTimer = DEFAULTKEYPRESST;
+			shopVisible = !shopVisible;
+			myShop->SetShopVisibility(!shopVisible);
+			myInput->SetKetState('K', false);
 		}
 		myShop->Update();
+		#pragma endregion
+
 
 		if (myPlayer->getTimeLeft() >= 0)
 		{

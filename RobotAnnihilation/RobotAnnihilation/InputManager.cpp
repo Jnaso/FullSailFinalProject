@@ -98,10 +98,27 @@ void InputManager::SetKeyState(int keyCode, bool isPress)
 	}*/
 }
 
+void InputManager::SetKetState(char keyCode, bool isPressed)
+{
+	m_keys[(int)keyCode] = isPressed;
+}
+
 KEYSTATE InputManager::GetKeyState(int keyCode)
 {
 	
 	if (m_keys[keyCode])
+	{
+		return KEYSTATE::DOWN;
+	}
+	else
+	{
+		return KEYSTATE::UP;
+	}
+}
+
+KEYSTATE InputManager::GetKeyState(char keyCode)
+{
+	if (m_keys[(int)keyCode])
 	{
 		return KEYSTATE::DOWN;
 	}

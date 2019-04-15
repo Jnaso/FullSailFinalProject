@@ -78,6 +78,7 @@ public:
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
+	Shop* GetShopPtr() { return myShop; }
 
 
 	void ShootBullets();
