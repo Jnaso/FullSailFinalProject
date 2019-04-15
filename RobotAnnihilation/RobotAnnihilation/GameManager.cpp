@@ -208,9 +208,11 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 
+			BombEnemy *currBomb;
 
 			for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 			{
+				currBomb = dynamic_cast<BombEnemy*>(myEnemyManager->GetEnemies()[j]);
 				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f && bullets[i]->GetTag() == "Player")
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
@@ -222,11 +224,16 @@ void GameManager::Update(float delta, float total)
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
+						else if (currBomb)
+						{
+							currBomb->Attack(myPlayer, myEnemyManager->GetEnemies(), window);
+						}
 						else
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
+
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
 							myEnemyManager->AddSound(new Sound((char*)"Assets/Explosion.wav", 0));
