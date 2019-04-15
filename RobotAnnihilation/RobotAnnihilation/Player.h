@@ -69,6 +69,7 @@ public:
 
 	unsigned int GetHealth() { return health; };
 	void SetHealth(unsigned int newHeath) { health = newHeath; }
+	void Damage(unsigned int amount) { health -= amount; }
 
 	void MeleeAttack(int index);
 
