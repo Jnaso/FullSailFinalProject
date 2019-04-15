@@ -94,11 +94,11 @@ bool ShaderManager::RenderAnimatedShader(ID3D11DeviceContext *myContext, int ind
 	return true;
 }
 
-bool ShaderManager::RenderStaticShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx)
+bool ShaderManager::RenderStaticShader(ID3D11DeviceContext *myContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red)
 {
 	bool result;
 
-	result = myStaticShader->Render(myContext, indicies, world, view, projection, texture, lightDir, dirColor, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx);
+	result = myStaticShader->Render(myContext, indicies, world, view, projection, texture, lightDir, dirColor, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx, red);
 	if (!result)
 	{
 		return false;

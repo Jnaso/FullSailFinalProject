@@ -225,10 +225,12 @@ void GameManager::Update(float delta, float total)
 						if (myPlayer->GetTimeDamage() > 0)
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						else
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
@@ -479,9 +481,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
-	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
-	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
-	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
+	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0, true);
+	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1, true);
+	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2, true);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
 	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -0.50, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(50);

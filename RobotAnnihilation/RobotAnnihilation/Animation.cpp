@@ -27,15 +27,18 @@ std::vector<float4x4> Animation::Flatten(std::vector<float4x4> joints, std::vect
 	return NewJoints;
 }
 
-Animation::Animation(const char* filePath, ID3D11Device* device)
+Animation::Animation(const char* filePath, ID3D11Device* device, bool split)
 {
 	ReadAnimFile(filePath, device);
-	for (size_t i = 0; i < ObjAnim.frames.size(); i++)
+	if (split)
 	{
-		std::vector<float4x4> flattenedjoints = Flatten(ObjAnim.frames[i].joints, ObjAnim.parent_indicies);
-		ObjAnim.frames[i].joints = flattenedjoints;
+		for (size_t i = 0; i < ObjAnim.frames.size(); i++)
+		{
+			std::vector<float4x4> flattenedjoints = Flatten(ObjAnim.frames[i].joints, ObjAnim.parent_indicies);
+			ObjAnim.frames[i].joints = flattenedjoints;
+		}
+		ObjAnim.bindPose.joints = Flatten(ObjAnim.bindPose.joints, ObjAnim.parent_indicies);
 	}
-	ObjAnim.bindPose.joints = Flatten(ObjAnim.bindPose.joints, ObjAnim.parent_indicies);
 }
 
 

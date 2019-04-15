@@ -103,8 +103,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 
 	myPosition[0] = { 0.0f, 3.0f, 10.0f, 5.0f };
 	myPosition[1] = { 0.0f, 3.0f, -10.0f, 5.0f };
-	myColors[0] = {1.0f, 0.0f, 0.0f, 1.0f};
-	myColors[1] = {0.0f, 0.0f, 1.0f, 1.0f};
+	myColors[0] = {0.0f, 0.0f, 0.0f, 0.0f};
+	myColors[1] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 	myFrustum = new Frustum();
 	if (!myFrustum)
@@ -348,7 +348,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 				myTargets[i]->Render(myDX->GetDeviceContext());
 
-				result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+				result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra(), myTargets[i]->GetHurt());
 				//renderCount++;
 			}
 

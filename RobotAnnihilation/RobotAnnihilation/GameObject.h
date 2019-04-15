@@ -52,7 +52,7 @@ public:
 
 	virtual void Update(float delta);
 
-	void AddAninimation(const char* filePath, ID3D11Device* device, int index);
+	void AddAninimation(const char* filePath, ID3D11Device* device, int index, bool split);
 
 	PhysicsComponent* GetPhysicsComponent();
 	void SetPhysicsComponent(PhysicsComponent* newPhysics);
