@@ -37,7 +37,7 @@ bool MyWindow::Run()
 		if (gameManager->GetKeyState(_ESCAPE))
 		{
 			paused = !paused;
-			gameManager->GetShopPtr()->SetShopVisibility(!paused);
+			gameManager->GetShopPtr()->SetShopVisibility(false);
 			SetPauseMenu(paused);
 			gameManager->SetLowHealthImage(false);
 			gameManager->SetKeyState(_ESCAPE, false);
@@ -463,11 +463,6 @@ bool MyWindow::Initialize()
 	#pragma endregion
 	pauseMenu[2] = mainMenuButton;
 	#pragma endregion
-
-
-
-
-	
 
 	//memset(tempT0, '\0', sizeof(tempT0));
 	//_itoa_s(gameManager->GetEnemies(), tempT0, 65, 10);
