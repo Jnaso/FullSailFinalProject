@@ -189,6 +189,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="MathDefines.h" />
+    <ClInclude Include="Math_Types.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MyWindow.h" />
     <ClInclude Include="PhysicsComponent.h" />

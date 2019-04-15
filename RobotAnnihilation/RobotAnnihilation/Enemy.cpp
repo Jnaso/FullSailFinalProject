@@ -4,6 +4,7 @@ Enemy::Enemy()
 {
 	GameObject::GameObject();
 	readyToDestroy = false;
+	ImHurt = false;
 }
 
 bool Enemy::Destroy()
@@ -36,4 +37,18 @@ void Enemy::SubHealth(float newHealth, DamageType dmg, HWND window)
 		this->GetSounds()[this->GetSounds().size() - 1]->PlayWaveFile();
 		health -= newHealth;
 	}
+}
+
+void Enemy::SetHurt()
+{
+	if (!ImHurt)
+	{
+		HurtTime = timeGetTime();
+		ImHurt = true;
+	}
+}
+
+bool Enemy::GetHurt()
+{
+	return ImHurt;
 }

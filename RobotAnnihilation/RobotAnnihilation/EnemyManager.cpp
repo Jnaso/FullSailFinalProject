@@ -16,7 +16,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f };
 	}
 
-	for (unsigned int i = 0; i < 1; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		
 		if (rand() % 3 == 0)

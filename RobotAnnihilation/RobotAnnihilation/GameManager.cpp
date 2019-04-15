@@ -220,10 +220,12 @@ void GameManager::Update(float delta, float total)
 						if (myPlayer->GetTimeDamage() > 0)
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						else
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{

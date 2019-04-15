@@ -23,6 +23,8 @@ public:
 	void Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice);
 	void Attack(Player *myPlayer);
 	float GetHealth() { return health; }
+	void SetHurt();
+	bool GetHurt();
 };
 
 #endif // !_TARGET_H_

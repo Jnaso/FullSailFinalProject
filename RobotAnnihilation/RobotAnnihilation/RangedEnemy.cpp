@@ -49,6 +49,12 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 		GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 	}
 
+	if (timeGetTime() >= HurtTime + 200)
+	{
+		ImHurt = false;
+		HurtTime = 0.8f;
+	}
+
 }
 
 void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)

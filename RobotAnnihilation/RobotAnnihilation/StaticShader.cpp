@@ -29,12 +29,12 @@ void StaticShader::Shutdown()
 	DestroyShaders();
 }
 
-bool StaticShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx)
+bool StaticShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red)
 {
 	bool result;
 
 	//Update information
-	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx);
+	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx, red);
 	if (!result)
 	{
 		return false;
@@ -245,7 +245,7 @@ void StaticShader::ProcessShaderErrors(ID3D10Blob *errors)
 	errorMessages = nullptr;
 }
 
-bool StaticShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx)
+bool StaticShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mapped;
@@ -302,6 +302,15 @@ bool StaticShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMM
 	constLightData->cameraPosition = cam;
 	constLightData->specularColor = specCol;
 	constLightData->specularExtra = specEx;
+
+	if (red)
+	{
+		constLightData->padding = 1.0f;
+	}
+	else
+	{
+		constLightData->padding = 0.0f;
+	}
 
 	//Unmap the buffer and subresource
 	myDeviceContext->Unmap(myConstantLightBuffer, 0);
