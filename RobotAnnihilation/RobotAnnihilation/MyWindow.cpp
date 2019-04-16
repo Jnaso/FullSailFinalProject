@@ -355,8 +355,13 @@ bool MyWindow::Initialize()
 		startButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
 		//Lamda [Place Scope Here](Parameters){Code Here} 
 		//Used To Set the function pointer in UIElement
-		startButton->m_OnMouseClick = [this]()
+		startButton->m_OnMouseClick = [this, screenW, screenH]()
 		{
+			if (!gameManager->GetEnemyMangerPtr())
+			{
+				gameManager->Initialize(screenW, screenH, myWindow);
+			}
+			timer.Restart();
 			HideMainMenu();
 			ShowPlayerUI();
 			SetPaused(false);
@@ -453,6 +458,7 @@ bool MyWindow::Initialize()
 		mainMenuButton->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
 		mainMenuButton->m_OnMouseClick = [this]()
 		{
+			gameManager->ExitLevel();
 			this->ShowMainMenu();
 			this->SetPauseMenu(false);
 			this->HidePlayerUI();

@@ -43,7 +43,10 @@ void UIManager::Update(float time)
 
 	for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	{
-		m_UIElements[i]->Update(time);
+		if (m_UIElements[i])
+		{
+			m_UIElements[i]->Update(time);
+		}
 	}
 	//for (unsigned int i = 0; i < m_UIElements.size(); i++)
 	//{

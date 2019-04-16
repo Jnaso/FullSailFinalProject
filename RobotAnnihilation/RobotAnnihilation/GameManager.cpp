@@ -5,7 +5,7 @@ GameManager::GameManager()
 	myInput = new InputManager();
 	myGraphics = new Graphics(myInput);
 	myPlayer = nullptr;
-	myEnemyManager = new EnemyManager();
+	//myEnemyManager = new EnemyManager();
 }
 
 GameManager::~GameManager()
@@ -115,6 +115,36 @@ void GameManager::SpawnDamagePickup(float3 pos)
 	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
 	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
 	Pickups.push_back(newpickup);
+}
+
+void GameManager::ExitLevel()
+{
+	if (myGraphics)
+	{
+		myGraphics->ExitLevel();
+	}
+
+	if (myPlayer)
+	{
+		myPlayer->Shutdown();
+		delete myPlayer;
+		myPlayer = nullptr;
+	}
+
+	if (myEnemyManager)
+	{
+		myEnemyManager->Shutdown();
+		delete myEnemyManager;
+		myEnemyManager = nullptr;
+	}
+
+	Obstacles.clear();
+
+	/*if (myShop)
+	{
+		delete myShop;
+		myShop = nullptr;
+	}*/
 }
 
 void GameManager::EndRound()
@@ -477,7 +507,17 @@ void GameManager::Update(float delta, float total)
 bool GameManager::Render()
 {
 	//return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
-	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
+
+	if (myEnemyManager)
+	{
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
+	}
+	else
+	{
+		myGraphics->RenderOnlyUI();
+		return true;
+	}
+	
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -485,6 +525,11 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 
 	myDX = myGraphics->GetGraphicsEngine();
+
+	if (!myEnemyManager)
+	{
+		myEnemyManager = new EnemyManager();
+	}
 
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
@@ -593,5 +638,13 @@ void GameManager::ShutDown()
 		delete myShop;
 		myShop = nullptr;
 	}
+
+	for (unsigned int i = 0; i < Obstacles.size(); i++)
+	{
+		Obstacles[i]->Shutdown();
+		delete Obstacles[i];
+	}
+
+	Obstacles.clear();
 	
 }
