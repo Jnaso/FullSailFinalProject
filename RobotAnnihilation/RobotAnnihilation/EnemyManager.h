@@ -6,6 +6,7 @@
 #include "Target.h"
 #include "Player.h"
 #include "RangedEnemy.h"
+#include "BombEnemy.h" 
 
 using namespace std;
 
@@ -24,7 +25,7 @@ private:
 	float flockRadius;
 
 	const float safeRadius = 1.0f;
-	const float safeObstacleRadius = 10.0f;
+	const float safeObstacleRadius = 7.0f;
 
 	float3 SpawnPoints[4];
 
@@ -40,11 +41,11 @@ public:
 	void Shutdown();
 	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
 
-	vector<Enemy *> GetEnemies();
+	vector<Enemy *> &GetEnemies();
 	unsigned int GetEnemyCount();
 	float3 CalculateCohesion(Target *myT);
-	float3 CalculateSeperation(Target &myT);
-	float3 CalculateObstacleSeperation(Target &myT, vector<GameObject*> obstacles);
+	float3 CalculateSeperation(Enemy &myT);
+	float3 CalculateObstacleSeperation(Enemy &myT, vector<GameObject*> obstacles);
 
 	void StartNewRound();
 
