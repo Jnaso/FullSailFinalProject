@@ -20,6 +20,8 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 {
 	bool result;
 
+	playerWorld = XMMatrixIdentity();
+
 	//Initialize the direct x object 
 	if (!myDX)
 	{
