@@ -65,12 +65,21 @@ public:
 	}
 	void SetPos(float2 value) 
 	{ 
-		m_destRect.right = static_cast<LONG>(value.x + GetSize().x);
-		m_destRect.bottom = static_cast<LONG>(value.y + GetSize().y);
-		m_destRect.left = value.x;
-		m_destRect.top = value.y;
+		m_destRect.right	=	static_cast<LONG>(value.x + GetSize().x);
+		m_destRect.bottom	=	static_cast<LONG>(value.y + GetSize().y);
+		m_destRect.left		=	value.x;
+		m_destRect.top		=	value.y;
 		
 		m_pos = { value.x, value.y };
+	}
+	void SetPos(LONG x, LONG y)
+	{
+		m_destRect.right	=	x + GetSize().x;
+		m_destRect.bottom	=	y + GetSize().y;
+		m_destRect.left		=	x;
+		m_destRect.top		=	y;
+
+		m_pos				=	{ static_cast<float>(x), static_cast<float>(y)};
 	}
 	
 	void SetSize(float2 value) 

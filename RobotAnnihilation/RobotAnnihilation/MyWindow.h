@@ -16,6 +16,9 @@ private:
 	const float DEFAULTKEYPRESST = 0.2f;
 	float keyPressTimer = 0.2f;
 
+	bool pauseMenuBool = false;
+	bool mainMenuBool = true;
+
 	LPCWSTR myAppName;
 	HINSTANCE myInstance;
 	HWND myWindow;
@@ -46,9 +49,14 @@ private:
 	std::string numToChr;
 	
 	UIElement* mainMenu[5];
-	UIElement* optionsMenu[5];
 	UIElement* playerUI[6];
 	UIElement* pauseMenu[3];
+	UIElement* optionsMenu[5];
+	//0 = Main Options Text
+	//1 = Volume Text
+	//2 = Volume Up Button
+	//3 = Volume Down Button
+	//4 = Back Button
 
 	//UI Functions For Function Pointers
 private:
@@ -59,9 +67,16 @@ private:
 	void SetPauseMenu(bool value);
 
 	void GameIsDone();
+
 	void ShowPlayerUI();
 	void HidePlayerUI();
+
+	void SetOptionsMenu(bool val);
+
 	void ShowFPS();
+
+	void VolumeUp();
+	void VolumeDown();
 
 	void CalcFPS();
 public:

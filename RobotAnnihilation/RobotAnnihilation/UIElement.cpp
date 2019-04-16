@@ -112,26 +112,29 @@ ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, floa
 }
 void ButtonElement::Update(float time)
 {
-	m_interactable = m_enabled;
-	m_buttonText->SetEnabled(m_enabled);
-
-	if (m_interactable)
+	if (this != nullptr)
 	{
-		PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
-		if (m_mouseOver)
+		m_interactable = m_enabled;
+		m_buttonText->SetEnabled(m_enabled);
+
+		if (m_interactable)
 		{
-			if (m_OnMouseEnter)
+			PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
+			if (m_mouseOver)
 			{
-				this->m_OnMouseEnter();
-			}
-			if (this->m_input->GetKeyState(_LMOUSE))
-			{
-				if (m_OnMouseClick != nullptr)
+				if (m_OnMouseEnter)
 				{
-					this->m_OnMouseClick();
+					this->m_OnMouseEnter();
 				}
-				m_input->SetKeyState(_LMOUSE, false);
-				return;
+				if (this->m_input->GetKeyState(_LMOUSE))
+				{
+					if (m_OnMouseClick != nullptr)
+					{
+						this->m_OnMouseClick();
+					}
+					m_input->SetKeyState(_LMOUSE, false);
+					return;
+				}
 			}
 		}
 	}
