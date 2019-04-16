@@ -20,19 +20,25 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 {
 	bool result;
 
+	playerWorld = XMMatrixIdentity();
+
 	//Initialize the direct x object 
-	myDX = new DX();
 	if (!myDX)
 	{
-		return false;
+		myDX = new DX();
+		if (!myDX)
+		{
+			return false;
+		}
+
+		//Make sure the object initializes with no problem 
+		result = myDX->Initialize(windowWidth, windowHeight, VSYNC_ENABLED, window, FULL_SCREEN, FAR_PLANE, NEAR_PLANE);
+		if (!result)
+		{
+			return false;
+		}
 	}
 
-	//Make sure the object initializes with no problem 
-	result = myDX->Initialize(windowWidth, windowHeight, VSYNC_ENABLED, window, FULL_SCREEN, FAR_PLANE, NEAR_PLANE);
-	if (!result)
-	{
-		return false;
-	}
 
 	//Create Turtle Image
 	//myDX->CreateImage("DrawingStuff/turtle.dds", DirectX::SimpleMath::Vector2(0,0));
@@ -69,18 +75,24 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	}
 
 	//Intialize the camera
-	myCamera = new Camera();
 	if (!myCamera)
 	{
-		return false;
+		myCamera = new Camera();
+		if (!myCamera)
+		{
+			return false;
+		}
 	}
 
 	myCamera->SetPosition(0.0f, 3.0f, -7.0f);
 
-	myDebug = new DebugCamera();
 	if (!myDebug)
 	{
-		return false;
+		myDebug = new DebugCamera();
+		if (!myDebug)
+		{
+			return false;
+		}
 	}
 
 	myDebug->SetPosition(0.0f, 2.0f, -5.0f);
@@ -113,28 +125,40 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	}
 
 	//Create UI Manager
-	myUI = new UIManager(myInput, myDX->GetDevice(), myDX->GetDeviceContext());
 	if (!myUI)
 	{
-		return false;
+		myUI = new UIManager(myInput, myDX->GetDevice(), myDX->GetDeviceContext());
+		if (!myUI)
+		{
+			return false;
+		}
 	}
 
-	m_spriteBatch.reset(new DirectX::SpriteBatch(myDX->GetDeviceContext()));
 	if (!m_spriteBatch)
 	{
-		return false;
+		m_spriteBatch.reset(new DirectX::SpriteBatch(myDX->GetDeviceContext()));
+		if (!m_spriteBatch)
+		{
+			return false;
+		}
 	}
 
-	m_arialFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/Arial.spritefont"));
 	if (!m_arialFont)
 	{
-		return false;
+		m_arialFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/Arial.spritefont"));
+		if (!m_arialFont)
+		{
+			return false;
+		}
 	}
 
-	m_comicSansFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/ComicSans.spritefont"));
 	if (!m_comicSansFont)
 	{
-		return false;
+		m_comicSansFont.reset(new DirectX::SpriteFont(myDX->GetDevice(), L"DrawingStuff/ComicSans.spritefont"));
+		if (!m_comicSansFont)
+		{
+			return false;
+		}
 	}
 
 	//return true;
@@ -386,6 +410,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 	if (!debugCam)
 	{
+
 		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
 		 
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
@@ -407,6 +432,84 @@ void Graphics::Update()
 {
 	
 }
+
+void Graphics::ExitLevel()
+{
+
+	if (myLighting)
+	{
+		delete myLighting;
+		myLighting = nullptr;
+	}
+
+	if (myShaderManager)
+	{
+		myShaderManager->Shutdown();
+		delete myShaderManager;
+		myShaderManager = nullptr;
+	}
+
+	if (Ground)
+	{
+		Ground->Shutdown();
+		delete Ground;
+		Ground = nullptr;
+	}
+
+	if (Skybox)
+	{
+		Skybox->Shutdown();
+		delete Skybox;
+		Skybox = nullptr;
+	}
+
+
+	if (myFrustum)
+	{
+		delete myFrustum;
+		myFrustum = nullptr;
+	}
+
+}
+
+void Graphics::RenderOnlyUI()
+{
+	XMMATRIX world, view, projection, frustumView;
+	bool result, render;
+	unsigned int renderCount = 0;
+
+	HRESULT hr;
+
+	//Clear the screen 
+	myDX->ClearScreen(0.0f, 1.0f, 0.0f, 1.0f);
+
+	myDX->PassWorldMatrix(world);
+	if (debugCam)
+	{
+		myDebug->PassInViewMatrix(view);
+	}
+	else
+	{
+		myCamera->PassInViewMatrix(view);
+	}
+	myCamera->PassInViewMatrix(frustumView);
+
+	myDX->PassProjectionMatrix(projection);
+
+	//camPosition = { view.r[3].m128_f32[0],  view.r[3].m128_f32[1], view.r[3].m128_f32[2], view.r[3].m128_f32[3] };
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
+
+	myDX->GetDeviceContext()->RSSetState(spriteRasterState);
+
+	myUI->Render(m_spriteBatch, m_arialFont, m_comicSansFont);
+
+	m_spriteBatch->End();
+
+	myDX->PresentScreen();
+}
+
+
 
 void Graphics::Update(InputManager *myInput, float delta, Player *myPlayer)
 {

@@ -79,6 +79,7 @@ public:
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
 	Shop* GetShopPtr() { return myShop; }
+	EnemyManager* GetEnemyMangerPtr() { return myEnemyManager; }
 
 
 	void ShootBullets();
@@ -89,6 +90,8 @@ public:
 
 	void SpawnHealthPickup(float3 pos);
 	void SpawnDamagePickup(float3 pos);
+
+	void ExitLevel();
 
 #pragma region CheatCodes
 	void MaxHealth() { myPlayer->SetHealth(myPlayer->GetMaxHealth()); }
