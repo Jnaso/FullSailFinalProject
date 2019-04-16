@@ -11,7 +11,6 @@ class Shop
 	UIManager* m_UIManager;
 	ID3D11Device* m_device;
 
-
 	int m_assultRifleLevel = 0;
 	int m_subMachineGunLevel = 0;
 	int m_pistolLevel = 0;
@@ -47,7 +46,6 @@ class Shop
 		{
 			delete m_image;
 		}
-
 	};
 
 	std::map<std::string, UIElement*> m_shopUI;
@@ -59,6 +57,7 @@ public:
 	float m_selectedStats[STATS::COUNT];
 	int m_selectedCost = 0;
 	std::string m_description;
+	std::string m_wpnStats;
 
 	Item* m_itemToDisplay;
 	
@@ -74,6 +73,7 @@ public:
 
 	
 	void Upgrade(WEAPONTYPE);
+	void UpgradeWeapon(Item*);
 
 	void Update();
 
