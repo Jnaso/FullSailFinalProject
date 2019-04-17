@@ -178,7 +178,7 @@ vector<Enemy*> &EnemyManager::GetEnemies()
 
 unsigned int EnemyManager::GetEnemyCount()
 {
-	return currentEnemies;
+	return myEnemies.size();
 }
 
 float3 EnemyManager::CalculateCohesion(Target * myT)
