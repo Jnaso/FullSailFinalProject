@@ -590,7 +590,7 @@ bool MyWindow::Initialize()
 
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1800, 0 }, F_ARIAL, "poopoo");
 
-	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
+	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 980 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
 
