@@ -134,8 +134,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1280;
-		screenH = 720;
+		screenW = 1920;
+		screenH = 1080;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
