@@ -18,6 +18,7 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 	GetPhysicsComponent()->SetPosition(position);
 	GetPhysicsComponent()->SetMass(5.0f);
 	GetPhysicsComponent()->SetDamping(0.99f);
+	GetPhysicsComponent()->SetVelocity({ 1, 1, 1 });
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.7f);
 	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.5f, GetPhysicsComponent()->GetPosition().z }, 0.5f);
@@ -34,16 +35,13 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 {
 	if (!attacking)
 	{
-		if (!attacking)
-		{
-			GameObject::Update(delta);
-			float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-			GetPhysicsComponent()->SetForward(forward2);
-			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
-			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
-			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-			GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
-		}
+		GameObject::Update(delta);
+		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+		GetPhysicsComponent()->SetForward(forward2);
+		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+		GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
 	}
 	else
 	{

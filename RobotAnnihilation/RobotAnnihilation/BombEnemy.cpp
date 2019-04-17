@@ -17,6 +17,7 @@ bool BombEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, float
 	GetPhysicsComponent()->SetPosition(position);
 	GetPhysicsComponent()->SetMass(5.0f);
 	GetPhysicsComponent()->SetDamping(0.99f);
+	GetPhysicsComponent()->SetVelocity({ 1, 1, 1 });
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.7f);
 
