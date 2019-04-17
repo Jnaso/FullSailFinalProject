@@ -1,7 +1,5 @@
 #include "Player.h"
 
-
-
 Player::Player()
 {
 	objectModel = new Model();
@@ -16,7 +14,6 @@ Player::Player()
 	collidingL = false;
 	collidingR = false;
 }
-
 
 Player::~Player()
 {
