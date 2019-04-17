@@ -254,14 +254,15 @@ void GameManager::Update(float delta, float total)
 					{
 						bullets[i]->SetDestroy();
 						
+						if (currBomb)
+						{
+							currBomb->Attack(myPlayer, myEnemyManager->GetEnemies(), window);
+						}
+
 						if (myPlayer->GetTimeDamage() > 0)
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
 							myEnemyManager->GetEnemies()[j]->SetHurt();
-						}
-						else if (currBomb)
-						{
-							currBomb->Attack(myPlayer, myEnemyManager->GetEnemies(), window);
 						}
 						else
 						{
@@ -315,10 +316,10 @@ void GameManager::Update(float delta, float total)
 			}
 		}
 
-		myPlayer->SetForward(true);
-		myPlayer->SetBackward(true);
-		myPlayer->SetLeft(true);
-		myPlayer->SetRight(true);
+		myPlayer->SetForward(false);
+		myPlayer->SetBackward(false);
+		myPlayer->SetLeft(false);
+		myPlayer->SetRight(false);
 		for (size_t i = 0; i < Obstacles.size(); i++)
 		{
 			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
@@ -328,25 +329,25 @@ void GameManager::Update(float delta, float total)
 					if (lineCircle(myPlayer->GetForwardArrow(), *Obstacles[i]->GetCollider(j)))
 					{
 						//std::cout << "BoomBoom" << std::endl;
-						myPlayer->SetForward(false);
+						myPlayer->SetForward(true);
 					}
 
 					if (lineCircle(myPlayer->GetBackwardArrow(), *Obstacles[i]->GetCollider(j)))
 					{
 						//std::cout << "BoomBoom" << std::endl;
-						myPlayer->SetBackward(false);
+						myPlayer->SetBackward(true);
 					}
 
 					if (lineCircle(myPlayer->GetLeftArrow(), *Obstacles[i]->GetCollider(j)))
 					{
 						//std::cout << "BoomBoom" << std::endl;
-						myPlayer->SetLeft(false);
+						myPlayer->SetLeft(true);
 					}
 
 					if (lineCircle(myPlayer->GetRightArrow(), *Obstacles[i]->GetCollider(j)))
 					{
 						//std::cout << "BoomBoom" << std::endl;
-						myPlayer->SetRight(false);
+						myPlayer->SetRight(true);
 					}
 				}
 			}
@@ -646,5 +647,4 @@ void GameManager::ShutDown()
 	}
 
 	Obstacles.clear();
-	
 }

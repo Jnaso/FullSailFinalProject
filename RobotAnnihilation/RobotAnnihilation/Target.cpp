@@ -31,41 +31,38 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 
 void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
 {
-	if (!pushed)
+	if (!attacking)
 	{
-		if (!attacking)
-		{
-			GameObject::Update(delta);
-			float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-			GetPhysicsComponent()->SetForward(forward2);
-			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
-			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
-			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-		}
+		GameObject::Update(delta);
+		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+		GetPhysicsComponent()->SetForward(forward2);
+		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+	}
 
-		if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
-		{
-			attacking = true;
-		}
-		else
-		{
-			attacking = false;
-		}
+	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+	{
+		attacking = true;
+	}
+	else
+	{
+		attacking = false;
+	}
 
-		if (attacking)
-		{
-			Attack(myPlayer);
-		}
-		if (timeBetweenDamage > 0)
-		{
-			timeBetweenDamage -= delta;
-		}
+	if (attacking)
+	{
+		Attack(myPlayer);
+	}
+	if (timeBetweenDamage > 0)
+	{
+		timeBetweenDamage -= delta;
+	}
 
-		if (timeGetTime() >= HurtTime + 200)
-		{
-			ImHurt = false;
-			HurtTime = 0.8f;
-		}
+	if (timeGetTime() >= HurtTime + 200)
+	{
+		ImHurt = false;
+		HurtTime = 0.8f;
 	}
 }
 
