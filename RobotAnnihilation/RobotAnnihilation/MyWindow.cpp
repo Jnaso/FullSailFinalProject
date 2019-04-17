@@ -26,6 +26,7 @@ bool MyWindow::Run()
 		Update(timer.Delta());
 	}
 	gameManager->GetUIManager()->Update(timer.Delta());
+	UpdateVolumeText();
 
 	//If user presses escape, close the window 
 	//if (gameManager->GetKeyState(_ESCAPE))
@@ -243,6 +244,15 @@ void MyWindow::SetMainMenuForOptions(bool val)
 	}
 }
 
+void MyWindow::UpdateVolumeText()
+{
+	TextElement* temp = static_cast<TextElement*>(optionsMenu[6]);
+	if (temp)
+	{
+		temp->SetText("Volume: " + to_string(volume));
+	}
+}
+
 void MyWindow::ShowFPS()
 {	
 	numberToChr = std::to_string((int)FPS);
@@ -253,11 +263,13 @@ void MyWindow::ShowFPS()
 void MyWindow::VolumeUp()
 {
 	//Volume Up
+	volume++;
 }
 
 void MyWindow::VolumeDown()
 {
 	//Volume Down
+	volume--;
 }
 
 void MyWindow::CalcFPS()
@@ -411,6 +423,7 @@ bool MyWindow::Initialize()
 		optionsButton->m_OnMouseClick = [this]()
 		{
 			//Open Options Menu
+			SetPaused(true);
 			SetMainMenuForOptions(false);
 			SetOptionsMenu(true);
 		};
@@ -470,6 +483,7 @@ bool MyWindow::Initialize()
 		optionsButton1->m_OnMouseClick = [this]()
 		{
 			//Open Options Menu
+			SetPaused(true);
 			SetPauseMenu(false);
 			SetOptionsMenu(true);
 		};
@@ -514,7 +528,7 @@ bool MyWindow::Initialize()
 	#pragma region Options_Menu
 	//Main Options Text
 	optionsMenu[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "OPTIONS");
-	optionsMenu[0]->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(0.0f));
+	optionsMenu[0]->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(20.0f));
 	
 	//Volume Text
 	optionsMenu[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "VOLUME");
@@ -589,6 +603,7 @@ bool MyWindow::Initialize()
 	//Options Backround
 	optionsMenu[5] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/optionsBackround.dds", this->GetDevice());
 
+	optionsMenu[6] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ screenW * 0.5f, 50 }, F_ARIAL, volumeTxt);
 	#pragma endregion
 
 	#pragma region Player_UI
