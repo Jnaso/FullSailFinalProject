@@ -13,6 +13,7 @@
 #include "Pickup.h"
 #include "Gun.h"
 #include "Camera.h"
+#include "RangedEnemy.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
 #include "DebugCamera.h"
@@ -41,6 +42,7 @@ private:
 	DX *myDX;
 	GameObject *Ground;
 	GameObject *Skybox;
+	GameObject *Walls;
 	//GameObject *target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;

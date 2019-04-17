@@ -23,10 +23,10 @@ class Animation
 	std::vector<float4x4> Joints;
 public:
 	Animation();
-	Animation(const char* filePath, ID3D11Device* device, bool split);
+	Animation(const char* filePath, ID3D11Device* device);
 	~Animation();
 	void ReadAnimFile(const char * filePath, ID3D11Device * device);
-	std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents);
+	std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio);
 	void SetJoints(float frametime);
 	void Update(float update);
 	std::vector<float4x4> GetJoints();

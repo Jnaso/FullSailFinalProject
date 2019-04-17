@@ -133,8 +133,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1280;
-		screenH = 720;
+		screenW = 1920;
+		screenH = 1080;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
@@ -635,9 +635,11 @@ bool MyWindow::Initialize()
 
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "");
 
-	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
+	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 980 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
+
+	playerUI[6] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
 	#pragma endregion
 
 #pragma endregion

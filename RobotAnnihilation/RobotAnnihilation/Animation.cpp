@@ -27,18 +27,15 @@ std::vector<float4x4> Animation::Flatten(std::vector<float4x4> joints, std::vect
 	return NewJoints;
 }
 
-Animation::Animation(const char* filePath, ID3D11Device* device, bool split)
+Animation::Animation(const char* filePath, ID3D11Device* device)
 {
 	ReadAnimFile(filePath, device);
-	if (split)
+	for (size_t i = 0; i < ObjAnim.frames.size(); i++)
 	{
-		for (size_t i = 0; i < ObjAnim.frames.size(); i++)
-		{
-			std::vector<float4x4> flattenedjoints = Flatten(ObjAnim.frames[i].joints, ObjAnim.parent_indicies);
-			ObjAnim.frames[i].joints = flattenedjoints;
-		}
-		ObjAnim.bindPose.joints = Flatten(ObjAnim.bindPose.joints, ObjAnim.parent_indicies);
+		std::vector<float4x4> flattenedjoints = Flatten(ObjAnim.frames[i].joints, ObjAnim.parent_indicies);
+		ObjAnim.frames[i].joints = flattenedjoints;
 	}
+	ObjAnim.bindPose.joints = Flatten(ObjAnim.bindPose.joints, ObjAnim.parent_indicies);
 }
 
 
@@ -52,6 +49,7 @@ void Animation::ReadAnimFile(const char* filePath, ID3D11Device* device)
 	std::fstream file(filePath, std::ios_base::in | std::ios_base::binary);
 	if (file.is_open())
 	{
+		std::fstream file(filePath, std::ios_base::in | std::ios_base::binary);
 		//Read animation data here
 		uint32_t framesAmount;
 		file.read((char*)&framesAmount, sizeof(uint32_t));
@@ -125,18 +123,15 @@ void Animation::Update(float delta)
 {
 	if (this)
 	{
-		frameTime += delta;
-		while (frameTime > ObjAnim.duration)
-		{
-			frameTime -= ObjAnim.duration;
-		}
+		SetFrameTime(delta);
 		SetJoints(frameTime);
 	}
 }
 
-std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio, std::vector<int32_t> parents)
+std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio)
 {
-	std::vector<float4x4> Joints;
+	// Calculate lerp between keyframes using ratio calculated above
+	std::vector<float4x4> newJoints;
 	for (uint32_t i = 0; i < frame1.size(); i++)
 	{
 		XMVECTOR result = XMQuaternionSlerp(XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame1[i])), XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame2[i])), ratio);
@@ -151,23 +146,32 @@ std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::ve
 		back.r[3].m128_f32[1] = pos.m128_f32[1];
 		back.r[3].m128_f32[2] = pos.m128_f32[2];
 		back.r[3].m128_f32[3] = pos.m128_f32[3];
-		Joints.push_back(XMMatrixToFloat4x4(back));
+		newJoints.push_back(XMMatrixToFloat4x4(back));
 	}
-	return Joints;
+	return newJoints;
 }
 
 void Animation::SetJoints(float frametime)
 {
+	std::vector<float4x4> newJoints;
 	uint32_t frame1 = 0;
 	uint32_t frame2 = 0;
-	for (uint32_t i = 0; i < ObjAnim.frames.size(); i++)
+	for (size_t i = 0; i < ObjAnim.frames.size(); i++)
 	{
+		// Checks if time is before the first keyframe
 		if (i == 0 && frametime < ObjAnim.frames[i].time)
 		{
 			frame1 = ObjAnim.frames.size() - 1;
 			frame2 = i;
 			break;
 		}
+		if (frametime > ObjAnim.frames[i].time && i == ObjAnim.frames.size() - 1)
+		{
+			frame1 = i;
+			frame2 = 0;
+			break;
+		}
+		// Checks if time falls between current and next keyframe
 		if (frametime > ObjAnim.frames[i].time && frametime < ObjAnim.frames[i + 1].time)
 		{
 			frame1 = i;
@@ -177,13 +181,14 @@ void Animation::SetJoints(float frametime)
 	}
 	float ratio = 0;
 	if (frame2 == 0)
-		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration) / (ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration)));
+		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration)) / (ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration));
 	else
 		ratio = (frametime - ObjAnim.frames[frame1].time) / (ObjAnim.frames[frame2].time - ObjAnim.frames[frame1].time);
-	Joints = LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio, ObjAnim.parent_indicies);
-	for (unsigned int i = 0; i < Joints.size(); i++)
+	newJoints = LerpJoints(ObjAnim.frames[frame1].joints, ObjAnim.frames[frame2].joints, ratio);
+	Joints.resize(newJoints.size());
+	for (size_t i = 0; i < ObjAnim.frames[0].joints.size(); i++)
 	{
-		Joints[i] = XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(ObjAnim.bindPose.joints[i]), Float4x4ToXMMatrix(Joints[i]))));
+		Joints[i] = XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(ObjAnim.bindPose.joints[i]), Float4x4ToXMMatrix(newJoints[i]))));
 	}
 }
 

@@ -44,8 +44,8 @@ PixelInput Main(VertexInput input)
 		skinnedNorm += mul(float4(input.norm, 0.0f), bindPoses[input.joints[i]]) * input.weights[i];
 	}
 
-	output.pos = skinned;
-	output.pos = mul(output.pos, worldMatrix);
+	//output.pos = skinned;
+	output.pos = mul(skinned, worldMatrix);
 	output.PixelPos = output.pos;
 	output.pos = mul(output.pos, viewMatrix);
 	output.pos = mul(output.pos, projectionMatrix);

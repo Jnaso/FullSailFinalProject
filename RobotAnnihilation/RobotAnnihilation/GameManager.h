@@ -67,6 +67,7 @@ public:
 	UIElement* m_healthText;
 	UIElement* m_timerText;
 	UIElement* m_damagetimerText;
+	UIElement* m_Currency;
 
 	UIElement* m_YouLose;
 	UIElement* m_youLoseQuitButton;
@@ -82,6 +83,7 @@ public:
 	void UpdateHealthText();
 	void UpdateWeaponText();
 	void UpdateTimerText(float time);
+	void UpdateCurrencyText();
 	void UpdateDamageTimerText();
 	void SetLowHealthImage(bool val);
 	

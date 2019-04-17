@@ -685,3 +685,8 @@ inline float3 VectorMatrixMultiplication(float3x3 mat, float3 vec)
 	value.z = (vec.x * mat[2].x) + (vec.y * mat[2].y) + (vec.z * mat[2].z);
 	return value;
 }
+
+inline int Pth(int x, int y)
+{
+	return sqrt(pow(x, 2) + pow(y, 2));
+}

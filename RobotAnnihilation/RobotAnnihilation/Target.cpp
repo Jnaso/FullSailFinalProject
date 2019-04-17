@@ -20,6 +20,7 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 	GetPhysicsComponent()->SetDamping(0.99f);
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.7f);
+	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.5f, GetPhysicsComponent()->GetPosition().z }, 0.5f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = RandomUniform();
@@ -29,9 +30,9 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 	return true;
 }
 
-void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
+void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
-	if (!pushed)
+	if (!attacking)
 	{
 		if (!attacking)
 		{
@@ -41,32 +42,42 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
 			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
 			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-		}
-
-		if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
-		{
-			attacking = true;
-		}
-		else
-		{
-			attacking = false;
-		}
-
-		if (attacking)
-		{
-			Attack(myPlayer);
-		}
-		if (timeBetweenDamage > 0)
-		{
-			timeBetweenDamage -= delta;
-		}
-
-		if (timeGetTime() >= HurtTime + 200)
-		{
-			ImHurt = false;
-			HurtTime = 0.8f;
+			GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
 		}
 	}
+	else
+	{
+		if (currentAnimation)
+		{
+			currentAnimation->Update(delta);
+		}
+	}	
+	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+	{
+		SetAnimation(0);
+		attacking = true;
+	}
+	else
+	{
+		SetAnimation(1);
+		attacking = false;
+	}
+
+	if (attacking)
+	{
+		Attack(myPlayer);
+	}
+	if (timeBetweenDamage > 0)
+	{
+		timeBetweenDamage -= delta;
+	}
+
+	if (timeGetTime() >= HurtTime + 200)
+	{
+		ImHurt = false;
+		HurtTime = 0.8f;
+	}
+	
 }
 
 void Target::Attack(Player *myPlayer)

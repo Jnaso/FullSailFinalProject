@@ -61,17 +61,14 @@ void GameObject::Update(float delta)
 	}
 }
 
-void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, int index, bool split)
+void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, int index)
 {
 	objectAnimations.resize(objectAnimations.size() + 1);
-	objectAnimations[index] = new Animation(filePath, device, split);
-	if (split)
+	objectAnimations[index] = new Animation(filePath, device);
+	AnimationParents.clear();
+	for (size_t i = 0; i < objectAnimations[index]->GetAnimationClip().parent_indicies.size(); i++)
 	{
-		AnimationParents.clear();
-		for (size_t i = 0; i < objectAnimations[index]->GetAnimationClip().parent_indicies.size(); i++)
-		{
-			AnimationParents.push_back(GetParent(i, objectAnimations[index]->GetAnimationClip().parent_indicies));
-		}
+		AnimationParents.push_back(GetParent(i, objectAnimations[index]->GetAnimationClip().parent_indicies));
 	}
 }
 

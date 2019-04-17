@@ -11,6 +11,10 @@ Player::Player()
 	canMoveBackward = true;
 	canMoveLeft = true;
 	canMoveRight = true;
+	collidingF = false;
+	collidingB = false;
+	collidingL = false;
+	collidingR = false;
 }
 
 
@@ -40,6 +44,45 @@ void Player::Render(ID3D11DeviceContext * context)
 void Player::Shutdown()
 {
 	GameObject::Shutdown();
+}
+
+void Player::CheckMovement()
+{
+	if (collidingF || DitanceFloat3(forwardArrow.end, {0, 0, 0}) >= 78.0f)
+	{
+		canMoveForward = false;
+	}
+	else
+	{
+		canMoveForward = true;
+	}
+
+	if (collidingB || DitanceFloat3(backwardArrow.end, { 0, 0, 0 }) >= 78.0f)
+	{
+		canMoveBackward = false;
+	}
+	else
+	{
+		canMoveBackward = true;
+	}
+
+	if (collidingR || DitanceFloat3(rightArrow.end, { 0, 0, 0 }) >= 78.0f)
+	{
+		canMoveRight = false;
+	}
+	else
+	{
+		canMoveRight = true;
+	}
+
+	if (collidingL || DitanceFloat3(leftArrow.end, { 0, 0, 0 }) >= 78.0f)
+	{
+		canMoveLeft = false;
+	}
+	else
+	{
+		canMoveLeft = true;
+	}
 }
 
 void Player::Update(float delta)
@@ -92,6 +135,8 @@ void Player::Update(float delta)
 	rightArrow.start = playerBox.center;
 	float3 rightForward = VectorMatrixMultiplication(CreateRotationMatrixY(90.0f), GetPhysicsComponent()->GetForward());
 	rightArrow.end = { rightArrow.start.x - (rightForward.x), GetPhysicsComponent()->GetPosition().y + 2.0f,  rightArrow.start.z - (rightForward.z) };
+
+	CheckMovement();
 }
 
 float4x4 LerpJoint(float4x4 frame1, float4x4 frame2, float ratio)
@@ -262,22 +307,22 @@ bool Player::MoveRight()
 
 void Player::SetForward(bool f)
 {
-	canMoveForward = f;
+	collidingF = f;
 }
 
 void Player::SetBackward(bool f)
 {
-	canMoveBackward = f;
+	collidingB = f;
 }
 
 void Player::SetLeft(bool f)
 {
-	canMoveLeft = f;
+	collidingL = f;
 }
 
 void Player::SetRight(bool f)
 {
-	canMoveRight = f;
+	collidingR = f;
 }
 
 void Player::MeleeAttack(int index)

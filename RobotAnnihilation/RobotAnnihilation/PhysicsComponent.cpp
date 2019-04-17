@@ -70,7 +70,7 @@ void PhysicsComponent::Update(float delta)
 	velocity.addScaledVec(resultingAcceleration, delta);
 
 	velocity = velocity * powf(damping, delta);
-	//clearAccumulator();
+	clearAccumulator();
 	if (position.y < 0)
 	{
 		position.y = 0;

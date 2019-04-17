@@ -24,6 +24,10 @@ protected:
 	bool canMoveBackward;
 	bool canMoveLeft;
 	bool canMoveRight;
+	bool collidingF;
+	bool collidingB;
+	bool collidingL;
+	bool collidingR;
 
 	unsigned int CurrentPoints = 0;
 
@@ -36,6 +40,7 @@ public:
 	bool Initialize(const char* filePath, ID3D11Device* device);
 	void Render(ID3D11DeviceContext* context);
 	void Shutdown();
+	void CheckMovement();
 	void Update(float delta);
 	std::vector<float4x4> SetSkeletonLines(anim_clip animationUpper, anim_clip animationLower, float timeUpper, float timeLower);
 
