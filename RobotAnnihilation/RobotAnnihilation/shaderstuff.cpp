@@ -32,12 +32,12 @@ void AnimatedShader::Shutdown()
 }
 
 //Called every frame, updates the shader information and then draws them
-bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, ID3D11ShaderResourceView *normalTexture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red)
+bool AnimatedShader::Render(ID3D11DeviceContext *myDeviceContext, int indicies, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture, ID3D11ShaderResourceView *normalTexture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red, bool bomb)
 {
 	bool result;
 
 	//Update information
-	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor, binds, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx, red);
+	result = UpdateShaderBuffers(myDeviceContext, world, view, projection, texture, lightDir, dirColor, binds, myPos, myCol, spotCol, spotDir, spotPos, spotEx, cam, specCol, specEx, red, bomb);
 	if (!result)
 	{
 		return false;
@@ -252,7 +252,7 @@ void AnimatedShader::ProcessShaderErrors(ID3D10Blob *errors)
 }
 
 //Updates and sets the constant buffer data 
-bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red)
+bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDir, XMFLOAT4 dirColor, std::vector<float4x4> binds, XMFLOAT4 myPos[], XMFLOAT4 myCol[], XMFLOAT4 spotCol, XMFLOAT4 spotDir, XMFLOAT4 spotPos, XMFLOAT4 spotEx, XMFLOAT4 cam, XMFLOAT4 specCol, XMFLOAT4 specEx, bool red, bool bomb)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mapped;
@@ -315,7 +315,18 @@ bool AnimatedShader::UpdateShaderBuffers(ID3D11DeviceContext *myDeviceContext, X
 	constLightData->cameraPosition = cam;
 	constLightData->specularColor = specCol;
 	constLightData->specularExtra = specEx;
-	constLightData->padding = red;
+	if (red && bomb)
+	{
+		constLightData->padding = 2.0f;
+	}
+	else if (red)
+	{
+		constLightData->padding = 1.0f;
+	}
+	else
+	{
+		constLightData->padding = 0.0f;
+	}
 
 	//Unmap the buffer and subresource
 	myDeviceContext->Unmap(myConstantLightBuffer, 0);
