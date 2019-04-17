@@ -6,6 +6,7 @@ Graphics::Graphics(InputManager* input)
 	myDX = nullptr;
 	Ground = nullptr;
 	Skybox = nullptr;
+	Walls = nullptr;
 	myLighting = nullptr;
 	myShaderManager = nullptr;
 	myCamera = nullptr;
@@ -57,6 +58,14 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 	{
 		return false;
 	}
+
+	Walls = new GameObject();
+	Walls->Initialize("Assets/OutsideWalls.mesh", myDX->GetDevice());
+	if (!Walls)
+	{
+		return false;
+	}
+
 	//myTargets.push_back(new Target());
 	//myTargets[myTargets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", float3{ 0.0f, 2.0f, -20.0f });
 
@@ -235,6 +244,13 @@ void Graphics::Shutdown()
 		Skybox = nullptr;
 	}
 
+	if (Walls)
+	{
+		Walls->Shutdown();
+		delete Walls;
+		Walls = nullptr;
+	}
+
 	if (myCamera)
 	{
 		delete myCamera;
@@ -342,6 +358,11 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 		//result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetObjectIndices().size(), world, view, projection, Ground->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Ground->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Ground->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+
+		world = XMMatrixIdentity();
+		Walls->Render(myDX->GetDeviceContext());
+
+		result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Walls->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Walls->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
 		myFrustum->Construct(FAR_PLANE, projection, frustumView);
 		

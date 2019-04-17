@@ -42,6 +42,7 @@ private:
 	DX *myDX;
 	GameObject *Ground;
 	GameObject *Skybox;
+	GameObject *Walls;
 	//GameObject *target;
 	ShaderManager *myShaderManager;
 	Lighting *myLighting;

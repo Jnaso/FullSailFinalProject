@@ -48,7 +48,7 @@ void Player::Shutdown()
 
 void Player::CheckMovement()
 {
-	if (collidingF || DitanceFloat3(forwardArrow.end, {0, 0, 0}) >= 74.0f)
+	if (collidingF || DitanceFloat3(forwardArrow.end, {0, 0, 0}) >= 78.0f)
 	{
 		canMoveForward = false;
 	}
@@ -57,7 +57,7 @@ void Player::CheckMovement()
 		canMoveForward = true;
 	}
 
-	if (collidingB || DitanceFloat3(backwardArrow.end, { 0, 0, 0 }) >= 74.0f)
+	if (collidingB || DitanceFloat3(backwardArrow.end, { 0, 0, 0 }) >= 78.0f)
 	{
 		canMoveBackward = false;
 	}
@@ -66,7 +66,7 @@ void Player::CheckMovement()
 		canMoveBackward = true;
 	}
 
-	if (collidingR || DitanceFloat3(rightArrow.end, { 0, 0, 0 }) >= 74.0f)
+	if (collidingR || DitanceFloat3(rightArrow.end, { 0, 0, 0 }) >= 78.0f)
 	{
 		canMoveRight = false;
 	}
@@ -75,7 +75,7 @@ void Player::CheckMovement()
 		canMoveRight = true;
 	}
 
-	if (collidingL || DitanceFloat3(leftArrow.end, { 0, 0, 0 }) >= 74.0f)
+	if (collidingL || DitanceFloat3(leftArrow.end, { 0, 0, 0 }) >= 78.0f)
 	{
 		canMoveLeft = false;
 	}
