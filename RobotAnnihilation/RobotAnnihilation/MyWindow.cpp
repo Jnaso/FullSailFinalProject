@@ -617,7 +617,7 @@ bool MyWindow::Initialize()
 	playerUI[8] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/Crosshair.dds", this->GetDevice());
 	if (playerUI[8])
 	{
-		playerUI[8]->SetPos(((screenW * 0.5f) - (playerUI[8]->GetSize().x * 0.5f)) - 15, ((screenH * 0.5f) - (playerUI[8]->GetSize().y * 0.5f)) - 5);
+		playerUI[8]->SetPos(((screenW * 0.5f) - (playerUI[8]->GetSize().x * 0.5f)), ((screenH * 0.5f) - (playerUI[8]->GetSize().y * 0.5f)) - 5);
 	}
 	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0, 100 }, F_ARIAL, "Current Weapon: ");
 
