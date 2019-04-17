@@ -49,14 +49,15 @@ private:
 	std::string numToChr;
 	
 	UIElement* mainMenu[5];
-	UIElement* playerUI[7];
-	UIElement* pauseMenu[3];
-	UIElement* optionsMenu[5];
+	UIElement* playerUI[9];
+	UIElement* pauseMenu[4];
+	UIElement* optionsMenu[6];
 	//0 = Main Options Text
 	//1 = Volume Text
 	//2 = Volume Up Button
 	//3 = Volume Down Button
 	//4 = Back Button
+	//5 = Options Backround
 
 	//UI Functions For Function Pointers
 private:
@@ -72,6 +73,7 @@ private:
 	void HidePlayerUI();
 
 	void SetOptionsMenu(bool val);
+	void SetMainMenuForOptions(bool val);
 
 	void ShowFPS();
 
@@ -86,8 +88,8 @@ public:
 	void Shutdown();
 	void Render();
 
-	bool GetPaused() { return paused; }
-	void SetPaused(bool value) { paused = value; }
+	bool GetPaused() { return gameManager->paused; }
+	void SetPaused(bool value) { gameManager->paused = value; }
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 };

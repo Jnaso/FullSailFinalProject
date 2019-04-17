@@ -21,11 +21,14 @@ class GameManager
 	InputManager *myInput;
 	HWND window;
 	
+	int screenW, screenH;
 	
 	char displayString[65];
 	char displayString1[65];
 	char displayString2[65];
 	bool shopVisible = false;
+
+	
 
 	bool betweenRounds = false;
 	float countDown = 0.0f;
@@ -43,11 +46,16 @@ class GameManager
 	vector<Pickup*> Pickups;
 
 public:
+	bool isDone = false;
+	bool paused = false;
+
 	GameManager();
 	~GameManager();
 	void Update(float delta, float total);
 
 	bool Render();
+
+	void GameEnd();
 
 	bool Initialize(int windowWidth, int windowHeight, HWND window);
 	void ShutDown();
@@ -62,6 +70,8 @@ public:
 	UIElement* m_Currency;
 
 	UIElement* m_YouLose;
+	UIElement* m_youLoseQuitButton;
+
 	UIElement* m_YouWin;
 
 	UIElement* m_weapon;

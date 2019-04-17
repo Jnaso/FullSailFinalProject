@@ -84,7 +84,10 @@ void Player::CheckMovement()
 
 void Player::Update(float delta)
 {
-
+	if (health <= 0)
+	{
+		health = 0;
+	}
 	ObjectPhysics->Update(delta);
 
 	if (GetPhysicsComponent()->GetPosition().y < 0.0f)
