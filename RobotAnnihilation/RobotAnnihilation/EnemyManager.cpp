@@ -9,7 +9,7 @@ EnemyManager::EnemyManager()
 void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
-	enemyCount = rand() % 25 + 10;
+	enemyCount = 15;
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
