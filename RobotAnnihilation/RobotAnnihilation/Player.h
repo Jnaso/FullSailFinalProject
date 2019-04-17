@@ -14,8 +14,8 @@ protected:
 	float timeLeft = 0.0f;
 	float timeLeftDamage = 0.0f;
 	AABB playerBox;
-	unsigned int health = 1000;
-	unsigned int MaxHealth = 1000;
+	int health = 1000;
+	int MaxHealth = 1000;
 	Segment forwardArrow;
 	Segment backwardArrow;
 	Segment leftArrow;
@@ -70,10 +70,10 @@ public:
 
 	AABB GetAABB() { return playerBox; };
 
-	unsigned int GetHealth() { return health; };
-	unsigned int GetMaxHealth() { return MaxHealth; };
-	void SetHealth(unsigned int newHeath) { health = newHeath; }
-	void Damage(unsigned int amount) { health -= amount; }
+	int GetHealth() { return health; };
+	int GetMaxHealth() { return MaxHealth; };
+	void SetHealth(int newHeath) { health = newHeath; }
+	void Damage(int amount) { health -= amount; }
 
 	void MeleeAttack(int index);
 

@@ -13,7 +13,7 @@
 
 inline LONG LLerp(LONG l1, LONG l2, float r)
 {
-	return (l2 - l1) * r + l1;
+	return static_cast<float>((l2 - l1) * r + l1);
 }
 
 class UIElement
@@ -67,17 +67,17 @@ public:
 	{ 
 		m_destRect.right	=	static_cast<LONG>(value.x + GetSize().x);
 		m_destRect.bottom	=	static_cast<LONG>(value.y + GetSize().y);
-		m_destRect.left		=	value.x;
-		m_destRect.top		=	value.y;
+		m_destRect.left		=	static_cast<LONG>(value.x);
+		m_destRect.top		=	static_cast<LONG>(value.y);
 		
 		m_pos = { value.x, value.y };
 	}
 	void SetPos(LONG x, LONG y)
 	{
-		m_destRect.right	=	x + GetSize().x;
-		m_destRect.bottom	=	y + GetSize().y;
-		m_destRect.left		=	x;
-		m_destRect.top		=	y;
+		m_destRect.right	=	static_cast<LONG>(x + GetSize().x);
+		m_destRect.bottom	=	static_cast<LONG>(y + GetSize().y);
+		m_destRect.left		=	static_cast<LONG>(x);
+		m_destRect.top		=	static_cast<LONG>(y);
 
 		m_pos				=	{ static_cast<float>(x), static_cast<float>(y)};
 	}
