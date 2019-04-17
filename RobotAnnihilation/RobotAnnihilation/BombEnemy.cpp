@@ -58,7 +58,6 @@ void BombEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bul
 
 void BombEnemy::Attack(Player * myPlayer, std::vector<Enemy*> &myEnemies, HWND window)
 {
-	std::cout << "Kaboom" << std::endl;
 	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 10.0f)
 	{
 		myPlayer->SetHealth(myPlayer->GetHealth() - 20);

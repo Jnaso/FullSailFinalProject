@@ -92,6 +92,6 @@ public:
 	void SubTimeDamage(float damage) { timeLeftDamage -= damage; }
 
 	void FlipInvincible() { isInvincible = !isInvincible; }
-	bool GetInvincible() { return isInvincible; std::cout << isInvincible << std::endl; }
+	bool GetInvincible() { return isInvincible; }
 };
 

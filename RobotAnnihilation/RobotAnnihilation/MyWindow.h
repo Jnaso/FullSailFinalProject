@@ -49,7 +49,7 @@ private:
 	std::string numToChr;
 	
 	UIElement* mainMenu[5];
-	UIElement* playerUI[9];
+	UIElement* playerUI[10];
 	UIElement* pauseMenu[4];
 	UIElement* optionsMenu[6];
 	//0 = Main Options Text

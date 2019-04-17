@@ -160,7 +160,7 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 		}
 	}
 
-	if (upMovement > 0.0f)
+	/*if (upMovement > 0.0f)
 	{
 		upMovement -= 0.3f;
 		moveChar = true;
@@ -170,17 +170,17 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 	{
 		upMovement += 1.0f;
 		moveChar = true;
-	}
+	}*/
 
-	desiredCharDir.m128_f32[1] += upMovement;
+	//desiredCharDir.m128_f32[1] += upMovement;
 
-	if (myPlayer->GetPhysicsComponent()->GetPosition().y < 0.0f)
-	{
-		desiredCharDir.m128_f32[1] = 0.0f;
-		myPlayer->GetPhysicsComponent()->SetPosition({ myPlayer->GetPhysicsComponent()->GetPosition().x, 0.0f, myPlayer->GetPhysicsComponent()->GetPosition().z });
-		upMovement = 0.0f;
-		moveChar = true;
-	}
+	//if (myPlayer->GetPhysicsComponent()->GetPosition().y < 0.0f)
+	//{
+	//	desiredCharDir.m128_f32[1] = 0.0f;
+	//	myPlayer->GetPhysicsComponent()->SetPosition({ myPlayer->GetPhysicsComponent()->GetPosition().x, 0.0f, myPlayer->GetPhysicsComponent()->GetPosition().z });
+	//	upMovement = 0.0f;
+	//	moveChar = true;
+	//}
 
 	XMVECTOR copyvec = desiredCharDir;
 	desiredCharDir = XMVector4Normalize(copyvec);

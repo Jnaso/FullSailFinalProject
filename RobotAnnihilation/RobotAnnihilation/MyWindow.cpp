@@ -600,7 +600,7 @@ bool MyWindow::Initialize()
 	playerUI[6] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/EnemyUI.dds", this->GetDevice());
 	if (playerUI[6])
 	{
-		playerUI[6]->SetSize(100, 100);
+		playerUI[6]->SetSize(42, 42);
 	}
 
 	//Health Text
@@ -633,13 +633,13 @@ bool MyWindow::Initialize()
 	const char* tempT100 = numToChr.c_str();
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 
-	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "");
+	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1800, 50 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 980 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
 
-	playerUI[6] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
+	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
 	#pragma endregion
 
 #pragma endregion

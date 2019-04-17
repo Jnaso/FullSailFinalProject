@@ -31,6 +31,8 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 			myEnemies.push_back(new RangedEnemy());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
+			//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
 			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
 		}
 		else
@@ -81,6 +83,8 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies.push_back(new RangedEnemy());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
+			//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
 			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
 		}
 		else
@@ -163,8 +167,6 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 
 		}
 	}
-	if (myEnemies.size() <= 1)
-		cout << endl;
 		
 
 	currentEnemies = myEnemies.size();

@@ -393,6 +393,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 				if (currEnemy)
 				{
 					world = XMMatrixMultiply(XMMatrixScaling(4, 4, 4), lookcopy);
+					//world = XMMatrixMultiply(XMMatrixScaling(.05f, .05f, .05f), lookcopy);
 				}
 				else
 				{
