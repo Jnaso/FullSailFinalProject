@@ -626,7 +626,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
 	if (tempImg)
 	{
-		tempImg->SetSize(1280, 720);
+		tempImg->SetSize(1920, 1080);
 	}
 
 	return result;
