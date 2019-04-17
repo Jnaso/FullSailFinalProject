@@ -59,6 +59,12 @@ void GameManager::UpdateTimerText(float time)
 	tempT->SetText( "Total Time: " + std::to_string(static_cast<int>(time)) );
 }
 
+void GameManager::UpdateCurrencyText()
+{
+	TextElement* tempT = static_cast<TextElement*>(m_Currency);
+	tempT->SetText( "Points: " + std::to_string(static_cast<int>(myPlayer->GetPoints())) );
+}
+
 void GameManager::UpdateDamageTimerText()
 {
 	TextElement* tempT = static_cast<TextElement*>(m_damagetimerText);
@@ -475,6 +481,7 @@ void GameManager::Update(float delta, float total)
 			UpdateDamageTimerText();
 		}
 		UpdateTimerText(total);
+		UpdateCurrencyText();
 		if (myPlayer->GetTimeDamage() <= 0 && m_damagetimerText->GetEnabled())
 		{
 			myPlayer->AddSound(new Sound((char*)"Assets/DamagePickupEnd.wav", 0));
@@ -590,13 +597,16 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles.push_back(new GameObject());
 		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
-
+		while (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		}
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 15.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		
 	}
 
 	this->window = window;

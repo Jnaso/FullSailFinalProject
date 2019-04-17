@@ -593,6 +593,8 @@ bool MyWindow::Initialize()
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 600 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
+
+	playerUI[6] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 650}, F_ARIAL, "");
 	#pragma endregion
 
 #pragma endregion

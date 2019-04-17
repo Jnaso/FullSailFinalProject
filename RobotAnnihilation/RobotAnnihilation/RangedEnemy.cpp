@@ -19,7 +19,7 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 	GetPhysicsComponent()->SetDamping(0.99f);
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.8f);
-	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z }, 0.5f);
+	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z }, 0.5f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = .6f;
@@ -34,8 +34,8 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
 	GameObject::Update(delta);
-	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.5f, GetPhysicsComponent()->GetPosition().z };
 
 	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
 
