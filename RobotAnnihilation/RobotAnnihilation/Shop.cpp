@@ -248,6 +248,17 @@ void Shop::Upgrade(WEAPONTYPE type)
 	}
 }
 
+void Shop::UpgradeWeapon(Item* item)
+{
+	if (item)
+	{
+		//If Player Has Enough Currency
+		item->m_stats[STATS::AMMO_COUNT] += 1;
+		item->m_stats[STATS::DAMAGE] += 1;
+		item->m_stats[STATS::FIRE_RATE] += 1;
+	}
+}
+
 void Shop::Update()
 {
 	TextElement* tempTx = static_cast<TextElement*>(m_shopUI["desc text"]);

@@ -5,7 +5,7 @@ GameManager::GameManager()
 	myInput = new InputManager();
 	myGraphics = new Graphics(myInput);
 	myPlayer = nullptr;
-	myEnemyManager = new EnemyManager();
+	//myEnemyManager = new EnemyManager();
 }
 
 GameManager::~GameManager()
@@ -65,6 +65,11 @@ void GameManager::UpdateDamageTimerText()
 	tempT->SetText("Damage Increase: " + std::to_string(static_cast<int>(myPlayer->GetTimeDamage())));
 }
 
+void GameManager::SetLowHealthImage(bool val)
+{
+	m_lowHealthImage->SetEnabled(val);
+}
+
 InputManager * GameManager::GetInputManager()
 {
 	return myInput;
@@ -112,6 +117,36 @@ void GameManager::SpawnDamagePickup(float3 pos)
 	Pickups.push_back(newpickup);
 }
 
+void GameManager::ExitLevel()
+{
+	if (myGraphics)
+	{
+		myGraphics->ExitLevel();
+	}
+
+	if (myPlayer)
+	{
+		myPlayer->Shutdown();
+		delete myPlayer;
+		myPlayer = nullptr;
+	}
+
+	if (myEnemyManager)
+	{
+		myEnemyManager->Shutdown();
+		delete myEnemyManager;
+		myEnemyManager = nullptr;
+	}
+
+	Obstacles.clear();
+
+	/*if (myShop)
+	{
+		delete myShop;
+		myShop = nullptr;
+	}*/
+}
+
 void GameManager::EndRound()
 {
 	for (unsigned int i = 0; i < myEnemyManager->GetEnemies().size(); i++)
@@ -155,16 +190,16 @@ void GameManager::Update(float delta, float total)
 			myPlayer->SetCurrentGun(2);
 		}
 
-		if (keyPressTimer <= 0)
+		#pragma region Shop_Controls
+		if (myInput->GetKeyState('K'))
 		{
-			if (myInput->GetKeyState((int)'K'))
-			{
-				shopVisible = !shopVisible;
-				myShop->SetShopVisibility(!shopVisible);
-			}
-			keyPressTimer = DEFAULTKEYPRESST;
+			shopVisible = !shopVisible;
+			myShop->SetShopVisibility(!shopVisible);
+			myInput->SetKetState('K', false);
 		}
 		myShop->Update();
+		#pragma endregion
+
 
 		if (myPlayer->getTimeLeft() >= 0)
 		{
@@ -208,9 +243,11 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 
+			BombEnemy *currBomb;
 
 			for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 			{
+				currBomb = dynamic_cast<BombEnemy*>(myEnemyManager->GetEnemies()[j]);
 				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f && bullets[i]->GetTag() == "Player")
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(1), delta))
@@ -262,6 +299,10 @@ void GameManager::Update(float delta, float total)
 							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
+						else if (currBomb)
+						{
+							currBomb->Attack(myPlayer, myEnemyManager->GetEnemies(), window);
+						}
 						else
 						{
 							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
@@ -270,6 +311,7 @@ void GameManager::Update(float delta, float total)
 							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
+
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
 						{
 							myEnemyManager->AddSound(new Sound((char*)"Assets/Explosion.wav", -1000));
@@ -290,22 +332,16 @@ void GameManager::Update(float delta, float total)
 							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency());
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 
-							//cout << myPlayer->GetPoints();
-#ifdef DEBUG
-							
-							//std::cout << myEnemyManager->GetEnemyCount() << std::endl;
-#endif // DEBUG
-
 						}
 					}
 				}
 			}
 			for (size_t j = 0; j < Obstacles.size(); j++)
 			{
-				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f)
+				for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
 				{
-					for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
-					{
+					if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetCollider(k)->center) <= (bullets[i]->GetCollider(0)->radius + Obstacles[j]->GetCollider(k)->radius))
+					{				
 						if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *Obstacles[j]->GetCollider(k), delta))
 						{
 							bullets[i]->SetDestroy();
@@ -351,16 +387,6 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 		}
-
-		/*if (allGood)
-		{
-			myPlayer->SetForward(true);
-		}
-
-		if (allGoodBack)
-		{
-			myPlayer->SetBackward(true);
-		}*/
 
 		for (size_t i = 0; i < Pickups.size(); i++)
 		{
@@ -467,14 +493,19 @@ void GameManager::Update(float delta, float total)
 			{
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
 			}
+			myPlayer->SetHealth(0);
 		}
+		if (GetHealth() >= 0 && GetHealth() <= 100)
+		{
+			m_lowHealthImage->SetEnabled(true);
+		}
+		else
+		{
+			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
+		}
+
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
-			/*if (!m_YouWin)
-			{
-				m_YouWin = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU WIN!!!");
-			}*/
-			//myEnemyManager->StartNewRound();
 			countDown = 5.0f;
 			betweenRounds = true;
 		}
@@ -494,8 +525,16 @@ void GameManager::Update(float delta, float total)
 
 bool GameManager::Render()
 {
-	//return myGraphics->Render(myInput, myPlayer, bullets, myTargets);
-	return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
+	if (myEnemyManager)
+	{
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
+	}
+	else
+	{
+		myGraphics->RenderOnlyUI();
+		return true;
+	}
+	
 }
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
@@ -503,6 +542,11 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 
 	myDX = myGraphics->GetGraphicsEngine();
+
+	if (!myEnemyManager)
+	{
+		myEnemyManager = new EnemyManager();
+	}
 
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
@@ -550,6 +594,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 15.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 	}
 
 	this->window = window;
@@ -565,6 +612,12 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
+	m_lowHealthImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/almostDead.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
+	if (tempImg)
+	{
+		tempImg->SetSize(1280, 720);
+	}
 
 	return result;
 }
@@ -605,5 +658,13 @@ void GameManager::ShutDown()
 		delete myShop;
 		myShop = nullptr;
 	}
+
+	for (unsigned int i = 0; i < Obstacles.size(); i++)
+	{
+		Obstacles[i]->Shutdown();
+		delete Obstacles[i];
+	}
+
+	Obstacles.clear();
 	
 }

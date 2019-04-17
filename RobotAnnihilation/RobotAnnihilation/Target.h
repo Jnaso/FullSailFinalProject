@@ -13,6 +13,7 @@ private:
 	float timeBetweenAttacks;
 	float timeBetweenDamage;
 	bool attacking;
+	bool pushed;
 
 	float health = 100;
 
@@ -23,8 +24,8 @@ public:
 	void Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
 	void Attack(Player *myPlayer);
 	float GetHealth() { return health; }
-	void SetHurt();
-	bool GetHurt();
+
+	void ApplyForce(float3 force);
 };
 
 #endif // !_TARGET_H_

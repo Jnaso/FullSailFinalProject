@@ -85,6 +85,8 @@ public:
 	DX* GetGraphicsEngine() { return myDX; }
 	UIManager* GetUIManager() { return myUI; }
 	Camera* GetCamera() { return myCamera; };
+	void ExitLevel();
+	void RenderOnlyUI();
 };
 
 #endif // !_GRAPHICSCLASS_H_

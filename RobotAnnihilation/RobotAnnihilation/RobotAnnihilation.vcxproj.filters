@@ -33,6 +33,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
     <ClCompile Include="Pickup.cpp" />
+    <ClCompile Include="BombEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="RangedEnemy.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="Math_Types.h" />
+    <ClInclude Include="BombEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />

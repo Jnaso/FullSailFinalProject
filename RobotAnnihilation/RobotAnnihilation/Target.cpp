@@ -4,6 +4,7 @@ Target::Target()
 {
 	Enemy::Enemy();
 	timeBetweenAttacks = 3.0f;
+	pushed = false;
 }
 
 bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 position)
@@ -33,13 +34,16 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 {
 	if (!attacking)
 	{
-		GameObject::Update(delta);
-		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-		GetPhysicsComponent()->SetForward(forward2);
-		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
-		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
-		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-		GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
+		if (!attacking)
+		{
+			GameObject::Update(delta);
+			float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+			GetPhysicsComponent()->SetForward(forward2);
+			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+			GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
+		}
 	}
 	else
 	{
@@ -47,8 +51,7 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 		{
 			currentAnimation->Update(delta);
 		}
-	}
-	
+	}	
 	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
 	{
 		SetAnimation(0);
@@ -74,6 +77,7 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 		ImHurt = false;
 		HurtTime = 0.8f;
 	}
+	
 }
 
 void Target::Attack(Player *myPlayer)
@@ -86,6 +90,11 @@ void Target::Attack(Player *myPlayer)
 		}
 		timeBetweenAttacks = timeGetTime();
 	}
+}
+
+void Target::ApplyForce(float3 force)
+{
+	float3 forward = GetPhysicsComponent()->GetPosition() - force;
 }
 
 

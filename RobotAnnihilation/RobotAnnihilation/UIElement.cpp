@@ -11,8 +11,6 @@ UIElement::UIElement(RECT srcRect, bool interactable, bool enabled, float2 pos)
 	SimpleMath::Vector2 temp(pos.x, pos.y);
 	m_pos = temp;
 }
-
-
 UIElement::~UIElement()
 {
 }
@@ -101,7 +99,6 @@ ImageElement::~ImageElement()
 #pragma endregion
 
 #pragma region Button_Child_Class
-
 //MAKE SURE TO SET THE DEFAULT TEXTURE!! (SetDefaultTexture(File Path))
 ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, float2 pos, ID3D11Device* device, InputManager* input, /*Text Variables*/ int font, const char* text)
 	: UIElement(srcRect, interactable, enabled, pos)
@@ -113,40 +110,31 @@ ButtonElement::ButtonElement(RECT srcRect, bool interactable, bool enabled, floa
 	m_buttonText = new TextElement(RECT{ 0,0,0,0 }, false, true, pos, font, (char*)text);
 	
 }
-
 void ButtonElement::Update(float time)
 {
-	m_interactable = m_enabled;
-	m_buttonText->SetEnabled(m_enabled);
-	
-	if (this->m_enabled)
+	if (this != nullptr)
 	{
-		m_clickTimeLeft -= time;
-	}
+		m_interactable = m_enabled;
+		m_buttonText->SetEnabled(m_enabled);
 
-	if (m_interactable)
-	{
-		
-		PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
-		if (m_mouseOver)
+		if (m_interactable)
 		{
-			if (m_OnMouseEnter)
+			PtInRect(this->GetSrcRect(), m_input->GetMousePos()) ? m_mouseOver = true : m_mouseOver = false;
+			if (m_mouseOver)
 			{
-				this->m_OnMouseEnter();
-			}
-			if (m_clickTimeLeft <= 0)
-			{
+				if (m_OnMouseEnter)
+				{
+					this->m_OnMouseEnter();
+				}
 				if (this->m_input->GetKeyState(_LMOUSE))
 				{
 					if (m_OnMouseClick != nullptr)
 					{
 						this->m_OnMouseClick();
 					}
-					m_clickTimeLeft = CLICKTIME;
 					m_input->SetKeyState(_LMOUSE, false);
 					return;
 				}
-				
 			}
 		}
 	}
@@ -240,7 +228,6 @@ void ButtonElement::SetDefaultTexture(const char * filePath)
 		(int)m_pos.y + (int)dim.y	//Bottom
 	};
 }
-
 //Make sure image is same dimensions as m_textures[BUTTONELEMENT::DEFAULT]
 void ButtonElement::SetMouseOverTexture(const char * filePath)
 {
@@ -249,7 +236,6 @@ void ButtonElement::SetMouseOverTexture(const char * filePath)
 	HRESULT hr = CreateDDSTextureFromFile(m_device, temp, nullptr, &m_textures[ButtonElement::MOUSEOVER]);
 	delete temp;
 }
-
 //Make sure image is same dimensions as m_textures[BUTTONELEMENT::DEFAULT]
 void ButtonElement::SetMouseClickTexture(const char * filePath)
 {
@@ -258,7 +244,6 @@ void ButtonElement::SetMouseClickTexture(const char * filePath)
 	HRESULT hr = CreateDDSTextureFromFile(m_device, temp, nullptr, &m_textures[ButtonElement::MOUSECLICK]);
 	delete temp;
 }
-
 ButtonElement::~ButtonElement()
 {
 	//Delete all Textures

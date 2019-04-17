@@ -19,7 +19,14 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		
-		if (rand() % 5 == 0)
+		if (rand() % 8 == 0)
+		{
+			myEnemies.push_back(new BombEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/BombEnemy.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/BombEnemy.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
+		}
+		else if(rand() % 5 == 0)
 		{
 			myEnemies.push_back(new RangedEnemy());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
@@ -62,7 +69,14 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	float accelMulti = 0;
 	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
 	{
-		if (rand() % 5 == 0)
+		if (rand() % 8 == 0)
+		{
+			myEnemies.push_back(new BombEnemy());
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/BombEnemy.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/BombEnemy.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
+		}
+		else if (rand() % 5 == 0)
 		{
 			myEnemies.push_back(new RangedEnemy());
 			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
@@ -89,6 +103,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 		timeBetween += delta;
 	}
 	Target *currEnemy;
+	BombEnemy *currBomb;
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
 		currEnemy = dynamic_cast<Target*>(myEnemies[i]);
@@ -98,10 +113,39 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel += CalculateObstacleSeperation(*currEnemy, obstacles);
 			accel *= delta;
 			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
-		myEnemies[i]->Update(delta, myPlayer, bullets, myDevice, window);
+
+
+
+		currBomb = dynamic_cast<BombEnemy*>(myEnemies[i]);
+		if (currBomb)
+		{
+			accel = CalculateSeperation(*currBomb);
+			accel += CalculateObstacleSeperation(*currBomb, obstacles);
+			accel *= delta;
+			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
+		}
+
+		if (currBomb)
+		{
+			currBomb->Update(delta, myPlayer, bullets, myDevice, myEnemies, window);
+		}
+		else
+		{
+			myEnemies[i]->Update(delta, myPlayer, bullets, myDevice, window);
+		}
+
 		if (myEnemies[i]->Destroy())
 		{
+			if (currBomb)
+			{
+				EnemiesSounds.push_back(new Sound((char*)"Assets/BombExplosion.wav", 0));
+				EnemiesSounds[EnemiesSounds.size() - 1]->Initialize(window);
+				EnemiesSounds[EnemiesSounds.size() - 1]->PlayWaveFile();
+			}
+
 			Enemy *temp;
 			myEnemies[i]->Shutdown();
 			temp = myEnemies[i];
@@ -127,7 +171,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 }
 
 
-vector<Enemy*> EnemyManager::GetEnemies()
+vector<Enemy*> &EnemyManager::GetEnemies()
 {
 	return myEnemies;
 }
@@ -157,7 +201,8 @@ float3 EnemyManager::CalculateCohesion(Target * myT)
 	return myV * CohesionStrength;
 }
 
-float3 EnemyManager::CalculateSeperation(Target &myT)
+
+float3 EnemyManager::CalculateSeperation(Enemy &myT)
 {
 	float3 sum = { 0, 0, 0 };
 
@@ -202,7 +247,7 @@ float3 EnemyManager::CalculateSeperation(Target &myT)
 	return sum * SeperationStrength;
 }
 
-float3 EnemyManager::CalculateObstacleSeperation(Target & myT, vector<GameObject*> obstacles)
+float3 EnemyManager::CalculateObstacleSeperation(Enemy & myT, vector<GameObject*> obstacles)
 {
 	float3 sum = { 0, 0, 0 };
 

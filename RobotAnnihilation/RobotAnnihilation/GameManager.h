@@ -65,15 +65,21 @@ public:
 
 	UIElement* m_weapon;
 
+	UIElement* m_lowHealthImage;
+
+	//UI Modifier Functions
 	void UpdateScoreText();
 	void UpdateHealthText();
 	void UpdateWeaponText();
 	void UpdateTimerText(float time);
 	void UpdateDamageTimerText();
+	void SetLowHealthImage(bool val);
 	
 	InputManager* GetInputManager();
 	Graphics* GetGraphicsManager();
 	UIManager* GetUIManager() { return myGraphics->GetUIManager(); }
+	Shop* GetShopPtr() { return myShop; }
+	EnemyManager* GetEnemyMangerPtr() { return myEnemyManager; }
 
 
 	void ShootBullets();
@@ -84,6 +90,8 @@ public:
 
 	void SpawnHealthPickup(float3 pos);
 	void SpawnDamagePickup(float3 pos);
+
+	void ExitLevel();
 
 #pragma region CheatCodes
 	void MaxHealth() { myPlayer->SetHealth(myPlayer->GetMaxHealth()); }
