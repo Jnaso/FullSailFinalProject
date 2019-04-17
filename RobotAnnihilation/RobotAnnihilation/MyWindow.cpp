@@ -21,7 +21,7 @@ bool MyWindow::Run()
 	//Subtract Time So Input Isnt checked every frame
 	keyPressTimer -= timer.Delta();
 	
-	if (!paused)
+	if (!gameManager->paused)
 	{
 		Update(timer.Delta());
 	}
@@ -33,7 +33,8 @@ bool MyWindow::Run()
 	//	return false;
 	//}
 
-
+	if (!gameManager->GetUIManager()->m_mainMenu && !gameManager->GetUIManager()->m_pauseMenu)
+	{
 		if (gameManager->GetKeyState(_ESCAPE))
 		{
 			paused = !paused;
@@ -43,37 +44,37 @@ bool MyWindow::Run()
 			gameManager->SetKeyState(_ESCAPE, false);
 			pauseMenuBool = paused;
 		}
-		
-		if (gameManager->GetKeyState('L'))
-		{
-			showFPS = !showFPS;
-			m_FPSText->SetEnabled(showFPS);
-			gameManager->SetKeyState('L', false);
-		}
-		
-		if (gameManager->GetKeyState((int)'9')) {
-			gameManager->FlipInvincible();  gameManager->SetKeyState('9', false);
-		}
-		if (gameManager->GetKeyState((int)'8')) {
-			gameManager->AddMoney();  gameManager->SetKeyState('8', false);
-		}
-		if (gameManager->GetKeyState((int)'7')) {
-			gameManager->UnlockAllGuns(); gameManager->SetKeyState('7', false);
-		}
-		if (gameManager->GetKeyState((int)'6')) {
-			gameManager->EndRound(); gameManager->SetKeyState('6', false);
-		}
-		if (gameManager->GetKeyState((int)'0')){
-			gameManager->MaxHealth(); gameManager->SetKeyState('0', false);
-		}
-
-		if (keyPressTimer <= 0)
-		{
-			//Make Sure This Is On The Bottom!!!!
-			keyPressTimer = DEFAULTKEYPRESST;
-		}
+	}
 	
+	if (gameManager->GetKeyState('L'))
+	{
+		showFPS = !showFPS;
+		m_FPSText->SetEnabled(showFPS);
+		gameManager->SetKeyState('L', false);
+	}
+	
+	if (gameManager->GetKeyState((int)'9')) {
+		gameManager->FlipInvincible();  gameManager->SetKeyState('9', false);
+	}
+	if (gameManager->GetKeyState((int)'8')) {
+		gameManager->AddMoney();  gameManager->SetKeyState('8', false);
+	}
+	if (gameManager->GetKeyState((int)'7')) {
+		gameManager->UnlockAllGuns(); gameManager->SetKeyState('7', false);
+	}
+	if (gameManager->GetKeyState((int)'6')) {
+		gameManager->EndRound(); gameManager->SetKeyState('6', false);
+	}
+	if (gameManager->GetKeyState((int)'0')){
+		gameManager->MaxHealth(); gameManager->SetKeyState('0', false);
+	}
 
+	if (keyPressTimer <= 0)
+	{
+		//Make Sure This Is On The Bottom!!!!
+		keyPressTimer = DEFAULTKEYPRESST;
+	}
+	
 	//Render every frame and stop if anything goes wrong 
 	result = gameManager->Render();
 	if (!result)
@@ -207,7 +208,7 @@ void MyWindow::SetPauseMenu(bool value)
 
 void MyWindow::GameIsDone()
 {
-	m_done = true;
+	gameManager->GameEnd();
 }
 
 void MyWindow::ShowPlayerUI()
@@ -231,6 +232,14 @@ void MyWindow::SetOptionsMenu(bool val)
 	for (int i = 0; i < ARRAYSIZE(optionsMenu); i++)
 	{
 		optionsMenu[i]->SetEnabled(val);
+	}
+}
+
+void MyWindow::SetMainMenuForOptions(bool val)
+{
+	for (int i = 0; i < ARRAYSIZE(mainMenu); i++)
+	{
+		mainMenu[i]->SetEnabled(val);
 	}
 }
 
@@ -358,7 +367,7 @@ bool MyWindow::Initialize()
 
 	//Images
 	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
-	mainMenuBkrnd->SetSize(float2{ 1920, 1080 });
+	mainMenuBkrnd->SetSize(float2{static_cast<float>(screenW), static_cast<float>(screenH)});
 	mainMenuBkrnd->SetPos(float2{ 0.0f, 0.0f });
 	mainMenu[1] = mainMenuBkrnd;
 
@@ -402,7 +411,7 @@ bool MyWindow::Initialize()
 		optionsButton->m_OnMouseClick = [this]()
 		{
 			//Open Options Menu
-			HideMainMenu();
+			SetMainMenuForOptions(false);
 			SetOptionsMenu(true);
 		};
 		optionsButton->SetSize(float2{ 200, 50 });
@@ -490,6 +499,16 @@ bool MyWindow::Initialize()
 	}
 	#pragma endregion
 	pauseMenu[2] = mainMenuButton;
+
+	UIElement* pauseBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/pauseBkrnd.dds", this->GetDevice());
+	#pragma region Shop_Bkrnd
+	if (pauseBkrnd)
+	{
+		pauseBkrnd->SetSize(static_cast<LONG>(screenW), static_cast<LONG>(screenH));
+	}
+	#pragma endregion
+
+	pauseMenu[3] = pauseBkrnd;
 	#pragma endregion
 
 	#pragma region Options_Menu
@@ -519,6 +538,7 @@ bool MyWindow::Initialize()
 	}
 	#pragma endregion
 
+	//Volume Down Button
 	optionsMenu[3] = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), F_ARIAL, "-");
 	#pragma region Volume_Down_Button
 	ButtonElement* downButton = static_cast<ButtonElement*>(optionsMenu[3]);
@@ -537,6 +557,7 @@ bool MyWindow::Initialize()
 	}
 	#pragma endregion
 
+	//Options Back Button
 	optionsMenu[4] = gameManager->GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, this->GetDevice(), F_ARIAL, "Back");
 	#pragma region Options_Back_Button
 	ButtonElement* backButton = static_cast<ButtonElement*>(optionsMenu[4]);
@@ -551,7 +572,7 @@ bool MyWindow::Initialize()
 			//Volume Down
 			if (this->mainMenu)
 			{
-				ShowMainMenu();
+				SetMainMenuForOptions(true);
 				this->mainMenuBool = false;
 			}
 			else if (this->pauseMenu)
@@ -565,15 +586,39 @@ bool MyWindow::Initialize()
 	}
 	#pragma endregion
 
+	//Options Backround
+	optionsMenu[5] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/optionsBackround.dds", this->GetDevice());
+
 	#pragma endregion
 
 	#pragma region Player_UI
+	//Enemy Text
 	std::string EnemyTxt = "Enemies: " + std::to_string(gameManager->GetEnemies());
-	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_COMICSANS, EnemyTxt);
+	gameManager->m_scoreText = playerUI[0] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 64,0 }, F_COMICSANS, EnemyTxt);
+	
+	//Enemy Image
+	playerUI[6] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/EnemyUI.dds", this->GetDevice());
+	if (playerUI[6])
+	{
+		playerUI[6]->SetSize(100, 100);
+	}
 
+	//Health Text
 	std::string healthTxt = "Health: " + std::to_string(gameManager->GetPlayer()->GetHealth());
-	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,50 }, F_COMICSANS, healthTxt);
+	gameManager->m_healthText = playerUI[1] = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 64,50 }, F_COMICSANS, healthTxt);
 
+	//Health Image
+	playerUI[7] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,42 }, "DrawingStuff/HealthUI.dds", this->GetDevice());
+	if (playerUI[7])
+	{
+		playerUI[7]->SetSize(42, 42);
+	}
+
+	playerUI[8] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/Crosshair.dds", this->GetDevice());
+	if (playerUI[8])
+	{
+		playerUI[8]->SetPos(((screenW * 0.5f) - (playerUI[8]->GetSize().x * 0.5f)) - 15, ((screenH * 0.5f) - (playerUI[8]->GetSize().y * 0.5f)) - 5);
+	}
 	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0, 100 }, F_ARIAL, "Current Weapon: ");
 
 	std::string timerTxt = "Total Time: ";
@@ -588,7 +633,7 @@ bool MyWindow::Initialize()
 	const char* tempT100 = numToChr.c_str();
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 
-	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1800, 0 }, F_ARIAL, "poopoo");
+	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1000, 0 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 980 }, F_ARIAL, "");
 
@@ -618,8 +663,8 @@ void MyWindow::Render()
 
 	ZeroMemory(&msg, sizeof(MSG));
 	
-	m_done = false;
-	while (!m_done)
+	gameManager->isDone = false;
+	while (!gameManager->isDone)
 	{
 		//Read in any messages 
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))

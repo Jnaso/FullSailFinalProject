@@ -8,6 +8,12 @@ GameManager::GameManager()
 	//myEnemyManager = new EnemyManager();
 }
 
+
+void GameManager::GameEnd()
+{
+	isDone = true;
+}
+
 GameManager::~GameManager()
 {
 }
@@ -506,8 +512,27 @@ void GameManager::Update(float delta, float total)
 			if (!m_YouLose)
 			{
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
+				paused = true;
 			}
-			myPlayer->SetHealth(0);
+			if (!m_youLoseQuitButton)
+			{
+				m_youLoseQuitButton = GetUIManager()->CreateButton(RECT{ 0,0,0,0 }, true, true, float2{ 0,0 }, GetGraphicsManager()->GetGraphicsEngine()->GetDevice(), F_ARIAL, "QUIT");
+				ButtonElement* lqb = static_cast<ButtonElement*>(m_youLoseQuitButton);
+				if (lqb)
+				{
+					lqb->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+					lqb->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+					lqb->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+					lqb->m_OnMouseClick = [this]()
+					{
+						GameEnd();
+						
+					};
+					lqb->SetSize(100, 50);
+					lqb->SetPos((screenW * 0.5f) - (lqb->GetSize().x * 0.5f), (screenH * 0.5f) - (lqb->GetSize().y * 0.5f));
+				}
+			}
+			GetPlayer()->SetHealth(0);
 		}
 		if (GetHealth() >= 0 && GetHealth() <= 100)
 		{
@@ -633,8 +658,12 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
 	if (tempImg)
 	{
-		tempImg->SetSize(1920, 1080);
+
+		tempImg->SetSize(screenW, screenH);
 	}
+
+	screenW = windowWidth;
+	screenH = windowHeight;
 
 	return result;
 }

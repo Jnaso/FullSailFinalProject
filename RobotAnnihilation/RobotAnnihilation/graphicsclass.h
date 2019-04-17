@@ -22,6 +22,7 @@
 #include "Bullet.h"
 #include "Target.h"
 #include "Frustum.h"
+#include "BombEnemy.h"
 #include <string.h>
 
 //Full screen flag 
