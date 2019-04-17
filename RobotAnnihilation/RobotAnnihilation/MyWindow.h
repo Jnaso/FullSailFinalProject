@@ -51,14 +51,16 @@ private:
 	UIElement* mainMenu[5];
 	UIElement* playerUI[10];
 	UIElement* pauseMenu[4];
-	UIElement* optionsMenu[6];
+	UIElement* optionsMenu[7];
+	
 	//0 = Main Options Text
 	//1 = Volume Text
 	//2 = Volume Up Button
 	//3 = Volume Down Button
 	//4 = Back Button
 	//5 = Options Backround
-
+	std::string volumeTxt;
+	int volume = 0;
 	//UI Functions For Function Pointers
 private:
 
@@ -74,6 +76,8 @@ private:
 
 	void SetOptionsMenu(bool val);
 	void SetMainMenuForOptions(bool val);
+
+	void UpdateVolumeText();
 
 	void ShowFPS();
 
