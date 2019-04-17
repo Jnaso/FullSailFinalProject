@@ -213,18 +213,20 @@ void GameManager::Update(float delta, float total)
 			{
 				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f && bullets[i]->GetTag() == "Player")
 				{
-					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(1), delta))
 					{
 						bullets[i]->SetDestroy();
-						
+						myEnemyManager->AddSound(new Sound((char*)"Assets/Headshot.wav", -1000));
+						myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+						myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
 						if (myPlayer->GetTimeDamage() > 0)
 						{
-							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f * 1.3f, Target::DamageType::Gun, window);
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						else
 						{
-							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.3f, Target::DamageType::Gun, window);						
 							myEnemyManager->GetEnemies()[j]->SetHurt();
 						}
 						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
@@ -235,7 +237,47 @@ void GameManager::Update(float delta, float total)
 							int chance = rand() % 100;
 							if (chance < 25)
 							{
-								
+								if (chance < 10)
+								{
+									SpawnDamagePickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+								}
+								else
+								{
+									SpawnHealthPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
+								}
+							}
+							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency() * 1.5f);
+							myEnemyManager->GetEnemies()[j]->SetDestroy();
+						}
+					}
+					else if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
+					{
+						bullets[i]->SetDestroy();
+						
+						if (myPlayer->GetTimeDamage() > 0)
+						{
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Gun, window);
+							myEnemyManager->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
+							myEnemyManager->GetEnemies()[j]->SetHurt();
+						}
+						else
+						{
+							myEnemyManager->GetEnemies()[j]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Gun, window);
+							myEnemyManager->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
+							myEnemyManager->GetEnemies()[j]->SetHurt();
+						}
+						if (myEnemyManager->GetEnemies()[j]->GetHealth() <= 0)
+						{
+							myEnemyManager->AddSound(new Sound((char*)"Assets/Explosion.wav", -1000));
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+							myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
+							int chance = rand() % 100;
+							if (chance < 25)
+							{								
 								if (chance < 10)
 								{
 									SpawnDamagePickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
@@ -390,8 +432,6 @@ void GameManager::Update(float delta, float total)
 
 						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
 
-						cout << myPlayer->GetPoints();
-
 					}
 					float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
 					dir.normalize();
@@ -466,9 +506,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	myPlayer = new Player();
 	myPlayer->Initialize("Assets/Teddy_Idle.mesh", myDX->GetDevice());
-	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0, true);
-	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1, true);
-	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2, true);
+	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
+	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
+	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
 	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -0.50, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(50);

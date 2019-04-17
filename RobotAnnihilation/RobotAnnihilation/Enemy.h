@@ -29,7 +29,7 @@ public:
 	bool Destroy();
 	void SetDestroy();
 	virtual bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position) { return true; };
-	virtual void Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice) {};
+	virtual void Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window) {};
 
 
 	float GetHealth() { return health; }

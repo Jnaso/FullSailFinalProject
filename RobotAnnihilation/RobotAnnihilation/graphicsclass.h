@@ -13,6 +13,7 @@
 #include "Pickup.h"
 #include "Gun.h"
 #include "Camera.h"
+#include "RangedEnemy.h"
 #include "InputManager.h"
 #include "ShaderManager.h"
 #include "DebugCamera.h"

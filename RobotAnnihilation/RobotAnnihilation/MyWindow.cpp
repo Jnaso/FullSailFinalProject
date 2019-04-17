@@ -45,8 +45,7 @@ bool MyWindow::Run()
 		{
 			showFPS = !showFPS;
 			m_FPSText->SetEnabled(showFPS);
-		}
-		
+		}		
 
 		if (gameManager->GetKeyState((int)'0')) {
 			gameManager->MaxHealth();

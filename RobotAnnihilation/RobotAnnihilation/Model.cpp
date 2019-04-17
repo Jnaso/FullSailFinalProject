@@ -39,7 +39,7 @@ void Model::ReadMeshFile(const char * filePath, ID3D11Device* device)
 		file.read((char*)&ObjectVerts[i].weights.x, sizeof(float));
 		file.read((char*)&ObjectVerts[i].weights.y, sizeof(float));
 		file.read((char*)&ObjectVerts[i].weights.z, sizeof(float));
-		file.read((char*)&ObjectVerts[i].weights.z, sizeof(float));
+		file.read((char*)&ObjectVerts[i].weights.w, sizeof(float));
 	}
 
 	file.read((char*)&Count, sizeof(uint32_t));

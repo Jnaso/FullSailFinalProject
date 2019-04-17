@@ -19,6 +19,7 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 	GetPhysicsComponent()->SetDamping(0.99f);
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.8f);
+	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z }, 0.5f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = .6f;
@@ -30,10 +31,11 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 	return true;
 }
 
-void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
+void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
 	GameObject::Update(delta);
 	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
 
 	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
 
@@ -41,7 +43,7 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 
 	if (startTime > 5.0f)
 	{
-		Attack(myPlayer, bullets, myDevice);
+		Attack(myPlayer, bullets, myDevice, window);
 	}
 
 	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
@@ -57,7 +59,7 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 
 }
 
-void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice)
+void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
 	if (timeGetTime() >= timeBetweenAttacks + 3000)
 	{
@@ -73,6 +75,9 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 		bullets.push_back(new Bullet(1.0f));
 		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + .5f, GetPhysicsComponent()->GetPosition().z };
 		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Sphere.mesh", forward, playerPos, "Enemy", 1.5f);
+		AddSound(new Sound((char*)"Assets/EnemyShoot.wav", 0));
+		GetSounds()[GetSounds().size() - 1]->Initialize(window);
+		GetSounds()[GetSounds().size() - 1]->PlayWaveFile();
 		timeBetweenAttacks = timeGetTime();
 	}
 	
