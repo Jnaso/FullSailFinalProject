@@ -225,7 +225,7 @@ void GameManager::Update(float delta, float total)
 		{
 			ShootBullets();
 		}
-		if (myPlayer->GetPhysicsComponent()->GetPosition().y <= 1.2f && myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
+		if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
 		{
 			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 2.0f, 0.0f });
 			myPlayer->setJumping(true);
@@ -598,7 +598,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
 	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 });
-	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.5, 0 });
+	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -2.0, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(100);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(1);

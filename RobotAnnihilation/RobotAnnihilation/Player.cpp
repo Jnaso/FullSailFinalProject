@@ -92,11 +92,11 @@ void Player::Update(float delta)
 
 	if (GetPhysicsComponent()->GetPosition().y < 1.0f)
 	{
+		if (Jumping)
+		{
+			Jumping = false;
+		}
 		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
-	}
-	if (GetPhysicsComponent()->GetPosition().y < 1.0f && Jumping)
-	{
-		Jumping = false;
 	}
 
 	if (currentLowerAnimation != nullptr && currentUpperAnimation != nullptr)
