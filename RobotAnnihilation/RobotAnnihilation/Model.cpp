@@ -80,43 +80,22 @@ void Model::ReadMeshFile(const char * filePath, ID3D11Device* device)
 		}
 		wchar_t* dest = new wchar_t[newFilePath.size()];
 		mbstowcs(dest, (const char*)&newFilePath, newFilePath.size());
-		//HRESULT hr = CreateWICTextureFromFile(device, dest, &res, &srv);
 
 		if (i == 0)
 		{
-			hr = CreateWICTextureFromFile(device, dest, &res, &Diffuse);
-			if (hr == S_OK)
-			{
-				res->Release();
-				continue;
-			}
+			hr = CreateDDSTextureFromFile(device, dest, nullptr, &Diffuse);
 		}
 		if (i == 1)
 		{
-			hr = CreateWICTextureFromFile(device, dest, &res, &Emissive);
-			if (hr == S_OK)
-			{
-				res->Release();
-				continue;
-			}
+			hr = CreateDDSTextureFromFile(device, dest, nullptr, &Emissive);
 		}
 		if (i == 2)
 		{
-			hr = CreateWICTextureFromFile(device, dest, &res, &Specular);
-			if (hr == S_OK)
-			{
-				res->Release();
-				continue;
-			}
+			hr = CreateDDSTextureFromFile(device, dest, nullptr, &Specular);
 		}
 		if (i == 3)
 		{
-			hr = CreateWICTextureFromFile(device, dest, &res, &Normal);
-			if (hr == S_OK)
-			{
-				res->Release();
-				continue;
-			}
+			hr = CreateDDSTextureFromFile(device, dest, nullptr, &Normal);
 		}
 		delete dest;
 	}

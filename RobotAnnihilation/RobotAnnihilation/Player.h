@@ -28,6 +28,7 @@ protected:
 	bool collidingB;
 	bool collidingL;
 	bool collidingR;
+	bool Jumping = false;
 
 	unsigned int CurrentPoints = 0;
 
@@ -67,6 +68,8 @@ public:
 	bool MoveBackward();
 	bool MoveLeft();
 	bool MoveRight();
+	bool isJumping() { return Jumping; }
+	void setJumping(bool jump) { Jumping = jump; }
 
 	void SetForward(bool f);
 	void SetBackward(bool f);

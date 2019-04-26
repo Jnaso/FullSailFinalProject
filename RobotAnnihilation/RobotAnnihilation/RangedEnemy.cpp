@@ -74,7 +74,7 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 		}
 		bullets.push_back(new Bullet(1.0f));
 		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + .5f, GetPhysicsComponent()->GetPosition().z };
-		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Sphere.mesh", forward, playerPos, "Enemy", 1.5f);
+		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Bullet.mesh", forward, playerPos, "Enemy", 1.5f);
 		AddSound(new Sound((char*)"Assets/EnemyShoot.wav", 0));
 		GetSounds()[GetSounds().size() - 1]->Initialize(window);
 		GetSounds()[GetSounds().size() - 1]->PlayWaveFile();

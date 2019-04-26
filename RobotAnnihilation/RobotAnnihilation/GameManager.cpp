@@ -99,7 +99,7 @@ void GameManager::ShootBullets()
 		float3 forward = float3{ myGraphics->GetCamera()->GetCamDirection().m128_f32[0], myGraphics->GetCamera()->GetCamDirection().m128_f32[1], myGraphics->GetCamera()->GetCamDirection().m128_f32[2] };
 		float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.5f, myPlayer->GetPhysicsComponent()->GetPosition().z };
 		bullets.push_back(new Bullet());
-		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Sphere.mesh", forward * -1, playerPos, "Player");
+		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Bullet.mesh", forward * -1, playerPos, "Player");
 		myPlayer->AddSound(new Sound((char*)"Gunshot.wav"));
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
@@ -224,6 +224,11 @@ void GameManager::Update(float delta, float total)
 		if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
 		{
 			ShootBullets();
+		}
+		if (myPlayer->GetPhysicsComponent()->GetPosition().y <= 1.2f && myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
+		{
+			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 2.0f, 0.0f });
+			myPlayer->setJumping(true);
 		}
 		myPlayer->Update(delta);
 
@@ -592,9 +597,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddAninimation("Assets/Teddy_Idle.anim", myDX->GetDevice(), 0);
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
 	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
-	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 1.5, 0 });
-	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -0.50, 0 });
-	myPlayer->GetPhysicsComponent()->SetMass(50);
+	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 });
+	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.5, 0 });
+	myPlayer->GetPhysicsComponent()->SetMass(100);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(1);
 	Gun* Pistol = new Gun();
