@@ -452,9 +452,8 @@ void GameManager::Update(float delta, float total)
 				float3 dot = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
 				dot.normalize();
 				float result = DotProduct(dot, myPlayer->GetPhysicsComponent()->GetForward() * -1);
-				if (result > 0.7f)
-				{
-				
+				if (result > 0.6f)
+				{				
 					if (myPlayer->GetTimeDamage() > 0)
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Melee, window);
