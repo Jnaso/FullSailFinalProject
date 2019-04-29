@@ -35,11 +35,14 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 {
 	if (PlayOnce)
 	{
-		if (currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration)
+		if (!Dead)
 		{
-			currentAnimation->SetFrameTime(delta);
-			currentAnimation = PrevAnimation;
-			PlayOnce = false;
+			if (currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration)
+			{
+				currentAnimation->SetFrameTime(delta);
+				currentAnimation = PrevAnimation;
+				PlayOnce = false;
+			}
 		}
 	}
 	GameObject::Update(delta);
@@ -94,4 +97,12 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 		timeBetweenAttacks = timeGetTime();
 	}
 	
+}
+
+void RangedEnemy::Death()
+{
+	Dead = true;
+	PlayOnce = true;
+	PrevAnimation = currentAnimation;
+	currentAnimation = objectAnimations[2];
 }

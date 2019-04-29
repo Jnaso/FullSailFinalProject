@@ -327,7 +327,7 @@ void Player::SetRight(bool f)
 	collidingR = f;
 }
 
-void Player::MeleeAttack(int index)
+void Player::playOnce(int index)
 {
 	PlayOnce = true;
 	PrevUpperAnimation = currentUpperAnimation;

@@ -237,7 +237,7 @@ void GameManager::Update(float delta, float total)
 		}
 		if (myInput->GetCurrMouseState().rgbButtons[1])
 		{
-			myPlayer->MeleeAttack(2);
+			myPlayer->playOnce(2);
 		}
 		if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
 		{
