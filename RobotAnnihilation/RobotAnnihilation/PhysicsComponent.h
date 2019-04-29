@@ -10,6 +10,7 @@ class PhysicsComponent
 	float inverseMass;
 	float3 forceAccum;
 	float3 forward;
+	float3x3 rotation;
 
 	float lifeTime;
 
@@ -20,8 +21,12 @@ public:
 	~PhysicsComponent();
 	float3 GetPosition();
 	void SetPosition(float3 newPos);
+	float3x3 GetRotation();
+	void SetRotation(float3x3 newRot);
+	void AddPosition(float3 newPos);
 	float3 GetVelocity();
 	void SetVelocity(float3 newVel);
+	void AddVelocity(float3 newVel);
 	float3 GetForward();
 	void SetForward(float3 newFor);
 	float3 GetAccel();

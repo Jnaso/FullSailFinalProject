@@ -690,3 +690,32 @@ inline int Pth(int x, int y)
 {
 	return sqrt(pow(x, 2) + pow(y, 2));
 }
+
+inline float3x3 XMMatrixtoFloat3x3(XMMATRIX input)
+{
+	float3x3 result;
+	for (int i = 0; i < 3; i++)
+	{
+		result[i].x = input.r[i].m128_f32[0];
+		result[i].y = input.r[i].m128_f32[1];
+		result[i].z = input.r[i].m128_f32[2];
+	}
+	return result;
+}
+
+inline XMMATRIX Float3x3toXMMatrix(float3x3 input)
+{
+	XMMATRIX result = XMMatrixIdentity();
+	for (int i = 0; i < 3; i++)
+	{
+		result.r[i].m128_f32[0] = input[i].x;
+		result.r[i].m128_f32[1] = input[i].y;
+		result.r[i].m128_f32[2] = input[i].z;
+		//result.r[i].m128_f32[3] = 0.0f;
+	}
+	//result.r[4].m128_f32[0] = 0.0f;
+	//result.r[4].m128_f32[1] = 0.0f;
+	//result.r[4].m128_f32[2] = 0.0f;
+	//result.r[4].m128_f32[3] = 1.0f;
+	return result;
+}

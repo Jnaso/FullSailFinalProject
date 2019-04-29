@@ -175,6 +175,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BombEnemy.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BombEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />

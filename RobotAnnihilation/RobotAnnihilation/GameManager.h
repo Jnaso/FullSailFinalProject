@@ -26,9 +26,6 @@ class GameManager
 	char displayString[65];
 	char displayString1[65];
 	char displayString2[65];
-	
-
-	
 
 	bool betweenRounds = false;
 	float countDown = 0.0f;
@@ -70,6 +67,7 @@ public:
 	UIElement* m_timerText;
 	UIElement* m_damagetimerText;
 	UIElement* m_Currency;
+	UIElement* m_Ammo;
 
 	UIElement* m_YouLose;
 	UIElement* m_youLoseQuitButton;
@@ -87,6 +85,7 @@ public:
 	void UpdateTimerText(float time);
 	void UpdateCurrencyText();
 	void UpdateDamageTimerText();
+	void UpdateAmmoText();
 	void SetLowHealthImage(bool val);
 	
 	InputManager* GetInputManager();
@@ -117,12 +116,18 @@ public:
 			Gun* MachineGun = new Gun();
 			MachineGun->SetGunClass(Gun::MACHINE);
 			MachineGun->SetFireRate(0.3f);
-			MachineGun->SetDamageAmount(35);
+			MachineGun->SetDamageAmount(45);
+			MachineGun->SetMaxClipAmmo(30);
+			//MachineGun->SetMaxReserveAmmo(100);
+			MachineGun->SetReloadTime(1.0f);
 			myPlayer->AddGun(MachineGun);
 			Gun* SubMachineGun = new Gun();
 			SubMachineGun->SetGunClass(Gun::SUBMACHINE);
 			SubMachineGun->SetFireRate(0.25f);
 			SubMachineGun->SetDamageAmount(30);
+			SubMachineGun->SetMaxClipAmmo(35);
+			//SubMachineGun->SetMaxReserveAmmo(100);
+			SubMachineGun->SetReloadTime(1.0f);
 			myPlayer->AddGun(SubMachineGun);
 		}
 		else if (myPlayer->GetCurrentGuns().size() <= 1 && myPlayer->GetCurrentGuns()[2]->GetGunClass() == Gun::GunClass::MACHINE)
@@ -131,6 +136,9 @@ public:
 			SubMachineGun->SetGunClass(Gun::SUBMACHINE);
 			SubMachineGun->SetFireRate(0.25f);
 			SubMachineGun->SetDamageAmount(30);
+			SubMachineGun->SetMaxClipAmmo(35);
+			//SubMachineGun->SetMaxReserveAmmo(250);
+			SubMachineGun->SetReloadTime(0.5f);
 			myPlayer->AddGun(SubMachineGun);
 		}
 		else if (myPlayer->GetCurrentGuns().size() <= 1 && myPlayer->GetCurrentGuns()[2]->GetGunClass() == Gun::GunClass::SUBMACHINE)
@@ -139,6 +147,9 @@ public:
 			MachineGun->SetGunClass(Gun::MACHINE);
 			MachineGun->SetFireRate(0.3f);
 			MachineGun->SetDamageAmount(35);
+			MachineGun->SetMaxClipAmmo(30);
+			//MachineGun->SetMaxReserveAmmo(300);
+			MachineGun->SetReloadTime(1.5f);
 			myPlayer->AddGun(MachineGun);
 		}
 	}

@@ -227,6 +227,8 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 	}
 
 	SetCharacterPosition(time, desiredCharDir, player);
+	myPlayer->GetPhysicsComponent()->AddPosition(float3{ player.r[3].m128_f32[0], player.r[3].m128_f32[1], player.r[3].m128_f32[2] });
+	myPlayer->GetPhysicsComponent()->SetRotation(XMMatrixtoFloat3x3(player));
 }
 
 //Move the player's based 

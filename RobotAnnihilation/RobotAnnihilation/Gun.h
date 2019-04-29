@@ -10,7 +10,13 @@ public:
 protected:
 	float FireRate;
 	float DamageAmount;
-	float AmmoCount;
+	int CurrentAmmo;
+	int MaxClipAmmo;
+	//int MaxReserve;
+	//int ReserveAmmo;
+	float ReloadTime;
+	bool Reloading;
+	float TimeLeftReloading;
 
 	float3 ShootPos;
 
@@ -31,10 +37,31 @@ public:
 	float GetDamageAmount() { return DamageAmount; };
 	void SetDamageAmount(float damage) { DamageAmount = damage; };
 
+	int GetCurrentAmmo() { return CurrentAmmo; }
+	void SetCurrentAmmo(int ammo) { CurrentAmmo = ammo; }
+	void ShootBullet() { CurrentAmmo--; }
+	bool isReloading() { return Reloading; }/*
+
+	int GetReserveAmmo() { return ReserveAmmo; }
+	void SetReserveAmmo(int reserve) { ReserveAmmo = reserve; }
+
+	int GetMaxReserveAmmo() { return MaxReserve; }
+	void SetMaxReserveAmmo(int reserve) { ReserveAmmo = reserve; MaxReserve = reserve; }*/
+
+	int GetMaxClipAmmo() { return MaxClipAmmo; }
+	void SetMaxClipAmmo(int clip) {
+		CurrentAmmo = clip;
+		MaxClipAmmo = clip; }
+
+	float GetReloadTime() { return ReloadTime; }
+	void SetReloadTime(float reload) { ReloadTime = reload; }
+
 	float3 GetShootPos() { return ShootPos; };
 	void SetShootPos(float3 newPos) { ShootPos = newPos; };
 
 	GunClass GetGunClass() { return gunClass; };
 	void SetGunClass(GunClass newGun) { gunClass = newGun; };
+
+	void Reload();
 };
 

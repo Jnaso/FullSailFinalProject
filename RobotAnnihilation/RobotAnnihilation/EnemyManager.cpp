@@ -9,48 +9,48 @@ EnemyManager::EnemyManager()
 void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
-	enemyCount = 15;
+	enemyCount = 5;
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		SpawnPoints[i] = float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 0.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f };
 	}
 
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		
-		if (rand() % 8 == 0)
-		{
-			myEnemies.push_back(new BombEnemy());
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/BombEnemy.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/BombEnemy.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
-		}
-		else if(rand() % 5 == 0)
-		{
-			myEnemies.push_back(new RangedEnemy());
-			//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-			//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
-		}
-		else
-		{
-			myEnemies.push_back(new Target());
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotMove.anim", myDevice, 1);
-			myEnemies[myEnemies.size() - 1]->SetAnimation(1);
-		}
-		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
-		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
-		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
-		myEnemies[myEnemies.size() - 1]->SetCurrency(10);
-		//currentEnemies++;
-		TotalEnemiesSpawned++;
-	}
-
+	//for (unsigned int i = 0; i < 4; i++)
+	//{
+	//	
+	//	if (rand() % 8 == 0)
+	//	{
+	//		myEnemies.push_back(new BombEnemy());
+	//		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/BombEnemy.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+	//		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/BombEnemy.anim", myDevice, 0);
+	//		myEnemies[myEnemies.size() - 1]->SetAnimation(0);
+	//	}
+	//	else if(rand() % 5 == 0)
+	//	{
+	//		myEnemies.push_back(new RangedEnemy());
+	//		//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+	//		//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
+	//		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", SpawnPoints[rand() % 4]);// { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+	//		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
+	//		myEnemies[myEnemies.size() - 1]->SetAnimation(0);
+	//	}
+	//	else
+	//	{
+	//		myEnemies.push_back(new Target());
+	//		myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RobotAttack.mesh", SpawnPoints[rand() % 4]);
+	//		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotAttack.anim", myDevice, 0);
+	//		myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RobotMove.anim", myDevice, 1);
+	//		myEnemies[myEnemies.size() - 1]->SetAnimation(1);
+	//	}
+	//	myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({0, -1, 0});
+	//	myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
+	//	myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
+	//	myEnemies[myEnemies.size() - 1]->SetCurrency(10);
+	//	//currentEnemies++;
+	//	TotalEnemiesSpawned++;
+	//}
+	timeBetween = -2.5f;
 	this->myDevice = myDevice;
 }
 
@@ -116,7 +116,8 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel = CalculateSeperation(*currEnemy);
 			accel += CalculateObstacleSeperation(*currEnemy, obstacles);
 			accel *= delta;
-			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
 
@@ -129,6 +130,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel += CalculateObstacleSeperation(*currBomb, obstacles);
 			accel *= delta;
 			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
 

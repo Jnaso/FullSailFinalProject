@@ -666,12 +666,14 @@ bool MyWindow::Initialize()
 
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1800, 50 }, F_ARIAL, "");
 
-	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 980 }, F_ARIAL, "");
+	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 900 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
 
 	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
-	#pragma endregion
+	
+	playerUI[10] = gameManager->m_Ammo = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 1700, 1000 }, F_ARIAL, "");
+#pragma endregion
 
 #pragma endregion
 	

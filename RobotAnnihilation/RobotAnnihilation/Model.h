@@ -1,6 +1,6 @@
 #pragma once
 #include "MathDefines.h"
-#include "WICTextureLoader.h"
+#include "DDSTextureLoader.h"
 #include <fstream>
 class Model
 {

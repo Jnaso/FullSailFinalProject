@@ -8,6 +8,7 @@ PhysicsComponent::PhysicsComponent()
 	velocity = float3{ 0, 0, 0 };
 	acceleration = float3{ 0, 0, 0 };
 	forward = float3{ 0, 0, 0 };
+	rotation = float3x3{ 0,0,0, 0,0,0, 0,0,0 };
 	inverseMass = 0;
 	lifeTime = 0;
 	clearAccumulator();
@@ -28,6 +29,21 @@ void PhysicsComponent::SetPosition(float3 newPos)
 	position = newPos;
 }
 
+float3x3 PhysicsComponent::GetRotation()
+{
+	return rotation;
+}
+
+void PhysicsComponent::SetRotation(float3x3 newRot)
+{
+	rotation = newRot;
+}
+
+void PhysicsComponent::AddPosition(float3 newPos)
+{
+	position += newPos;
+}
+
 float3 PhysicsComponent::GetVelocity()
 {
 	return velocity;
@@ -36,6 +52,11 @@ float3 PhysicsComponent::GetVelocity()
 void PhysicsComponent::SetVelocity(float3 newVel)
 {
 	velocity = newVel;
+}
+
+void PhysicsComponent::AddVelocity(float3 newVel)
+{
+	velocity += newVel;
 }
 
 float3 PhysicsComponent::GetForward()
@@ -70,12 +91,16 @@ void PhysicsComponent::Update(float delta)
 	velocity.addScaledVec(resultingAcceleration, delta);
 
 	velocity = velocity * powf(damping, delta);
-	//clearAccumulator();
+	clearAccumulator();
 	if (position.y < 0)
 	{
 		position.y = 0;
 	}
 	lifeTime -= delta;
+	if (isnan(position.y))
+	{
+		position.y = 1;
+	}
 }
 
 void PhysicsComponent::SetMass(float val)
