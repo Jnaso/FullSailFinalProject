@@ -74,6 +74,7 @@ void BombEnemy::Attack(Player * myPlayer, std::vector<Enemy*> &myEnemies, HWND w
 		{
 			float3 force = GetPhysicsComponent()->GetPosition() - myEnemies[i]->GetPhysicsComponent()->GetPosition();
 			myEnemies[i]->GetPhysicsComponent()->SetPosition({ (myEnemies[i]->GetPhysicsComponent()->GetPosition().x + force.x * -1.0f), myEnemies[i]->GetPhysicsComponent()->GetPosition().y, (myEnemies[i]->GetPhysicsComponent()->GetPosition().z + force.z * -1.0f)});
+			//myEnemies[i]->GetPhysicsComponent()->AddVelocity({ force.x, force.y, force.z });
 			myEnemies[i]->SubHealth(10, Enemy::DamageType::Gun, window);
 		}
 	}

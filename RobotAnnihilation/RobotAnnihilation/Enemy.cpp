@@ -23,8 +23,11 @@ void Enemy::SubHealth(float newHealth, DamageType dmg, HWND window)
 	{
 		if (timeBetweenDamage <= 0)
 		{
+			this->AddSound(new Sound((char*)"Assets/HitSound.wav", -1000));
+			this->GetSounds()[this->GetSounds().size() - 1]->Initialize(window);
+			this->GetSounds()[this->GetSounds().size() - 1]->PlayWaveFile();
 			health -= newHealth;
-			timeBetweenDamage = 0.5f;
+			timeBetweenDamage = 0.25f;
 		}
 	}
 	else if (dmg == DamageType::Gun)

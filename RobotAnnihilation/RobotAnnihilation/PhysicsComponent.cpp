@@ -56,7 +56,7 @@ void PhysicsComponent::SetVelocity(float3 newVel)
 
 void PhysicsComponent::AddVelocity(float3 newVel)
 {
-	velocity = velocity + newVel;
+	velocity += newVel;
 }
 
 float3 PhysicsComponent::GetForward()

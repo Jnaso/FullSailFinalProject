@@ -42,6 +42,13 @@ void GameManager::UpdateHealthText()
 	temp->SetText(healthText);
 }
 
+void GameManager::UpdateAmmoText()
+{
+	std::string ammoText = "Current Ammo: " + std::to_string(myPlayer->GetCurrentGun()->GetCurrentAmmo());
+	TextElement* temp = dynamic_cast<TextElement*>(m_Ammo);
+	temp->SetText(ammoText);
+}
+
 void GameManager::UpdateWeaponText()
 {
 	TextElement* temp = static_cast<TextElement*>(m_weapon);
@@ -94,17 +101,27 @@ Graphics * GameManager::GetGraphicsManager()
 
 void GameManager::ShootBullets()
 {
-	if (myPlayer->getTimeLeft() <= 0)
+	if (myPlayer->GetCurrentGun()->GetCurrentAmmo() > 0 && !myPlayer->GetCurrentGun()->isReloading())
 	{
-		float3 forward = float3{ myGraphics->GetCamera()->GetCamDirection().m128_f32[0], myGraphics->GetCamera()->GetCamDirection().m128_f32[1], myGraphics->GetCamera()->GetCamDirection().m128_f32[2] };
-		float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.5f, myPlayer->GetPhysicsComponent()->GetPosition().z };
-		bullets.push_back(new Bullet());
-		bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Bullet.mesh", forward * -1, playerPos, "Player");
-		myPlayer->AddSound(new Sound((char*)"Gunshot.wav"));
+		if (myPlayer->getTimeLeft() <= 0)
+		{
+			float3 forward = float3{ myGraphics->GetCamera()->GetCamDirection().m128_f32[0], myGraphics->GetCamera()->GetCamDirection().m128_f32[1], myGraphics->GetCamera()->GetCamDirection().m128_f32[2] };
+			float3 playerPos = { myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y + 2.5f, myPlayer->GetPhysicsComponent()->GetPosition().z };
+			bullets.push_back(new Bullet());
+			bullets[bullets.size() - 1]->Initialize(myDX->GetDevice(), "Assets/Bullet.mesh", forward * -1, playerPos, "Player");
+			myPlayer->AddSound(new Sound((char*)"Gunshot.wav"));
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
+			myPlayer->SetTimeLeft(myPlayer->GetCurrentGun()->GetFireRate());
+			myPlayer->GetCurrentGun()->ShootBullet();
+		}
+	}
+	/*else if (myPlayer->GetCurrentGun()->GetCurrentAmmo() <= 0)
+	{
+		myPlayer->AddSound(new Sound((char*)"Assets/NoAmmo.wav"));
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
 		myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
-		myPlayer->SetTimeLeft(myPlayer->GetCurrentGun()->GetFireRate());
-	}
+	}*/
 }
 
 void GameManager::SpawnHealthPickup(float3 pos)
@@ -225,12 +242,25 @@ void GameManager::Update(float delta, float total)
 		{
 			ShootBullets();
 		}
+		if (myInput->GetKeyState('R') && myPlayer->GetCurrentGun()->GetCurrentAmmo() < myPlayer->GetCurrentGun()->GetMaxClipAmmo())
+		{
+			myPlayer->GetCurrentGun()->Reload();
+			myPlayer->AddSound(new Sound((char*)"Assets/Reload.wav", 0));
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
+			myInput->SetKeyState('R', false);
+		}
 		if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
 		{
-			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 2.0f, 0.0f });
+			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
 			myPlayer->setJumping(true);
 		}
 		myPlayer->Update(delta);
+		if (myPlayer->GetCurrentGun()->isReloading())
+			myPlayer->GetCurrentGun()->Update(delta);
+		if (!myPlayer->GetCurrentGun()->isReloading() && myPlayer->GetCurrentGun()->GetCurrentAmmo() <= 0)
+			myPlayer->GetCurrentGun()->Reload();
+
 
 		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice(), window);
 
@@ -452,18 +482,23 @@ void GameManager::Update(float delta, float total)
 				float3 dot = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
 				dot.normalize();
 				float result = DotProduct(dot, myPlayer->GetPhysicsComponent()->GetForward() * -1);
-				if (result > 0.6f)
-				{				
+				if (result > 0.5f)
+				{
 					if (myPlayer->GetTimeDamage() > 0)
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Target::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Target::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
 					{
+						myEnemyManager->AddSound(new Sound((char*)"Assets/Explosion.wav", -1000));
+						myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->Initialize(window);
+						myEnemyManager->GetSounds()[myEnemyManager->GetSounds().size() - 1]->PlayWaveFile();
 						int chance = rand() % 100;
 						if (chance < 25)
 						{
@@ -493,6 +528,7 @@ void GameManager::Update(float delta, float total)
 		UpdateScoreText();
 		UpdateHealthText();
 		UpdateWeaponText();
+		UpdateAmmoText();
 		if (myPlayer->GetTimeDamage() > 0)
 		{
 			UpdateDamageTimerText();
@@ -605,6 +641,9 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	Pistol->SetGunClass(Gun::PISTOL);
 	Pistol->SetFireRate(0.5f);
 	Pistol->SetDamageAmount(25);
+	Pistol->SetMaxClipAmmo(15);
+	//Pistol->SetMaxReserveAmmo(100);
+	Pistol->SetReloadTime(1.0f);
 	myPlayer->AddGun(Pistol);
 	//Gun* MachineGun = new Gun();
 	//MachineGun->SetGunClass(Gun::MACHINE);

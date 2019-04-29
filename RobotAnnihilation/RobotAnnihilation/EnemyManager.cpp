@@ -9,7 +9,7 @@ EnemyManager::EnemyManager()
 void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
-	enemyCount = 15;
+	enemyCount = 5;
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
@@ -116,7 +116,8 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel = CalculateSeperation(*currEnemy);
 			accel += CalculateObstacleSeperation(*currEnemy, obstacles);
 			accel *= delta;
-			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
 
@@ -129,6 +130,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel += CalculateObstacleSeperation(*currBomb, obstacles);
 			accel *= delta;
 			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
 
