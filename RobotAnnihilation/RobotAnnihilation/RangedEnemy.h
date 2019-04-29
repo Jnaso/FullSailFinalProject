@@ -10,6 +10,8 @@ class RangedEnemy : public Enemy
 private:
 	float timeBetweenAttacks;
 	float startTime;
+	bool PlayOnce = false;
+	Animation* PrevAnimation;
 
 public:
 	RangedEnemy();

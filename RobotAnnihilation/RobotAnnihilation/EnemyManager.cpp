@@ -83,8 +83,9 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies.push_back(new RangedEnemy());
 			//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 			//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedEnemy.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedEnemyIdle.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedEnemyAttack.anim", myDevice, 1);
 			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
 		}
 		else
@@ -120,9 +121,6 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
-
-
-
 		currBomb = dynamic_cast<BombEnemy*>(myEnemies[i]);
 		if (currBomb)
 		{

@@ -633,7 +633,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
 	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 });
-	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -2.0, 0 });
+	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.0, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(100);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(1);

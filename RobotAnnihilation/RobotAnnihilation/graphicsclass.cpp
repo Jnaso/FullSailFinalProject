@@ -396,16 +396,16 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 				if (currEnemy)
 				{
 					//world = XMMatrixMultiply(XMMatrixScaling(4, 4, 4), lookcopy);
-					world = XMMatrixMultiply(XMMatrixScaling(.05f, .05f, .05f), lookcopy);
+					world = XMMatrixMultiply(XMMatrixScaling(.06f, .06f, .06f), lookcopy);
 
 					myTargets[i]->Render(myDX->GetDeviceContext());
 
 					//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myPlayer->GetModelComponent()->GetDiffuseTexture(), myPlayer->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
-					result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myTargets[i]->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myTargets[i]->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra(), !myTargets[i]->GetHurt(), false);
+					result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myTargets[i]->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myTargets[i]->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra(), myTargets[i]->GetHurt(), false);
 				}
 				else
 				{
-					world = XMMatrixMultiply(XMMatrixScaling(2, 2, 2), lookcopy);
+					world = XMMatrixMultiply(XMMatrixScaling(2.5f, 2.5f, 2.5f), lookcopy);
 
 					myTargets[i]->Render(myDX->GetDeviceContext());
 

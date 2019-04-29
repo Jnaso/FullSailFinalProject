@@ -19,7 +19,7 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 	GetPhysicsComponent()->SetDamping(0.99f);
 
 	AddCollider(GetPhysicsComponent()->GetPosition(), 0.8f);
-	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z }, 0.5f);
+	AddCollider({ GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.0f, GetPhysicsComponent()->GetPosition().z }, 0.5f);
 	//srand((unsigned int)time(NULL));
 
 	velocity = .6f;
@@ -33,11 +33,20 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 
 void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
+	if (PlayOnce)
+	{
+		if (currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration)
+		{
+			currentAnimation->SetFrameTime(delta);
+			currentAnimation = PrevAnimation;
+			PlayOnce = false;
+		}
+	}
 	GameObject::Update(delta);
-	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z };
-	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.5f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.0f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.5f, GetPhysicsComponent()->GetPosition().z };
 
-	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
 
 	startTime += delta;
 
@@ -63,8 +72,12 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 {
 	if (timeGetTime() >= timeBetweenAttacks + 3000)
 	{
+		PlayOnce = true;
+		PrevAnimation = currentAnimation;
+		currentAnimation = objectAnimations[1];
+		currentAnimation->Update(0);
 		float3 forward = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-		forward.y = forward.y + 2.0f;
+		//forward.y = forward.y + 2.5f;
 		if (rand() % 3 == 0)
 		{
 			float3 bulletV = forward * 3.0f;
@@ -73,7 +86,7 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 			forward = { forward.x + Offset, forward.y, forward.z + Offset };
 		}
 		bullets.push_back(new Bullet(1.0f));
-		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + .5f, GetPhysicsComponent()->GetPosition().z };
+		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.0f, GetPhysicsComponent()->GetPosition().z };
 		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Bullet.mesh", forward, playerPos, "Enemy", 1.5f);
 		AddSound(new Sound((char*)"Assets/EnemyShoot.wav", 0));
 		GetSounds()[GetSounds().size() - 1]->Initialize(window);
