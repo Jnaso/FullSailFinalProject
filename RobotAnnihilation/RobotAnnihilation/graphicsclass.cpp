@@ -13,8 +13,11 @@ Graphics::Graphics(InputManager* input)
 	myDebug = nullptr;
 	debugCam = false;
 	timeBetween = timeGetTime();
+	timeBetweenRenderer = timeGetTime();
 	playerWorld = XMMatrixIdentity();
 	myUI = nullptr;
+	myDebugRend = nullptr;
+	debugRenderer = false;
 }
 
 bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputManager *myInput)
@@ -170,6 +173,17 @@ bool Graphics::Initialize(int windowWidth, int windowHeight, HWND window, InputM
 		}
 	}
 
+	if (!myDebugRend)
+	{
+		myDebugRend = new DebugRenderer();
+		if (!myDebugRend)
+		{
+			return false;
+		}
+
+		myDebugRend->Initialize(myDX->GetDevice());
+	}
+
 	//return true;
 
 	HRESULT hr;
@@ -275,6 +289,13 @@ void Graphics::Shutdown()
 		myFrustum = nullptr;
 	}
 
+	if (myDebugRend)
+	{
+		myDebugRend->Shutdown();
+		delete myDebugRend;
+		myDebugRend = nullptr;
+	}
+
 	//Clean up for 2d graphics
 	if (m_spriteBatch) { m_spriteBatch.release(); }
 	if (m_arialFont) { m_arialFont.release(); }
@@ -349,6 +370,12 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 		//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), Player->GetObjectIndices().size(), world, view, projection, Player->GetDiffuseTexture(), Player->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), Player->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra());
 		result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myPlayer->GetModelComponent()->GetDiffuseTexture(), myPlayer->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 		myDX->PassWorldMatrix(world);
+		if (debugRenderer)
+		{
+			myDebugRend->MakeAABB(myPlayer->GetAABB());
+			myDebugRend->Render(myDX->GetDeviceContext());
+			myShaderManager->RenderDebugShader(myDX->GetDeviceContext(), world, view, projection);
+		}
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
 			bullets[i]->Render(myDX->GetDeviceContext());
@@ -415,6 +442,12 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 					//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myPlayer->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myPlayer->GetModelComponent()->GetDiffuseTexture(), myPlayer->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPlayer->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 					result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myTargets[i]->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myTargets[i]->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra(), myTargets[i]->GetHurt(), bomber);
 				}
+
+				if (debugRenderer)
+				{
+					myDebugRend->MakeSphere(*myTargets[i]->GetCollider(0));
+				}
+
 				//world = lookcopy;
 
 				//world = XMMatrixTranslation(myTargets[i]->GetPhysicsComponent()->GetPosition().x, myTargets[i]->GetPhysicsComponent()->GetPosition().y - 1.0f, myTargets[i]->GetPhysicsComponent()->GetPosition().z);
@@ -425,7 +458,6 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 			//result = myShaderManager->RenderAnimatedShader(myDX->GetDeviceContext(), myTargets[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, myTargets[i]->GetModelComponent()->GetDiffuseTexture(), myTargets[i]->GetModelComponent()->GetNormalTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myTargets[i]->GetCurrentAnimation()->GetJoints(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 		}
 
-
 		for (unsigned int i = 0; i < Obstacles.size(); i++)
 		{
 			render = myFrustum->CheckSphere(*Obstacles[i]->GetCollider(0));
@@ -435,6 +467,14 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 				Obstacles[i]->Render(myDX->GetDeviceContext());
 				result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Obstacles[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Obstacles[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+
+				if (debugRenderer)
+				{
+					for (unsigned int j = 0; j < Obstacles[i]->GetColliders().size(); j++)
+					{
+						myDebugRend->MakeSphere(*Obstacles[i]->GetCollider(j));
+					}
+				}
 			}
 		}
 
@@ -451,7 +491,9 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 			Pickups[i]->Render(myDX->GetDeviceContext());
 
 			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Pickups[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Pickups[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+
 		}
+
 	}
 
 	if (!debugCam)
@@ -577,6 +619,15 @@ void Graphics::Update(InputManager *myInput, float delta, Player *myPlayer)
 			{
 				debugCam = !debugCam;
 				timeBetween = timeGetTime();
+			}
+		}
+
+		if (myInput->GetKeyState((int)'R'))
+		{
+			if (timeGetTime() >= timeBetweenRenderer + 300)
+			{
+				debugRenderer = !debugRenderer;
+				timeBetweenRenderer = timeGetTime();
 			}
 		}
 	}
