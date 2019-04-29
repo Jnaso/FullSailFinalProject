@@ -43,8 +43,9 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 		}
 	}
 	GameObject::Update(delta);
-	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.0f, GetPhysicsComponent()->GetPosition().z };
-	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.5f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z };
+	GetCollider(0)->radius = 2.0f;
+	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 4.2f, GetPhysicsComponent()->GetPosition().z };
 
 	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
 
@@ -55,10 +56,10 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 		Attack(myPlayer, bullets, myDevice, window);
 	}
 
-	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
+	/*if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
 	{
 		GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-	}
+	}*/
 
 	if (timeGetTime() >= HurtTime + 200)
 	{
