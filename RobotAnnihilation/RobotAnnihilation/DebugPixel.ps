@@ -1,0 +1,10 @@
+struct PS_OUTPUT
+{
+	float4 finalPos : SV_POSITION;
+	float4 finalColor : COLOR;
+};
+
+float4 main(PS_OUTPUT IN) : SV_TARGET
+{
+	return IN.finalColor;
+}

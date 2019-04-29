@@ -34,6 +34,9 @@
     <ClCompile Include="RangedEnemy.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="BombEnemy.cpp" />
+    <ClCompile Include="DebugShader.cpp" />
+    <ClCompile Include="debug_renderer.cpp" />
+    <ClCompile Include="DebugClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -78,6 +81,9 @@
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="Math_Types.h" />
     <ClInclude Include="BombEnemy.h" />
+    <ClInclude Include="DebugShader.h" />
+    <ClInclude Include="DebugClass.h" />
+    <ClInclude Include="debug_renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />
@@ -94,5 +100,7 @@
     <None Include="Skybox.vs" />
     <None Include="VertexShader.vs" />
     <None Include="VertexShaderStatic.vs" />
+    <None Include="DebugVertex.vs" />
+    <None Include="DebugPixel.ps" />
   </ItemGroup>
 </Project>
