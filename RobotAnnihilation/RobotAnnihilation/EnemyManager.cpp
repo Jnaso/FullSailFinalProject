@@ -83,8 +83,10 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies.push_back(new RangedEnemy());
 			//myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedAttack.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
 			//myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedAttack.anim", myDevice, 0);
-			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/Teddy_Idle.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/Teddy_Attack1.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->Initialize(myDevice, "Assets/RangedEnemy.mesh", { (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedEnemyIdle.anim", myDevice, 0);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedEnemyAttack.anim", myDevice, 1);
+			myEnemies[myEnemies.size() - 1]->AddAninimation("Assets/RangedEnemyDeath.anim", myDevice, 2);
 			myEnemies[myEnemies.size() - 1]->SetAnimation(0);
 		}
 		else
@@ -120,9 +122,6 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
-
-
-
 		currBomb = dynamic_cast<BombEnemy*>(myEnemies[i]);
 		if (currBomb)
 		{
@@ -142,7 +141,19 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 		{
 			myEnemies[i]->Update(delta, myPlayer, bullets, myDevice, window);
 		}
-
+		//currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration
+		/*if (!currBomb && !currEnemy && dynamic_cast<RangedEnemy*>(myEnemies[i])->isDead())
+		{
+			if (myEnemies[i]->GetCurrentAnimation()->GetFrameTime() + delta > myEnemies[i]->GetCurrentAnimation()->GetAnimationClip().duration)
+			{
+				Enemy *temp;
+				myEnemies[i]->Shutdown();
+				temp = myEnemies[i];
+				myEnemies.erase(myEnemies.begin() + i);
+				delete temp;
+				break;
+			}
+		}*/
 		if (myEnemies[i]->Destroy())
 		{
 			if (currBomb)
@@ -151,7 +162,19 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 				EnemiesSounds[EnemiesSounds.size() - 1]->Initialize(window);
 				EnemiesSounds[EnemiesSounds.size() - 1]->PlayWaveFile();
 			}
-
+			/*if (!currBomb && !currEnemy)
+			{
+				dynamic_cast<RangedEnemy*>(myEnemies[i])->Death();
+			}
+			else
+			{
+				Enemy *temp;
+				myEnemies[i]->Shutdown();
+				temp = myEnemies[i];
+				myEnemies.erase(myEnemies.begin() + i);
+				delete temp;
+				break;
+			}*/
 			Enemy *temp;
 			myEnemies[i]->Shutdown();
 			temp = myEnemies[i];

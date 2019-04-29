@@ -83,7 +83,7 @@ public:
 	void SetHealth(int newHeath) { health = newHeath; }
 	void Damage(int amount) { health -= amount; }
 
-	void MeleeAttack(int index);
+	void playOnce(int index);
 
 	bool isAttacking() { return PlayOnce; }
 
