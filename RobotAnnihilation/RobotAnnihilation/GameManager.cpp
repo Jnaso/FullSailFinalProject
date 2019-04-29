@@ -202,15 +202,16 @@ void GameManager::Update(float delta, float total)
 			myPlayer->SetCurrentGun(2);
 		}
 
-		#pragma region Shop_Controls
-		if (myInput->GetKeyState('K'))
-		{
-			shopVisible = !shopVisible;
-			myShop->SetShopVisibility(!shopVisible);
-			myInput->SetKetState('K', false);
-		}
-		myShop->Update();
-		#pragma endregion
+		//#pragma region Shop_Controls
+		//if (myInput->GetKeyState('K'))
+		//{
+		//	shopVisible = !shopVisible;
+		//	myShop->SetShopVisibility(!shopVisible);
+		//	paused = !paused;
+		//	myInput->SetKetState('K', false);
+		//}
+		//myShop->Update();
+		//#pragma endregion
 
 
 		if (myPlayer->getTimeLeft() >= 0)
@@ -643,7 +644,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	this->window = window;
 
-	myShop = new Shop(GetUIManager(), myDX->GetDevice());
+	myShop = new Shop(GetUIManager(), myDX->GetDevice(), myPlayer);
 	if (!myShop)
 	{
 		return false;

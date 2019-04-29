@@ -26,7 +26,7 @@ class GameManager
 	char displayString[65];
 	char displayString1[65];
 	char displayString2[65];
-	bool shopVisible = false;
+	
 
 	
 
@@ -36,7 +36,8 @@ class GameManager
 
 	std::string numberToChr;
 
-	Player *myPlayer;
+
+	Player *myPlayer; //Player Reference
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
 	Sphere playerSphere;
@@ -46,6 +47,7 @@ class GameManager
 	vector<Pickup*> Pickups;
 
 public:
+	bool shopVisible = false;
 	bool isDone = false;
 	bool paused = false;
 
