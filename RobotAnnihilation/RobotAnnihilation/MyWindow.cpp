@@ -656,7 +656,7 @@ bool MyWindow::Initialize()
 
 	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
 	
-	playerUI[10] = gameManager->m_Ammo = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 1800, 1000 }, F_ARIAL, "");
+	playerUI[10] = gameManager->m_Ammo = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 1700, 1000 }, F_ARIAL, "");
 #pragma endregion
 
 #pragma endregion
