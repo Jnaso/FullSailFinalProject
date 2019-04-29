@@ -2,6 +2,7 @@
 
 #include "GeneralIncludes.h"
 #include "UIManager.h"
+#include "Player.h"
 
 #ifndef _SHOP_H_
 #define _SHOP_H_
@@ -10,6 +11,8 @@ class Shop
 {
 	UIManager* m_UIManager;
 	ID3D11Device* m_device;
+	Player* m_playerRef;
+
 
 	int m_assultRifleLevel = 0;
 	int m_subMachineGunLevel = 0;
@@ -17,9 +20,11 @@ class Shop
 	int m_meleeLevel = 0;
 
 	
+	
 
 	enum STATS{DAMAGE,AMMO_COUNT,FIRE_RATE,COUNT};
 	enum WEAPONTYPE { AR, SMG, PISTOL, MELEE, NONE };
+
 
 	struct Item
 	{
@@ -62,7 +67,7 @@ public:
 	Item* m_itemToDisplay;
 	
 
-	Shop(UIManager*, ID3D11Device*);
+	Shop(UIManager*, ID3D11Device*, Player*);
 
 	bool Initialize();
 

@@ -1,9 +1,10 @@
 #include "Shop.h"
 
-Shop::Shop(UIManager * ui, ID3D11Device* device)
+Shop::Shop(UIManager * ui, ID3D11Device* device, Player* player)
 {
 	m_UIManager = ui;
 	m_device = device;
+	m_playerRef = player;
 }
 
 bool Shop::Initialize()
@@ -29,7 +30,7 @@ bool Shop::Initialize()
 	m_items["Fire Axe"] = new Item(WEAPONTYPE::MELEE, 10, 0, 0.5f, 1, "Fire Axe Is An Upgraded Melee Weapon");
 	m_items["BroadSword"] = new Item(WEAPONTYPE::MELEE, 10, 0, 0.5f, 1, "Broad Sword Is An Ultra Upgraded Melee Weapon");
 
-	m_itemToDisplay = m_items["NULL"] = new Item(WEAPONTYPE::NONE, 0, 0, 0, 0, "BLAH");
+	m_itemToDisplay = m_items["NULL"] = new Item(WEAPONTYPE::NONE, 0, 0, 0, 0, "Select A Weapon Type see its description");
 	#pragma endregion
 
 	#pragma region Creation_Of_UI_Elements
@@ -40,6 +41,15 @@ bool Shop::Initialize()
 	if (desText)
 	{
 		desText->SetPos(float2{ 500, 200 });
+	}
+	#pragma endregion
+
+	#pragma region COST_TEXT
+	m_shopUI["cost text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Price");
+	TextElement* costText = static_cast<TextElement*>(m_shopUI["cost text"]);
+	if (costText)
+	{
+		costText->SetPos(float2{ 500, 500 });
 	}
 	#pragma endregion
 
@@ -149,7 +159,10 @@ bool Shop::Initialize()
 		uGB->m_OnMouseClick = [this]()
 		{
 			//Show Details In Description Window
+			UpgradeWeapon(this->m_itemToDisplay);
 			Upgrade(this->m_itemToDisplay->m_weaponType);
+			++m_itemToDisplay->m_cost;
+			
 		};
 	
 		uGB->SetSize(float2{ 200,50 });
@@ -263,7 +276,10 @@ void Shop::Update()
 {
 	TextElement* tempTx = static_cast<TextElement*>(m_shopUI["desc text"]);
 	tempTx->SetText(m_itemToDisplay->m_description);
-}
+
+	tempTx = static_cast<TextElement*>(m_shopUI["cost text"]);
+	tempTx->SetText("Price: " + std::to_string(m_itemToDisplay->m_cost));
+} 
 
 void Shop::SetShopVisibility(bool value)
 {

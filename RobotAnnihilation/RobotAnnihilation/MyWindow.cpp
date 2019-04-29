@@ -21,11 +21,26 @@ bool MyWindow::Run()
 	//Subtract Time So Input Isnt checked every frame
 	keyPressTimer -= timer.Delta();
 	
+	#pragma region Shop_Controls
+	if (gameManager->GetInputManager()->GetKeyState('K'))
+	{
+		paused = !paused;
+		gameManager->shopVisible = !gameManager->shopVisible;
+		gameManager->GetShopPtr()->SetShopVisibility(!gameManager->shopVisible);
+		gameManager->GetInputManager()->SetKetState('K', false);
+		
+		pauseMenuBool = paused;
+		gameManager->paused = paused;
+	}
+	gameManager->GetShopPtr()->Update();
+	#pragma endregion
+
 	if (!gameManager->paused)
 	{
 		Update(timer.Delta());
 	}
 	gameManager->GetUIManager()->Update(timer.Delta());
+	
 	UpdateVolumeText();
 
 	//If user presses escape, close the window 
@@ -42,6 +57,7 @@ bool MyWindow::Run()
 			gameManager->GetShopPtr()->SetShopVisibility(false);
 			SetPauseMenu(paused);
 			gameManager->SetLowHealthImage(false);
+			gameManager->paused = paused;
 			gameManager->SetKeyState(_ESCAPE, false);
 			pauseMenuBool = paused;
 		}
@@ -134,8 +150,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1920;
-		screenH = 1080;
+		screenW = 1024;
+		screenH = 768;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}

@@ -23,6 +23,7 @@
 #include "Target.h"
 #include "Frustum.h"
 #include "BombEnemy.h"
+#include "DebugClass.h"
 #include <string.h>
 
 //Full screen flag 
@@ -54,8 +55,11 @@ private:
 	XMFLOAT4 myColors[2];
 	XMMATRIX playerWorld;
 	bool debugCam;
+	bool debugRenderer;
 	float timeBetween;
+	float timeBetweenRenderer;
 	XMFLOAT4 camPosition;
+	DebugRenderer *myDebugRend;
 
 	//Main Menu Bool
 	bool MAIN_MENU_OPEN = true;
