@@ -445,7 +445,10 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 				if (debugRenderer)
 				{
-					myDebugRend->MakeSphere(*myTargets[i]->GetCollider(0));
+					for (unsigned int j = 0; j < myTargets[i]->GetColliders().size(); j++)
+					{
+						myDebugRend->MakeSphere(*myTargets[i]->GetCollider(j));
+					}
 				}
 
 				//world = lookcopy;
@@ -622,7 +625,7 @@ void Graphics::Update(InputManager *myInput, float delta, Player *myPlayer)
 			}
 		}
 
-		if (myInput->GetKeyState((int)'R'))
+		if (myInput->GetKeyState((int)'G'))
 		{
 			if (timeGetTime() >= timeBetweenRenderer + 300)
 			{
