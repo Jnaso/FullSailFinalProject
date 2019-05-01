@@ -20,10 +20,6 @@ bool ExplosiveBarrel::Initialize(ID3D11Device * myDevice, const char * fileName,
 	return true;
 }
 
-void ExplosiveBarrel::Update(float delta, Player * myPlayer, std::vector<Bullet*>& bullets, ID3D11Device * myDevice, HWND window)
-{
-}
-
 void ExplosiveBarrel::Destroy(Player * myPlayer, std::vector<Enemy*> &myEnemies, HWND window)
 {
 	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 10.0f)

@@ -13,6 +13,8 @@ Player::Player()
 	collidingB = false;
 	collidingL = false;
 	collidingR = false;
+	isFrozen = false;
+	frozenTime = 0.0f;
 }
 
 Player::~Player()
@@ -101,21 +103,26 @@ void Player::Update(float delta)
 		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
 	}
 
-	if (currentLowerAnimation != nullptr && currentUpperAnimation != nullptr)
-	{
-		if (PlayOnce)
+		if (currentLowerAnimation != nullptr && currentUpperAnimation != nullptr)
 		{
-			if (currentUpperAnimation->GetFrameTime() + delta > currentUpperAnimation->GetAnimationClip().duration)
+			if (PlayOnce)
 			{
-				currentUpperAnimation->SetFrameTime(delta);
-				currentUpperAnimation = objectAnimations[1];
-				PlayOnce = false;
+				if (currentUpperAnimation->GetFrameTime() + delta > currentUpperAnimation->GetAnimationClip().duration)
+				{
+					currentUpperAnimation->SetFrameTime(delta);
+					currentUpperAnimation = objectAnimations[1];
+					PlayOnce = false;
+				}
 			}
+
+			if (!isFrozen)
+			{
+				currentLowerAnimation->SetFrameTime(delta);
+				currentUpperAnimation->SetFrameTime(delta);
+			}
+			AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
+			
 		}
-		currentLowerAnimation->SetFrameTime(delta);
-		currentUpperAnimation->SetFrameTime(delta);
-		AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
-	}
 	if (timeLeftDamage > 0)
 	{
 		timeLeftDamage -= delta;
@@ -140,6 +147,16 @@ void Player::Update(float delta)
 	rightArrow.end = { rightArrow.start.x - (rightForward.x), GetPhysicsComponent()->GetPosition().y + 2.0f,  rightArrow.start.z - (rightForward.z) };
 
 	CheckMovement();
+
+	if (isFrozen)
+	{
+		frozenTime += delta;
+		if (frozenTime >= 10)
+		{
+			isFrozen = false;
+			frozenTime = 0.0f;
+		}
+	}
 }
 
 float4x4 LerpJoint(float4x4 frame1, float4x4 frame2, float ratio)

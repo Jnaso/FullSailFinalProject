@@ -29,6 +29,8 @@ protected:
 	bool collidingL;
 	bool collidingR;
 	bool Jumping = false;
+	bool isFrozen;
+	float frozenTime;
 
 	int CurrentPoints = 0;
 
@@ -96,5 +98,8 @@ public:
 
 	void FlipInvincible() { isInvincible = !isInvincible; }
 	bool GetInvincible() { return isInvincible; }
+
+	void SetFrozen() { isFrozen = true; }
+	bool GetFrozen() { return isFrozen; }
 };
 

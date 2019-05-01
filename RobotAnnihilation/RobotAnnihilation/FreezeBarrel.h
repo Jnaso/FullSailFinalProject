@@ -1,19 +1,19 @@
 #pragma once
-#ifndef _EXPLOSIVEBARREL_H_
-#define _EXPLOSIVEBARREL_H_
+#ifndef _FREEZEBARREL_H_
+#define _FREEZEBARREL_H_
 
 #include "GameObject.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "Enemy.h"
 
-class ExplosiveBarrel : public GameObject
+class FreezeBarrel : public GameObject
 {
-private: 
+private:
 	bool readyToDestroy;
 
 public:
-	ExplosiveBarrel();
+	FreezeBarrel();
 
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
 	void Destroy(Player *myPlayer, std::vector<Enemy*> &myEnemies, HWND window);
@@ -22,5 +22,4 @@ public:
 	void SetDestroy() { readyToDestroy = true; }
 };
 
-#endif // !_EXPLOSIVEBARREL_H_
-
+#endif // !_FREEZEBARREL_H_
