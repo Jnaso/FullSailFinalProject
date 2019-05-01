@@ -81,7 +81,7 @@ void GameManager::UpdateCurrentRound()
 void GameManager::UpdateCurrencyText()
 {
 	TextElement* tempT = static_cast<TextElement*>(m_Currency);
-	tempT->SetText( "Points: " + std::to_string(static_cast<int>(myPlayer->GetPoints())) );
+	tempT->SetText( "Gold: " + std::to_string(static_cast<int>(myPlayer->GetPoints())) );
 }
 
 void GameManager::UpdateDamageTimerText()
@@ -590,22 +590,42 @@ void GameManager::Update(float delta, float total)
 		{
 			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
 		}
-
+		soundPlayTimer -= delta;
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
 			countDown = 5.0f;
 			betweenRounds = true;
+			if (!m_countDownText->GetEnabled())
+			{
+				m_countDownText->SetEnabled(true);
+			}
+			
+			if (soundPlayTimer <= 0)
+			{
+				soundPlayTimer = 1.0f;
+				m_timerTickSound->PlayWaveFile();
+			}
 		}
 		if (countDown > 0.0f && betweenRounds)
 		{
 			countDown -= delta;
+			TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
+			if (countTextTemp)
+			{
+				countTextTemp->SetText("Time To Next Round: \n" + std::to_string((int)countDown + 1));
+			}
 			if (countDown < 0.0f)
 			{
 				UpdateCurrentRound();
 				myEnemyManager->StartNewRound();
 				betweenRounds = false;
+				if (m_countDownText->GetEnabled())
+				{
+					m_countDownText->SetEnabled(false); 
+				}
 				countDown = 0;
 				currentRound++;
+			
 			}
 		}
 	}
@@ -627,6 +647,10 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
+
+	screenW = windowWidth;
+	screenH = windowHeight;
+
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 
 	myDX = myGraphics->GetGraphicsEngine();
@@ -717,7 +741,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	if (!myShop->Initialize())
+	if (!myShop->Initialize(window))
 	{
 		return false;
 	}
@@ -726,12 +750,15 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
 	if (tempImg)
 	{
-
 		tempImg->SetSize(screenW, screenH);
 	}
 
-	screenW = windowWidth;
-	screenH = windowHeight;
+	m_timerTickSound = new Sound((char*)"Assets/Boost.wav", -2000);
+	m_timerTickSound->Initialize(window);
+
+
+	m_countDownText = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Time To Next Round: \n");
+	m_countDownText->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(screenH * 0.5f));
 
 	return result;
 }

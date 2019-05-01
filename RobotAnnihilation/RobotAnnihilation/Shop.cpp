@@ -7,7 +7,7 @@ Shop::Shop(UIManager * ui, ID3D11Device* device, Player* player)
 	m_playerRef = player;
 }
 
-bool Shop::Initialize()
+bool Shop::Initialize(HWND wnd)
 {
 	#pragma region Adding_Weapons_To_Items_Vector
 	//Assult Rifles
@@ -35,6 +35,10 @@ bool Shop::Initialize()
 
 	#pragma region Creation_Of_UI_Elements
 
+	m_buttonClickSound = new Sound((char*)"Assets/DamagePickup.wav", -2000);
+
+	m_buttonClickSound->Initialize(wnd);
+
 	#pragma region DESC_TEXT
 	m_shopUI["desc text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, 0, "Description");
 	TextElement* desText = static_cast<TextElement*>(m_shopUI["desc text"]);
@@ -45,7 +49,7 @@ bool Shop::Initialize()
 	#pragma endregion
 
 	#pragma region COST_TEXT
-	m_shopUI["cost text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Price");
+	m_shopUI["cost text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Gold: ");
 	TextElement* costText = static_cast<TextElement*>(m_shopUI["cost text"]);
 	if (costText)
 	{
@@ -55,6 +59,10 @@ bool Shop::Initialize()
 
 	#pragma region BACKROUND_IMAGE
 		m_shopUI["Background"] = m_UIManager->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/ShopBkrnd.dds", m_device);
+		if (m_shopUI["Background"])
+		{
+			m_shopUI["Background"]->SetSize(1920, 1080);
+		}
 	#pragma endregion
 	
 	#pragma region AR_BUTTON
@@ -243,6 +251,7 @@ void Shop::ShowMeleStats()
 
 void Shop::Upgrade(WEAPONTYPE type)
 {
+	m_buttonClickSound->PlayWaveFile();
 	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
 	if (res)
 	{

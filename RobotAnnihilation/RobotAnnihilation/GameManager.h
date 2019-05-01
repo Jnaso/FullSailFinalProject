@@ -9,6 +9,7 @@
 #include "EnemyManager.h"
 #include "Shop.h"
 #include "Pickup.h"
+#include "GeneralIncludes.h"
 class GameManager
 {
 	const float DEFAULTKEYPRESST = 0.01f;
@@ -38,6 +39,9 @@ class GameManager
 	vector<Bullet*> bullets;
 	EnemyManager *myEnemyManager;
 	Sphere playerSphere;
+
+	float soundPlayTimer = 1.0f;
+	Sound* m_timerTickSound;
 
 	vector<GameObject*> Obstacles;
 
@@ -69,6 +73,7 @@ public:
 	UIElement* m_Currency;
 	UIElement* m_Ammo;
 	UIElement* m_CurrentRound;
+	UIElement* m_countDownText;
 
 	UIElement* m_YouLose;
 	UIElement* m_youLoseQuitButton;

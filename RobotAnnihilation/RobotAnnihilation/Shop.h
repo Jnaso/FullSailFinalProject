@@ -3,6 +3,7 @@
 #include "GeneralIncludes.h"
 #include "UIManager.h"
 #include "Player.h"
+#include "Sound.h"
 
 #ifndef _SHOP_H_
 #define _SHOP_H_
@@ -12,6 +13,7 @@ class Shop
 	UIManager* m_UIManager;
 	ID3D11Device* m_device;
 	Player* m_playerRef;
+	Sound* m_buttonClickSound;
 
 
 	int m_assultRifleLevel = 0;
@@ -69,7 +71,7 @@ public:
 
 	Shop(UIManager*, ID3D11Device*, Player*);
 
-	bool Initialize();
+	bool Initialize(HWND);
 
 	void ShowARStats();
 	void ShowSMGStats();
