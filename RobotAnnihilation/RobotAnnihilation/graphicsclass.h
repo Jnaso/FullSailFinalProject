@@ -24,6 +24,7 @@
 #include "Frustum.h"
 #include "BombEnemy.h"
 #include "DebugClass.h"
+#include "ExplosiveBarrel.h"
 #include <string.h>
 
 //Full screen flag 
@@ -85,7 +86,7 @@ public:
 	void CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath);
 
 	void Shutdown();
-	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups);
+	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels);
 	void Update();
 
 	DX* GetGraphicsEngine() { return myDX; }

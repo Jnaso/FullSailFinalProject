@@ -9,6 +9,8 @@
 #include "EnemyManager.h"
 #include "Shop.h"
 #include "Pickup.h"
+#include "ExplosiveBarrel.h"
+#include "Sound.h"
 class GameManager
 {
 	const float DEFAULTKEYPRESST = 0.01f;
@@ -40,6 +42,9 @@ class GameManager
 	Sphere playerSphere;
 
 	vector<GameObject*> Obstacles;
+	vector<ExplosiveBarrel*> Barrels;
+	vector<GameObject*> AllObstacles;
+	vector<Sound*> mySounds;
 
 	vector<Pickup*> Pickups;
 
