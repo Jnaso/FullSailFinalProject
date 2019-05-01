@@ -15,7 +15,7 @@ bool FreezeBarrel::Initialize(ID3D11Device * myDevice, const char * fileName, fl
 
 	GetPhysicsComponent()->SetPosition(position); GetPhysicsComponent()->SetPosition(position);
 
-	AddCollider({ position.x, position.y + 1.0f, position.z }, 2.3f);
+	//AddCollider({ position.x, position.y + 1.0f, position.z }, 2.3f);
 
 	return true;
 }

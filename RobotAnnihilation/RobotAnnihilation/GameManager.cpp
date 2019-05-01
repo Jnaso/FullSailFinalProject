@@ -940,6 +940,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		{
 			Barrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
 		}
+		Barrels[i]->AddCollider({ Barrels[i]->GetPhysicsComponent()->GetPosition().x, Barrels[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Barrels[i]->GetPhysicsComponent()->GetPosition().z }, 2.3f);
 		AllObstacles.push_back(Barrels[i]);
 	}
 
@@ -952,6 +953,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		{
 			FreBarrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
 		}
+		FreBarrels[i]->AddCollider({ FreBarrels[i]->GetPhysicsComponent()->GetPosition().x, FreBarrels[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, FreBarrels[i]->GetPhysicsComponent()->GetPosition().z }, 2.3f);
 		AllObstacles.push_back(FreBarrels[i]);
 	}
 
