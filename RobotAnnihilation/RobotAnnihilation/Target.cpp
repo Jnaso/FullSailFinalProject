@@ -36,7 +36,6 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 
 	if (!GetFrozen())
 	{
-
 		if (!attacking)
 		{
 			GameObject::Update(delta);
@@ -89,22 +88,6 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 			isFrozen = false;
 			freezeTime = 0.0f;
 		}
-	}
-	else
-	{
-		SetAnimation(1);
-		attacking = false;
-	}
-
-	if (attacking)
-	{
-		Attack(myPlayer);
-	}
-
-	if (timeGetTime() >= HurtTime + 200)
-	{
-		ImHurt = false;
-		HurtTime = 0.8f;
 	}
 	
 }
