@@ -14,6 +14,7 @@ Player::Player()
 	collidingL = false;
 	collidingR = false;
 	isFrozen = false;
+	slowed = false;
 	frozenTime = 0.0f;
 }
 

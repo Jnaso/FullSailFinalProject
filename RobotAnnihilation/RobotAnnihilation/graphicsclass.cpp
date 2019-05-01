@@ -303,7 +303,7 @@ void Graphics::Shutdown()
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels, vector<FreezeBarrel*> FreBarrels)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels, vector<FreezeBarrel*> FreBarrels, vector<GameObject*> MudPits)
 {
 	XMMATRIX world, view, projection, frustumView;
 	bool result, render;
@@ -543,6 +543,25 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 			result = myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Pickups[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Pickups[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
 
+		}
+
+		for (unsigned int i = 0; i < MudPits.size(); i++)
+		{
+			render = myFrustum->CheckSphere(*MudPits[i]->GetCollider(0));
+			if (render)
+			{
+				world = XMMatrixMultiply(XMMatrixScaling(2.0f, 2.0f, 2.0f), XMMatrixTranslation(MudPits[i]->GetPhysicsComponent()->GetPosition().x, MudPits[i]->GetPhysicsComponent()->GetPosition().y, MudPits[i]->GetPhysicsComponent()->GetPosition().z));
+				MudPits[i]->Render(myDX->GetDeviceContext());
+				myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), MudPits[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, MudPits[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+
+				if (debugRenderer)
+				{
+					for (unsigned int j = 0; j < MudPits[i]->GetColliders().size(); j++)
+					{
+						myDebugRend->MakeSphere(*MudPits[i]->GetCollider(j));
+					}
+				}
+			}
 		}
 
 	}
