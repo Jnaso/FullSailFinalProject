@@ -42,6 +42,8 @@ class GameManager
 	EnemyManager *myEnemyManager;
 	Sphere playerSphere;
 
+	UIElement* m_youDiedImage;
+
 	float soundPlayTimer = 1.0f;
 	Sound* m_timerTickSound;
 
@@ -110,7 +112,7 @@ public:
 	void ShootBullets();
 
 	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
-	unsigned int GetHealth() { return myPlayer->GetHealth(); };
+	int GetHealth() { return myPlayer->GetHealth(); };
 	Player* GetPlayer() { return myPlayer; }
 
 	void SpawnHealthPickup(float3 pos);

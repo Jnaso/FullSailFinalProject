@@ -637,10 +637,20 @@ void GameManager::Update(float delta, float total)
 
 		if (GetHealth() <= 0)
 		{
+			m_lowHealthImage->SetEnabled(false);
 			if (!m_YouLose)
 			{
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
 				paused = true;
+			}
+			if (!m_youDiedImage)
+			{
+				m_youDiedImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/DeathScreen.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+				ImageElement* youDiedImage = static_cast<ImageElement*>(m_youDiedImage);
+				if (youDiedImage)
+				{
+					youDiedImage->SetSize(static_cast<LONG>(screenW), static_cast<LONG>(screenH));
+				}
 			}
 			if (!m_youLoseQuitButton)
 			{
@@ -662,7 +672,7 @@ void GameManager::Update(float delta, float total)
 			}
 			GetPlayer()->SetHealth(0);
 		}
-		if (GetHealth() >= 0 && GetHealth() <= 100)
+		if (GetHealth() > 0 && GetHealth() <= 100)
 		{
 			m_lowHealthImage->SetEnabled(true);
 		}
@@ -855,6 +865,8 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 
 	return result;
 }
+
+
 
 void GameManager::ShutDown()
 {
