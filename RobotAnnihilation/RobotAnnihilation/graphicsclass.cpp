@@ -472,7 +472,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 
 		for (unsigned int i = 0; i < Obstacles.size(); i++)
 		{
-			render = myFrustum->CheckSphere(*Obstacles[i]->GetCollider(4));
+			render = myFrustum->CheckSphere(*Obstacles[i]->GetCollider(4)) || myFrustum->CheckSphere(*Obstacles[i]->GetCollider(0));
 			if (render)
 			{
 				world = XMMatrixMultiply(XMMatrixScaling(3.0f, 3.0f, 3.0f), XMMatrixTranslation(Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y, Obstacles[i]->GetPhysicsComponent()->GetPosition().z));
