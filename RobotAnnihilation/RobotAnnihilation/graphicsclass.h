@@ -85,7 +85,7 @@ public:
 	void CreateImage(RECT srcRect, bool interactable, bool enabled, float2 pos, const char * filePath);
 
 	void Shutdown();
-	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels, vector<FreezeBarrel*> FreBarrels);
+	bool Render(InputManager *, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels, vector<FreezeBarrel*> FreBarrels, vector<GameObject*> MudPits);
 	void Update();
 
 	DX* GetGraphicsEngine() { return myDX; }

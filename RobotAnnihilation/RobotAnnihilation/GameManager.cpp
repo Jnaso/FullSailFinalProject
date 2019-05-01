@@ -206,6 +206,14 @@ void GameManager::ExitLevel()
 	}
 
 	FreBarrels.clear();
+
+	for (unsigned int i = 0; i < mudPits.size(); i++)
+	{
+		mudPits[i]->Shutdown();
+		delete mudPits[i];
+	}
+
+	mudPits.clear();
 }
 
 void GameManager::EndRound()
@@ -679,6 +687,19 @@ void GameManager::Update(float delta, float total)
 				}
 			}
 		}
+
+		myPlayer->SetSlow(false);
+		for (unsigned int i = 0; i < mudPits.size(); i++)
+		{
+			if (DitanceFloat3(mudPits[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 4.0f)
+			{
+				if (SphereToAABB(*mudPits[i]->GetCollider(0), myPlayer->GetAABB()))
+				{
+					myPlayer->SetSlow(true);
+				}
+			}
+		}
+
 		myInput->GetMouseInput()->Acquire();
 		myInput->SetCurrMouseState();
 		myGraphics->Update();
@@ -804,7 +825,7 @@ bool GameManager::Render()
 {
 	if (myEnemyManager)
 	{
-		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels, FreBarrels);
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels, FreBarrels, mudPits);
 	}
 	else
 	{
@@ -927,6 +948,18 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		AllObstacles.push_back(FreBarrels[i]);
 	}
 
+	unsigned int mudpitCount = rand() % 2 + 1;
+	for (unsigned int i = 0; i < mudpitCount; i++)
+	{
+		mudPits.push_back(new GameObject());
+		mudPits[i]->Initialize("Assets/MudPit.mesh", myDX->GetDevice());
+		while (DitanceFloat3(mudPits[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			mudPits[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), -.5f, (float)(rand() % 50 - 25) });
+		}
+		mudPits[i]->AddCollider({ mudPits[i]->GetPhysicsComponent()->GetPosition().x,  mudPits[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, mudPits[i]->GetPhysicsComponent()->GetPosition().z}, 2.0f);
+	}
+
 	this->window = window;
 
 	myShop = new Shop(GetUIManager(), myDX->GetDevice(), myPlayer);
@@ -1036,4 +1069,12 @@ void GameManager::ShutDown()
 	}
 
 	FreBarrels.clear();
+
+	for (unsigned int i = 0; i < mudPits.size(); i++)
+	{
+		mudPits[i]->Shutdown();
+		delete mudPits[i];
+	}
+
+	mudPits.clear();
 }

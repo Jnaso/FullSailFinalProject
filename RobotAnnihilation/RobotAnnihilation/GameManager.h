@@ -53,6 +53,7 @@ class GameManager
 	vector<FreezeBarrel*> FreBarrels;
 	vector<GameObject*> AllObstacles;
 	vector<Sound*> mySounds;
+	vector<GameObject*> mudPits;
 
 	vector<Pickup*> Pickups;
 

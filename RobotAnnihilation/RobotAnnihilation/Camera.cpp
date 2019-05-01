@@ -232,13 +232,13 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 		}
 	}
 
-	SetCharacterPosition(time, desiredCharDir, player);
+	SetCharacterPosition(time, desiredCharDir, player, myPlayer->GetSlow()); 
 	myPlayer->GetPhysicsComponent()->AddPosition(float3{ player.r[3].m128_f32[0], player.r[3].m128_f32[1], player.r[3].m128_f32[2] });
 	myPlayer->GetPhysicsComponent()->SetRotation(XMMatrixtoFloat3x3(player));
 }
 
 //Move the player's based 
-void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix)
+void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix, bool slowed)
 {
 	//Translate the chracter 
 	charPosition = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -257,7 +257,15 @@ void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, X
 	}
 
 	//Move the character by a speed 
-	float speed = 20.0f * time;
+	float speed;
+	if (!slowed)
+	{
+		speed = 20.0f * time;
+	}
+	else
+	{
+		speed = 5.0f * time;
+	}
 	charPosition = charPosition + (destinationDirection * speed);
 
 	//Translate the character 
