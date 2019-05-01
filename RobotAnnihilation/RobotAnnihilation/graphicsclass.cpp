@@ -449,6 +449,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 					{
 						myDebugRend->MakeSphere(*myTargets[i]->GetCollider(j));
 					}
+					
 				}
 
 				//world = lookcopy;
