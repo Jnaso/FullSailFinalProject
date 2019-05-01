@@ -241,6 +241,7 @@ void MyWindow::ShowPlayerUI()
 
 void MyWindow::HidePlayerUI()
 {
+	gameManager->m_countDownText->SetEnabled(false);
 	for (unsigned int i = 0; i < ARRAYSIZE(playerUI); i++)
 	{
 		playerUI[i]->SetEnabled(false);

@@ -778,7 +778,6 @@ void GameManager::Update(float delta, float total)
 		{
 			if(m_Frozen->GetEnabled()) m_Frozen->SetEnabled(false);
 		}
-		soundPlayTimer -= delta;
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
 			countDown = 5.0f;
@@ -794,12 +793,6 @@ void GameManager::Update(float delta, float total)
 				{
 					m_countDownText->SetEnabled(true);
 				}
-			}
-		
-			if (soundPlayTimer <= 0)
-			{
-				soundPlayTimer = 1.0f;
-				m_timerTickSound->PlayWaveFile();
 			}
 		}
 		if (countDown >= 0.0f && betweenRounds)
@@ -819,10 +812,17 @@ void GameManager::Update(float delta, float total)
 			}
 			else
 			{
+				soundPlayTimer -= delta;
 				TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
 				if (countTextTemp)
 				{
 					countTextTemp->SetText("Time To Next Round: \n             " + std::to_string((int)countDown + 1));
+				}
+
+				if (soundPlayTimer <= 0)
+				{
+					soundPlayTimer = 1.0f;
+					m_timerTickSound->PlayWaveFile();
 				}
 			}
 		}
