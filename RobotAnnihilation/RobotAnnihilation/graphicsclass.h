@@ -36,8 +36,6 @@ const float FAR_PLANE = 10000.0f;
 //Near plane
 const float NEAR_PLANE = 0.1f;
 
-
-
 class Graphics
 {
 private:
