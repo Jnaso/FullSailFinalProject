@@ -152,7 +152,7 @@ void Player::Update(float delta)
 	if (isFrozen)
 	{
 		frozenTime += delta;
-		if (frozenTime >= 10)
+		if (frozenTime >= 5)
 		{
 			isFrozen = false;
 			frozenTime = 0.0f;

@@ -346,7 +346,7 @@ void GameManager::Update(float delta, float total)
 			for (unsigned int j = 0; j < myEnemyManager->GetEnemies().size(); j++)
 			{
 				currBomb = dynamic_cast<BombEnemy*>(myEnemyManager->GetEnemies()[j]);
-				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 2.0f && bullets[i]->GetTag() == "Player")
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition()) <= 4.5f && bullets[i]->GetTag() == "Player")
 				{
 					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(1), delta))
 					{
