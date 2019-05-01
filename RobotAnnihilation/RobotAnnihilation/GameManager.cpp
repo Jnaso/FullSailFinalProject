@@ -687,9 +687,16 @@ void GameManager::Update(float delta, float total)
 			betweenRounds = true;
 			if (!m_countDownText->GetEnabled())
 			{
-				m_countDownText->SetEnabled(true);
+				if (GetUIManager()->m_mainMenu || GetUIManager()->m_pauseMenu)
+				{
+					m_countDownText->SetEnabled(false);
+				}
+				else
+				{
+					m_countDownText->SetEnabled(true);
+				}
 			}
-			
+		
 			if (soundPlayTimer <= 0)
 			{
 				soundPlayTimer = 1.0f;
@@ -711,7 +718,7 @@ void GameManager::Update(float delta, float total)
 				betweenRounds = false;
 				if (m_countDownText->GetEnabled())
 				{
-					m_countDownText->SetEnabled(false); 
+					m_countDownText->SetEnabled(false);
 				}
 				countDown = 0;
 				currentRound++;
