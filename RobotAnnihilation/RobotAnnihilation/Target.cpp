@@ -33,9 +33,9 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 
 void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
-
 	if (!GetFrozen())
 	{
+		Enemy::Update(delta, myPlayer, bullets, myDevice, window);
 		if (!attacking)
 		{
 			GameObject::Update(delta);
