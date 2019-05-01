@@ -56,10 +56,10 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 		Attack(myPlayer, bullets, myDevice, window);
 	}
 
-	/*if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
+	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
 	{
 		GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-	}*/
+	}
 
 	if (timeGetTime() >= HurtTime + 200)
 	{

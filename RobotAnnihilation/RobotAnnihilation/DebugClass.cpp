@@ -129,6 +129,11 @@ void DebugRenderer::MakeAABB(AABB ab)
 	end::debug_renderer::add_line(points[6], points[7], { 0, 1, 0, 1 });
 }
 
+void DebugRenderer::AddLine(end::float3 pos1, end::float3 pos2, end::float4 color)
+{
+	end::debug_renderer::add_line(pos1, pos2, color);
+}
+
 int DebugRenderer::GetVertCount()
 {
 	return vertexCount;

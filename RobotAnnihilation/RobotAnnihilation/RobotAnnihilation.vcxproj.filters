@@ -38,6 +38,7 @@
     <ClCompile Include="debug_renderer.cpp" />
     <ClCompile Include="DebugClass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="ExplosiveBarrel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="DebugClass.h" />
     <ClInclude Include="debug_renderer.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="ExplosiveBarrel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RobotAnnihilation.rc" />
