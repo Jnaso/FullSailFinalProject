@@ -33,41 +33,53 @@ bool RangedEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, flo
 
 void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
-	if (PlayOnce)
+	if (!isFrozen)
 	{
-		if (!Dead)
+		if (PlayOnce)
 		{
-			if (currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration)
+			if (!Dead)
 			{
-				currentAnimation->SetFrameTime(delta);
-				currentAnimation = PrevAnimation;
-				PlayOnce = false;
+				if (currentAnimation->GetFrameTime() + delta > currentAnimation->GetAnimationClip().duration)
+				{
+					currentAnimation->SetFrameTime(delta);
+					currentAnimation = PrevAnimation;
+					PlayOnce = false;
+				}
 			}
 		}
+		GameObject::Update(delta);
+		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z };
+		GetCollider(0)->radius = 2.0f;
+		GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 4.2f, GetPhysicsComponent()->GetPosition().z };
+
+		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
+
+		startTime += delta;
+
+		if (startTime > 5.0f)
+		{
+			Attack(myPlayer, bullets, myDevice, window);
+		}
+
+		if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
+		{
+			GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
+		}
+
+		if (timeGetTime() >= HurtTime + 200)
+		{
+			ImHurt = false;
+			HurtTime = 0.8f;
+		}
 	}
-	GameObject::Update(delta);
-	GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 2.0f, GetPhysicsComponent()->GetPosition().z };
-	GetCollider(0)->radius = 2.0f;
-	GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 4.2f, GetPhysicsComponent()->GetPosition().z };
-
-	GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
-
-	startTime += delta;
-
-	if (startTime > 5.0f)
+	else
 	{
-		Attack(myPlayer, bullets, myDevice, window);
-	}
-
-	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
-	{
-		GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-	}
-
-	if (timeGetTime() >= HurtTime + 200)
-	{
-		ImHurt = false;
-		HurtTime = 0.8f;
+		freezeTime += delta;
+		if (freezeTime >= 10.0f)
+		{
+			isFrozen = false;
+			freezeTime = 0.0f;
+		}
 	}
 
 }

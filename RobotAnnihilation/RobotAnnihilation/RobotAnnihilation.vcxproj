@@ -183,6 +183,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="ExplosiveBarrel.h" />
+    <ClInclude Include="FreezeBarrel.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="allofthelights.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="ExplosiveBarrel.cpp" />
+    <ClCompile Include="FreezeBarrel.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="InputManager.cpp" />

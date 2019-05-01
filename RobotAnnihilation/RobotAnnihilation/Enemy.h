@@ -10,6 +10,7 @@ class Enemy : public GameObject
 {
 protected:
 	bool readyToDestroy;
+	bool isFrozen;
 	float velocity;
 	bool attacking;
 	float health = 100;
@@ -17,6 +18,7 @@ protected:
 	float timeBetweenDamage = 0.0f;
 	float HurtTime = 0.8f;
 	bool ImHurt;
+	float freezeTime;
 
 	unsigned int CurrencyGiven;
 
@@ -40,6 +42,9 @@ public:
 
 	void SetHurt();
 	bool GetHurt();
+
+	void SetFrozen() { isFrozen = true; }
+	bool GetFrozen() { return isFrozen; }
 };
 
 

@@ -9,7 +9,7 @@ EnemyManager::EnemyManager()
 void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
-	enemyCount = 5;
+	//enemyCount = 5;
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
@@ -50,7 +50,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 	//	//currentEnemies++;
 	//	TotalEnemiesSpawned++;
 	//}
-	timeBetween = -2.5f;
+	//timeBetween = -5.0f;
 	this->myDevice = myDevice;
 }
 
@@ -113,24 +113,27 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	for (unsigned int i = 0; i < myEnemies.size(); i++)
 	{
 		currEnemy = dynamic_cast<Target*>(myEnemies[i]);
-		if (currEnemy)
-		{
-			accel = CalculateSeperation(*currEnemy);
-			accel += CalculateObstacleSeperation(*currEnemy, obstacles);
-			accel *= delta;
-			//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
-			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
-			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
-		}
 		currBomb = dynamic_cast<BombEnemy*>(myEnemies[i]);
-		if (currBomb)
+		if (!myEnemies[i]->GetFrozen())
 		{
-			accel = CalculateSeperation(*currBomb);
-			accel += CalculateObstacleSeperation(*currBomb, obstacles);
-			accel *= delta;
-			//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
-			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
-			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
+			if (currEnemy)
+			{
+				accel = CalculateSeperation(*currEnemy);
+				accel += CalculateObstacleSeperation(*currEnemy, obstacles);
+				accel *= delta;
+				//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+				myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
+				//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
+			}
+			if (currBomb)
+			{
+				accel = CalculateSeperation(*currBomb);
+				accel += CalculateObstacleSeperation(*currBomb, obstacles);
+				accel *= delta;
+				//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+				myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
+				//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
+			}
 		}
 
 		if (currBomb)

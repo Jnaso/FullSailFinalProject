@@ -29,6 +29,9 @@ protected:
 	bool collidingL;
 	bool collidingR;
 	bool Jumping = false;
+	bool slowed;
+	bool isFrozen;
+	float frozenTime;
 
 	int CurrentPoints = 0;
 
@@ -76,10 +79,10 @@ public:
 	void SetLeft(bool f);
 	void SetRight(bool f);
 
-	AABB GetAABB() { return playerBox; };
+	AABB GetAABB() { return playerBox; }
 
-	int GetHealth() { return health; };
-	int GetMaxHealth() { return MaxHealth; };
+	int GetHealth() { return health; }
+	int GetMaxHealth() { return MaxHealth; }
 	void SetHealth(int newHeath) { health = newHeath; }
 	void Damage(int amount) { health -= amount; }
 
@@ -96,5 +99,11 @@ public:
 
 	void FlipInvincible() { isInvincible = !isInvincible; }
 	bool GetInvincible() { return isInvincible; }
+
+	void SetFrozen() { isFrozen = true; }
+	bool GetFrozen() { return isFrozen; }
+
+	void SetSlow(bool s) { slowed = s; }
+	bool GetSlow() { return slowed; }
 };
 

@@ -198,6 +198,22 @@ void GameManager::ExitLevel()
 	}
 
 	mySounds.clear();
+
+	for (unsigned int i = 0; i < FreBarrels.size(); i++)
+	{
+		FreBarrels[i]->Shutdown();
+		delete FreBarrels[i];
+	}
+
+	FreBarrels.clear();
+
+	for (unsigned int i = 0; i < mudPits.size(); i++)
+	{
+		mudPits[i]->Shutdown();
+		delete mudPits[i];
+	}
+
+	mudPits.clear();
 }
 
 void GameManager::EndRound()
@@ -215,18 +231,23 @@ void GameManager::Update(float delta, float total)
 	{
 		myGraphics->Update(myInput, delta, myPlayer);
 		bool moving = false;
-		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+
+		if (!myPlayer->GetFrozen())
 		{
-			moving = true;
-		}
-		if (moving)
-		{
-			myPlayer->SetAnimationLower(1);
-		}
-		else
-		{
-			myPlayer->SetAnimationLower(0);
-		}
+			if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+			{
+				moving = true;
+			}
+
+			if (moving)
+			{
+				myPlayer->SetAnimationLower(1);
+			}
+			else
+			{
+				myPlayer->SetAnimationLower(0);
+			}
+		}		
 
 		myPlayer->GetPhysicsComponent()->SetForward(float3{ myGraphics->GetCamera()->GetCharDirection().m128_f32[0], myGraphics->GetCamera()->GetCharDirection().m128_f32[1], myGraphics->GetCamera()->GetCharDirection().m128_f32[2] });
 
@@ -259,27 +280,30 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->SubTimeLeft(delta);
 		}
-		if (myInput->GetCurrMouseState().rgbButtons[1])
+		if (!myPlayer->GetFrozen())
 		{
-			myPlayer->playOnce(2);
-		}
-		if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
-		{
-			ShootBullets();
-		}
-		if (myInput->GetKeyState('R') && myPlayer->GetCurrentGun()->GetCurrentAmmo() < myPlayer->GetCurrentGun()->GetMaxClipAmmo())
-		{
-			myPlayer->GetCurrentGun()->Reload();
-			myPlayer->AddSound(new Sound((char*)"Assets/Reload.wav", 0));
-			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
-			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
-			myInput->SetKeyState('R', false);
-		}
-		if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
-		{
-			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
-			myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
-			myPlayer->setJumping(true);
+			if (myInput->GetCurrMouseState().rgbButtons[1])
+			{
+				myPlayer->playOnce(2);
+			}
+			if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
+			{
+				ShootBullets();
+			}
+			if (myInput->GetKeyState('R') && myPlayer->GetCurrentGun()->GetCurrentAmmo() < myPlayer->GetCurrentGun()->GetMaxClipAmmo())
+			{
+				myPlayer->GetCurrentGun()->Reload();
+				myPlayer->AddSound(new Sound((char*)"Assets/Reload.wav", 0));
+				myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+				myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
+				myInput->SetKeyState('R', false);
+			}
+			if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
+			{
+				myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
+				myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
+				myPlayer->setJumping(true);
+			}
 		}
 		myPlayer->Update(delta);
 		if (myPlayer->GetCurrentGun()->isReloading())
@@ -449,6 +473,21 @@ void GameManager::Update(float delta, float total)
 				}
 				continue;
 			}
+
+			for (unsigned int j = 0; j < FreBarrels.size(); j++)
+			{
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), FreBarrels[j]->GetCollider(0)->center) <= (bullets[i]->GetCollider(0)->radius + FreBarrels[j]->GetCollider(0)->radius))
+				{
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *FreBarrels[j]->GetCollider(0), delta))
+					{
+						bullets[i]->SetDestroy();
+						FreBarrels[j]->Destroy(myPlayer, myEnemyManager->GetEnemies(), window);
+						mySounds.push_back(new Sound((char*)"Assets/Freeze.wav", 0));
+						mySounds[mySounds.size() - 1]->Initialize(window);
+						mySounds[mySounds.size() - 1]->PlayWaveFile();
+					}
+				}
+			}
 		}
 
 		myPlayer->SetForward(false);
@@ -530,6 +569,48 @@ void GameManager::Update(float delta, float total)
 			}
 		}
 
+		for (unsigned int i = 0; i < FreBarrels.size(); i++)
+		{
+
+			if (DitanceFloat3(FreBarrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
+			{
+				if (lineCircle(myPlayer->GetForwardArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetForward(true);
+				}
+
+				if (lineCircle(myPlayer->GetBackwardArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetBackward(true);
+				}
+
+				if (lineCircle(myPlayer->GetLeftArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetLeft(true);
+				}
+
+				if (lineCircle(myPlayer->GetRightArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetRight(true);
+				}
+
+			}
+
+			if (FreBarrels[i]->GetDestroy())
+			{
+				FreezeBarrel *temp;
+				FreBarrels[i]->Shutdown();
+				temp = FreBarrels[i];
+				FreBarrels.erase(FreBarrels.begin() + i);
+				AllObstacles.erase(((Obstacles.size() + Barrels.size()) + AllObstacles.begin()) + i);
+				delete temp;
+			}
+		}
+
 		for (size_t i = 0; i < Pickups.size(); i++)
 		{
 			Pickups[i]->Update(delta);
@@ -575,12 +656,10 @@ void GameManager::Update(float delta, float total)
 					if (myPlayer->GetTimeDamage() > 0)
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(15 * 1.5f, Enemy::DamageType::Melee, window);
-						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(15, Enemy::DamageType::Melee, window);
-						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
 					{
@@ -605,11 +684,22 @@ void GameManager::Update(float delta, float total)
 						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
 
 					}
-					float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
-					dir.normalize();
 				}
 			}
 		}
+
+		myPlayer->SetSlow(false);
+		for (unsigned int i = 0; i < mudPits.size(); i++)
+		{
+			if (DitanceFloat3(mudPits[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 4.0f)
+			{
+				if (SphereToAABB(*mudPits[i]->GetCollider(0), myPlayer->GetAABB()))
+				{
+					myPlayer->SetSlow(true);
+				}
+			}
+		}
+
 		myInput->GetMouseInput()->Acquire();
 		myInput->SetCurrMouseState();
 		myGraphics->Update();
@@ -680,6 +770,14 @@ void GameManager::Update(float delta, float total)
 		{
 			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
 		}
+		if (myPlayer->GetFrozen())
+		{
+			m_Frozen->SetEnabled(true);
+		}
+		else
+		{
+			if(m_Frozen->GetEnabled()) m_Frozen->SetEnabled(false);
+		}
 		soundPlayTimer -= delta;
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
@@ -703,14 +801,9 @@ void GameManager::Update(float delta, float total)
 				m_timerTickSound->PlayWaveFile();
 			}
 		}
-		if (countDown > 0.0f && betweenRounds)
+		if (countDown >= 0.0f && betweenRounds)
 		{
 			countDown -= delta;
-			TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
-			if (countTextTemp)
-			{
-				countTextTemp->SetText("Time To Next Round: \n" + std::to_string((int)countDown + 1));
-			}
 			if (countDown < 0.0f)
 			{
 				UpdateCurrentRound();
@@ -721,8 +814,15 @@ void GameManager::Update(float delta, float total)
 					m_countDownText->SetEnabled(false);
 				}
 				countDown = 0;
-				currentRound++;
-			
+				currentRound++;			
+			}
+			else
+			{
+				TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
+				if (countTextTemp)
+				{
+					countTextTemp->SetText("Time To Next Round: \n             " + std::to_string((int)countDown + 1));
+				}
 			}
 		}
 	}
@@ -732,7 +832,7 @@ bool GameManager::Render()
 {
 	if (myEnemyManager)
 	{
-		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels);
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels, FreBarrels, mudPits);
 	}
 	else
 	{
@@ -800,7 +900,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
 	{
 		Obstacles.push_back(new GameObject());
-		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
+		Obstacles[i]->Initialize("Assets/Tree.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 75 - 37.5), 0, (float)(rand() % 75 - 37.5) });		
 	}
 	for (int i = 0; i < Obstacles.size(); i++)
@@ -828,10 +928,10 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 9.0f);
 		AllObstacles.push_back(Obstacles[i]);
 	}
-	unsigned int barrelCount = rand() % 6 + 1;
+	unsigned int barrelCount = rand() % 4 + 1;
 	for (unsigned int i = 0; i < barrelCount; i++)
 	{
 		Barrels.push_back(new ExplosiveBarrel());
@@ -841,6 +941,30 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 			Barrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
 		}
 		AllObstacles.push_back(Barrels[i]);
+	}
+
+	unsigned int freBarrelCount = rand() % 4 + 1;
+	for (unsigned int i = 0; i < freBarrelCount; i++)
+	{
+		FreBarrels.push_back(new FreezeBarrel());
+		FreBarrels[i]->Initialize(myDX->GetDevice(), "Assets/FreezeBarrel.mesh", { (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		while (DitanceFloat3(FreBarrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			FreBarrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		}
+		AllObstacles.push_back(FreBarrels[i]);
+	}
+
+	unsigned int mudpitCount = rand() % 2 + 1;
+	for (unsigned int i = 0; i < mudpitCount; i++)
+	{
+		mudPits.push_back(new GameObject());
+		mudPits[i]->Initialize("Assets/MudPit.mesh", myDX->GetDevice());
+		while (DitanceFloat3(mudPits[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			mudPits[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 1.0f, (float)(rand() % 50 - 25) });
+		}
+		mudPits[i]->AddCollider({ mudPits[i]->GetPhysicsComponent()->GetPosition().x,  mudPits[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, mudPits[i]->GetPhysicsComponent()->GetPosition().z}, 2.0f);
 	}
 
 	this->window = window;
@@ -866,6 +990,13 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	m_timerTickSound = new Sound((char*)"Assets/Boost.wav", -2000);
 	m_timerTickSound->Initialize(window);
 
+	m_Frozen = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/freezeduration.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	tempImg = static_cast<ImageElement*>(m_Frozen);
+	if (tempImg)
+	{
+		tempImg->SetSize(100, 100);
+		tempImg->SetPos(screenW * 0.5f - 50, screenH * 0.5f + screenH * 0.25f);
+	}
 
 	m_countDownText = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Time To Next Round: \n");
 	m_countDownText->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(screenH * 0.5f));
@@ -937,4 +1068,20 @@ void GameManager::ShutDown()
 	}
 
 	mySounds.clear();
+
+	for (unsigned int i = 0; i < FreBarrels.size(); i++)
+	{
+		FreBarrels[i]->Shutdown();
+		delete FreBarrels[i];
+	}
+
+	FreBarrels.clear();
+
+	for (unsigned int i = 0; i < mudPits.size(); i++)
+	{
+		mudPits[i]->Shutdown();
+		delete mudPits[i];
+	}
+
+	mudPits.clear();
 }

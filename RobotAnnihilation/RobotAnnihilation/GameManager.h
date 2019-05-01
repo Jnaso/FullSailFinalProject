@@ -10,6 +10,7 @@
 #include "Shop.h"
 #include "Pickup.h"
 #include "ExplosiveBarrel.h"
+#include "FreezeBarrel.h"
 #include "Sound.h"
 #include "GeneralIncludes.h"
 class GameManager
@@ -31,7 +32,7 @@ class GameManager
 	char displayString2[65];
 
 	bool betweenRounds = false;
-	float countDown = 0.0f;
+	float countDown = 5.0f;
 	unsigned int currentRound = 0;
 
 	std::string numberToChr;
@@ -49,8 +50,10 @@ class GameManager
 
 	vector<GameObject*> Obstacles;
 	vector<ExplosiveBarrel*> Barrels;
+	vector<FreezeBarrel*> FreBarrels;
 	vector<GameObject*> AllObstacles;
 	vector<Sound*> mySounds;
+	vector<GameObject*> mudPits;
 
 	vector<Pickup*> Pickups;
 
@@ -90,6 +93,7 @@ public:
 	UIElement* m_weapon;
 
 	UIElement* m_lowHealthImage;
+	UIElement* m_Frozen;
 
 	//UI Modifier Functions
 	void UpdateScoreText();

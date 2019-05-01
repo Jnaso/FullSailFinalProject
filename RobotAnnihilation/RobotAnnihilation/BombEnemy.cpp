@@ -30,29 +30,41 @@ bool BombEnemy::Initialize(ID3D11Device * myDevice, const char * fileName, float
 
 void BombEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device * myDevice, std::vector<Enemy*> &myEnemies, HWND window)
 {
-	if (!attacking)
+	if (!isFrozen)
 	{
-		GameObject::Update(delta);
-		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-		GetPhysicsComponent()->SetForward(forward2);
-		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
-		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
-		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-	}
-
-	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
-	{
-		attacking = true;
-		ImHurt = true;
-	}
-	
-
-	if (attacking)
-	{
-		bombTimer -= delta;
-		if (bombTimer <= 0)
+		if (!attacking)
 		{
-			Attack(myPlayer, myEnemies, window);
+			GameObject::Update(delta);
+			float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+			GetPhysicsComponent()->SetForward(forward2);
+			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+		}
+
+		if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+		{
+			attacking = true;
+			ImHurt = true;
+		}
+
+
+		if (attacking)
+		{
+			bombTimer -= delta;
+			if (bombTimer <= 0)
+			{
+				Attack(myPlayer, myEnemies, window);
+			}
+		}
+	}
+	else
+	{
+		freezeTime += delta;
+		if (freezeTime >= 10.0f)
+		{
+			isFrozen = false;
+			freezeTime = 0.0f;
 		}
 	}
 }
@@ -62,10 +74,13 @@ void BombEnemy::Attack(Player * myPlayer, std::vector<Enemy*> &myEnemies, HWND w
 	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 10.0f)
 	{
 		float3 force = GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
-		myPlayer->GetPhysicsComponent()->SetVelocity({ 0.0f, 5.0f, 0.0f });
-		if (myPlayer->GetPhysicsComponent()->GetAccel().y != -3.0f)
+		if (!myPlayer->GetFrozen())
 		{
-			myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.0, 0 });
+			myPlayer->GetPhysicsComponent()->SetVelocity({ 0.0f, 5.0f, 0.0f });
+			if (myPlayer->GetPhysicsComponent()->GetAccel().y != -3.0f)
+			{
+				myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.0, 0 });
+			}
 		}
 		myPlayer->SetHealth(myPlayer->GetHealth() - 20);
 	}
