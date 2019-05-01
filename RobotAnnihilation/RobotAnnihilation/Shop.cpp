@@ -159,10 +159,11 @@ bool Shop::Initialize()
 		uGB->m_OnMouseClick = [this]()
 		{
 			//Show Details In Description Window
+			
+			
 			UpgradeWeapon(this->m_itemToDisplay);
 			Upgrade(this->m_itemToDisplay->m_weaponType);
-			++m_itemToDisplay->m_cost;
-			
+					
 		};
 	
 		uGB->SetSize(float2{ 200,50 });
@@ -242,33 +243,44 @@ void Shop::ShowMeleStats()
 
 void Shop::Upgrade(WEAPONTYPE type)
 {
-	switch (type)
+	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
+	if (res)
 	{
-	case Shop::AR:
-		m_assultRifleLevel += 1;
-		break;
-	case Shop::SMG:
-		m_subMachineGunLevel += 1;
-		break;
-	case Shop::PISTOL:
-		m_pistolLevel += 1;
-		break;
-	case Shop::MELEE:
-		m_meleeLevel += 1;
-		break;
-	case Shop::NONE:
-		break;
+		switch (type)
+		{
+		case Shop::AR:
+			m_assultRifleLevel += 1;
+			break;
+		case Shop::SMG:
+			m_subMachineGunLevel += 1;
+			break;
+		case Shop::PISTOL:
+			m_pistolLevel += 1;
+			break;
+		case Shop::MELEE:
+			m_meleeLevel += 1;
+			break;
+		case Shop::NONE:
+			break;
+		}
 	}
 }
 
 void Shop::UpgradeWeapon(Item* item)
 {
+	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
 	if (item)
 	{
-		//If Player Has Enough Currency
-		item->m_stats[STATS::AMMO_COUNT] += 1;
-		item->m_stats[STATS::DAMAGE] += 1;
-		item->m_stats[STATS::FIRE_RATE] += 1;
+		if (res)
+		{
+			//If Player Has Enough Currency
+			item->m_stats[STATS::AMMO_COUNT] += 1;
+			item->m_stats[STATS::DAMAGE] += 1;
+			item->m_stats[STATS::FIRE_RATE] += 1;
+			m_playerRef->AddCurrency(-m_itemToDisplay->m_cost);
+			++m_itemToDisplay->m_cost;
+			
+		}
 	}
 }
 

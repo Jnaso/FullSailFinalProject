@@ -30,7 +30,7 @@ protected:
 	bool collidingR;
 	bool Jumping = false;
 
-	unsigned int CurrentPoints = 0;
+	int CurrentPoints = 0;
 
 	bool PlayOnce = false;
 	bool isInvincible = false;
@@ -88,7 +88,7 @@ public:
 	bool isAttacking() { return PlayOnce; }
 
 	unsigned int GetPoints() { return CurrentPoints; }
-	void AddCurrency(unsigned int amount) { CurrentPoints += amount; }
+	void AddCurrency(int amount) { CurrentPoints += amount; }
 
 	void SetTimeDamage(float damage) { timeLeftDamage = damage; }
 	float GetTimeDamage() { return timeLeftDamage; }
