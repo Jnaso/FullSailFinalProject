@@ -14,7 +14,7 @@ protected:
 	bool attacking;
 	float health = 100;
 	float timeBetweenAttacks;
-	float timeBetweenDamage;
+	float timeBetweenDamage = 0.0f;
 	float HurtTime = 0.8f;
 	bool ImHurt;
 
@@ -29,7 +29,7 @@ public:
 	bool Destroy();
 	void SetDestroy();
 	virtual bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position) { return true; };
-	virtual void Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window) {};
+	virtual void Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
 
 
 	float GetHealth() { return health; }

@@ -303,7 +303,7 @@ void Graphics::Shutdown()
 }
 
 //Called each frame 
-bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups)
+bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bullet*> bullets, vector<Enemy*> myTargets, vector<GameObject*> Obstacles, vector<Pickup*> Pickups, vector<ExplosiveBarrel*> Barrels)
 {
 	XMMATRIX world, view, projection, frustumView;
 	bool result, render;
@@ -449,6 +449,14 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 					{
 						myDebugRend->MakeSphere(*myTargets[i]->GetCollider(j));
 					}
+					if (DitanceFloat3(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) > 5.0f)
+					{
+						myDebugRend->AddLine(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition(), float4{ 1.0f, 0, 0, 1.0f });
+					}
+					else
+					{
+						myDebugRend->AddLine(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition(), float4{ 0.0f, 1.0f, 0, 1.0f });
+					}
 				}
 
 				//world = lookcopy;
@@ -476,6 +484,25 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 					for (unsigned int j = 0; j < Obstacles[i]->GetColliders().size(); j++)
 					{
 						myDebugRend->MakeSphere(*Obstacles[i]->GetCollider(j));
+					}
+				}
+			}
+		}
+
+		for (unsigned int i = 0; i < Barrels.size(); i++)
+		{
+			render = myFrustum->CheckSphere(*Barrels[i]->GetCollider(0));
+			if (render)
+			{
+				world = XMMatrixMultiply(XMMatrixScaling(1.5f, 1.5f, 1.5f), XMMatrixTranslation(Barrels[i]->GetPhysicsComponent()->GetPosition().x, Barrels[i]->GetPhysicsComponent()->GetPosition().y, Barrels[i]->GetPhysicsComponent()->GetPosition().z));
+				Barrels[i]->Render(myDX->GetDeviceContext());
+				myShaderManager->RenderStaticShader(myDX->GetDeviceContext(), Barrels[i]->GetModelComponent()->GetObjectIndices().size(), world, view, projection, Barrels[i]->GetModelComponent()->GetDiffuseTexture(), myLighting->GetDirectionalDirection(), myLighting->GetDirectionalColor(), myPosition, myColors, myLighting->GetSpotlightColor(), myLighting->GetSpotlightDirection(), myLighting->GetSpotlightPosition(), myLighting->GetSpotlightExtra(), camPosition, myLighting->GetSpecularColor(), myLighting->GetSpecularExtra());
+
+				if (debugRenderer)
+				{
+					for (unsigned int j = 0; j < Barrels[i]->GetColliders().size(); j++)
+					{
+						myDebugRend->MakeSphere(*Barrels[i]->GetCollider(j));
 					}
 				}
 			}

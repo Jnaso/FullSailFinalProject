@@ -173,13 +173,31 @@ void GameManager::ExitLevel()
 		myEnemyManager = nullptr;
 	}
 
+	AllObstacles.clear();
+
+	for (unsigned int i = 0; i < Obstacles.size(); i++)
+	{
+		Obstacles[i]->Shutdown();
+		delete Obstacles[i];
+	}
+
 	Obstacles.clear();
 
-	/*if (myShop)
+	for (unsigned int i = 0; i < Barrels.size(); i++)
 	{
-		delete myShop;
-		myShop = nullptr;
-	}*/
+		Barrels[i]->Shutdown();
+		delete Barrels[i];
+	}
+
+	Barrels.clear();
+
+	for (unsigned int i = 0; i < mySounds.size(); i++)
+	{
+		mySounds[i]->Shutdown();
+		delete mySounds[i];
+	}
+
+	mySounds.clear();
 }
 
 void GameManager::EndRound()
@@ -270,7 +288,7 @@ void GameManager::Update(float delta, float total)
 			myPlayer->GetCurrentGun()->Reload();
 
 
-		myEnemyManager->Update(delta, myPlayer, Obstacles, bullets, myDX->GetDevice(), window);
+		myEnemyManager->Update(delta, myPlayer, AllObstacles, bullets, myDX->GetDevice(), window);
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
@@ -295,6 +313,7 @@ void GameManager::Update(float delta, float total)
 					{
 						myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
 					}
+					continue;
 				}
 			}
 
@@ -347,6 +366,7 @@ void GameManager::Update(float delta, float total)
 							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency() * 1.5f);
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 						}
+						continue;
 					}
 					else if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
@@ -395,6 +415,7 @@ void GameManager::Update(float delta, float total)
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 
 						}
+						continue;
 					}
 				}
 			}
@@ -408,8 +429,25 @@ void GameManager::Update(float delta, float total)
 						{
 							bullets[i]->SetDestroy();
 						}
+						continue;
 					}
 				}
+			}
+
+			for (unsigned int j = 0; j < Barrels.size(); j++)
+			{
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Barrels[j]->GetCollider(0)->center) <= (bullets[i]->GetCollider(0)->radius + Barrels[j]->GetCollider(0)->radius))
+				{
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *Barrels[j]->GetCollider(0), delta))
+					{
+						bullets[i]->SetDestroy();
+						Barrels[j]->Destroy(myPlayer, myEnemyManager->GetEnemies(), window);
+						mySounds.push_back(new Sound((char*)"Assets/ExplosiveBarrelSound.wav", 0));
+						mySounds[mySounds.size() - 1]->Initialize(window);
+						mySounds[mySounds.size() - 1]->PlayWaveFile();
+					}
+				}
+				continue;
 			}
 		}
 
@@ -447,6 +485,48 @@ void GameManager::Update(float delta, float total)
 						myPlayer->SetRight(true);
 					}
 				}
+			}
+		}
+
+		for (unsigned int i = 0; i < Barrels.size(); i++)
+		{
+		
+			if (DitanceFloat3(Barrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
+			{
+				if (lineCircle(myPlayer->GetForwardArrow(), *Barrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetForward(true);
+				}
+
+				if (lineCircle(myPlayer->GetBackwardArrow(), *Barrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetBackward(true);
+				}
+
+				if (lineCircle(myPlayer->GetLeftArrow(), *Barrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetLeft(true);
+				}
+
+				if (lineCircle(myPlayer->GetRightArrow(), *Barrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetRight(true);
+				}
+				
+			}
+
+			if (Barrels[i]->GetDestroy())
+			{
+				ExplosiveBarrel *temp;
+				Barrels[i]->Shutdown();
+				temp = Barrels[i];
+				Barrels.erase(Barrels.begin() + i);
+				AllObstacles.erase((Obstacles.size() + AllObstacles.begin()) + i);
+				delete temp;
 			}
 		}
 
@@ -494,12 +574,12 @@ void GameManager::Update(float delta, float total)
 				{
 					if (myPlayer->GetTimeDamage() > 0)
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(25 * 1.5f, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(15 * 1.5f, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(25, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(15, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
@@ -635,7 +715,7 @@ bool GameManager::Render()
 {
 	if (myEnemyManager)
 	{
-		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups);
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels);
 	}
 	else
 	{
@@ -732,7 +812,20 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		AllObstacles.push_back(Obstacles[i]);
 	}
+	unsigned int barrelCount = rand() % 6 + 1;
+	for (unsigned int i = 0; i < barrelCount; i++)
+	{
+		Barrels.push_back(new ExplosiveBarrel());
+		Barrels[i]->Initialize(myDX->GetDevice(), "Assets/ExplosiveBarrel.mesh", { (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		while (DitanceFloat3(Barrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			Barrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		}
+		AllObstacles.push_back(Barrels[i]);
+	}
+
 	this->window = window;
 
 	myShop = new Shop(GetUIManager(), myDX->GetDevice(), myPlayer);
@@ -800,6 +893,8 @@ void GameManager::ShutDown()
 		myShop = nullptr;
 	}
 
+	AllObstacles.clear();
+
 	for (unsigned int i = 0; i < Obstacles.size(); i++)
 	{
 		Obstacles[i]->Shutdown();
@@ -807,4 +902,20 @@ void GameManager::ShutDown()
 	}
 
 	Obstacles.clear();
+
+	for (unsigned int i = 0; i < Barrels.size(); i++)
+	{
+		Barrels[i]->Shutdown();
+		delete Barrels[i];
+	}
+
+	Barrels.clear();
+
+	for (unsigned int i = 0; i < mySounds.size(); i++)
+	{
+		mySounds[i]->Shutdown();
+		delete mySounds[i];
+	}
+
+	mySounds.clear();
 }

@@ -234,6 +234,7 @@ void Sound::ShutdownWaveFile(IDirectSoundBuffer8 **secondaryBuffer)
 bool Sound::PlayWaveFile()
 {
 	HRESULT result;
+	LPDWORD myWord = 0;
 
 	result = mySecondary->SetCurrentPosition(0);
 	if (FAILED(result))

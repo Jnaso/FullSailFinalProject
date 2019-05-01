@@ -9,8 +9,7 @@
 #include "EnemyManager.h"
 #include "Shop.h"
 #include "Pickup.h"
-#include "GeneralIncludes.h"
-class GameManager
+#include "ExplosiveBarrel.h"#include "Sound.h"#include "GeneralIncludes.h"class GameManager
 {
 	const float DEFAULTKEYPRESST = 0.01f;
 	float keyPressTimer = 0.01f;
@@ -44,6 +43,9 @@ class GameManager
 	Sound* m_timerTickSound;
 
 	vector<GameObject*> Obstacles;
+	vector<ExplosiveBarrel*> Barrels;
+	vector<GameObject*> AllObstacles;
+	vector<Sound*> mySounds;
 
 	vector<Pickup*> Pickups;
 

@@ -206,6 +206,8 @@ void DebugShader::DrawShaders(ID3D11DeviceContext * myContext)
 	myContext->VSSetShader(myVertexShader, NULL, 0);
 	myContext->PSSetShader(myPixelShader, NULL, 0);
 
-	myContext->Draw(end::debug_renderer::get_line_vert_count(), 0);
-	end::debug_renderer::clear_lines();
+	//myContext->Draw(end::debug_renderer::get_line_vert_count(), 0);
+	myContext->Draw(debug_renderer::get_line_vert_count(), 0);
+	//end::debug_renderer::clear_lines();
+	debug_renderer::clear_lines();
 }

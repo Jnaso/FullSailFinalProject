@@ -17,6 +17,14 @@ void Enemy::SetDestroy()
 	readyToDestroy = true;
 }
 
+void Enemy::Update(float delta, Player * myPlayer, std::vector<Bullet*>& bullets, ID3D11Device * myDevice, HWND window)
+{
+	if (timeBetweenDamage > 0)
+	{
+		timeBetweenDamage -= delta;
+	}
+}
+
 void Enemy::SubHealth(float newHealth, DamageType dmg, HWND window)
 {
 	if (dmg == DamageType::Melee)
