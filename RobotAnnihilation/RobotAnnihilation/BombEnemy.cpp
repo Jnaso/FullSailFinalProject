@@ -76,7 +76,7 @@ void BombEnemy::Attack(Player * myPlayer, std::vector<Enemy*> &myEnemies, HWND w
 		{
 			continue;
 		}
-		else if(DitanceFloat3(GetPhysicsComponent()->GetPosition(), myEnemies[i]->GetPhysicsComponent()->GetPosition()) <= 5.0f)
+		else if(DitanceFloat3(GetPhysicsComponent()->GetPosition(), myEnemies[i]->GetPhysicsComponent()->GetPosition()) <= 10.0f)
 		{
 			float3 force = GetPhysicsComponent()->GetPosition() - myEnemies[i]->GetPhysicsComponent()->GetPosition();
 			myEnemies[i]->GetPhysicsComponent()->SetPosition({ (myEnemies[i]->GetPhysicsComponent()->GetPosition().x + force.x * -1.0f), myEnemies[i]->GetPhysicsComponent()->GetPosition().y, (myEnemies[i]->GetPhysicsComponent()->GetPosition().z + force.z * -1.0f)});
