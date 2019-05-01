@@ -33,29 +33,62 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 
 void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
-	Enemy::Update(delta, myPlayer, bullets, myDevice, window);
-	if (!attacking)
+
+	if (!GetFrozen())
 	{
-		GameObject::Update(delta);
-		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
-		GetPhysicsComponent()->SetForward(forward2);
-		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
-		//GetPhysicsComponent()->AddVelocity(forward2 * velocity);
-		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
-		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
-		GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
+
+		if (!attacking)
+		{
+			GameObject::Update(delta);
+			float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
+			GetPhysicsComponent()->SetForward(forward2);
+			GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+			//GetPhysicsComponent()->AddVelocity(forward2 * velocity);
+			GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
+			GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
+			GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };
+		}
+		else
+		{
+			if (currentAnimation)
+			{
+				currentAnimation->Update(delta);
+			}
+		}
+		if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+		{
+			SetAnimation(0);
+			attacking = true;
+		}
+		else
+		{
+			SetAnimation(1);
+			attacking = false;
+		}
+
+		if (attacking)
+		{
+			Attack(myPlayer);
+		}
+		if (timeBetweenDamage > 0)
+		{
+			timeBetweenDamage -= delta;
+		}
+
+		if (timeGetTime() >= HurtTime + 200)
+		{
+			ImHurt = false;
+			HurtTime = 0.8f;
+		}
 	}
 	else
 	{
-		if (currentAnimation)
+		freezeTime += delta;
+		if (freezeTime >= 10.0f)
 		{
-			currentAnimation->Update(delta);
+			isFrozen = false;
+			freezeTime = 0.0f;
 		}
-	}	
-	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
-	{
-		SetAnimation(0);
-		attacking = true;
 	}
 	else
 	{

@@ -124,39 +124,42 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 	desiredCharDir = XMVECTOR{ 0, 0, 0, 0 };
 
 	//Update the chracter's direction and the camera's movement on each press 
-	if (myPlayer->MoveForward())
+	if (!myPlayer->GetFrozen())
 	{
-		if (myInput->GetKeyState((int)'W'))
+		if (myPlayer->MoveForward())
 		{
-			desiredCharDir += XMVECTOR{ camforward.m128_f32[0] * time, 0.0f* time, camforward.m128_f32[2] * time, camforward.m128_f32[3] * time };
-			moveChar = true;
+			if (myInput->GetKeyState((int)'W'))
+			{
+				desiredCharDir += XMVECTOR{ camforward.m128_f32[0] * time, 0.0f* time, camforward.m128_f32[2] * time, camforward.m128_f32[3] * time };
+				moveChar = true;
+			}
 		}
-	}
 
-	if (myPlayer->MoveBackward())
-	{
-		if (myInput->GetKeyState((int)'S'))
+		if (myPlayer->MoveBackward())
 		{
-			desiredCharDir += XMVECTOR{ -camforward.m128_f32[0] * time, 0.0f* time, -camforward.m128_f32[2] * time, -camforward.m128_f32[3] * time };
-			moveChar = true;
+			if (myInput->GetKeyState((int)'S'))
+			{
+				desiredCharDir += XMVECTOR{ -camforward.m128_f32[0] * time, 0.0f* time, -camforward.m128_f32[2] * time, -camforward.m128_f32[3] * time };
+				moveChar = true;
+			}
 		}
-	}
 
-	if (myPlayer->MoveLeft())
-	{
-		if (myInput->GetKeyState((int)'A'))
+		if (myPlayer->MoveLeft())
 		{
-			desiredCharDir += camRight * time;
-			moveChar = true;
+			if (myInput->GetKeyState((int)'A'))
+			{
+				desiredCharDir += camRight * time;
+				moveChar = true;
+			}
 		}
-	}
 
-	if (myPlayer->MoveRight())
-	{
-		if (myInput->GetKeyState((int)'D'))
+		if (myPlayer->MoveRight())
 		{
-			desiredCharDir += -camRight * time;
-			moveChar = true;
+			if (myInput->GetKeyState((int)'D'))
+			{
+				desiredCharDir += -camRight * time;
+				moveChar = true;
+			}
 		}
 	}
 
@@ -211,19 +214,22 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 		}
 	}*/
 
-	if (mouseCurrState.lX != myInput->GetPrevMouseState().lX || mouseCurrState.lY != myInput->GetPrevMouseState().lY)
+	if (!myPlayer->GetFrozen())
 	{
-		camYaw += myInput->GetPrevMouseState().lX * time * 0.1f;
-		camPitch += myInput->GetPrevMouseState().lY * time * 0.1f;
-		if (camPitch > 0.5f)
+		if (mouseCurrState.lX != myInput->GetPrevMouseState().lX || mouseCurrState.lY != myInput->GetPrevMouseState().lY)
 		{
-			camPitch = .5f;
+			camYaw += myInput->GetPrevMouseState().lX * time * 0.1f;
+			camPitch += myInput->GetPrevMouseState().lY * time * 0.1f;
+			if (camPitch > 0.5f)
+			{
+				camPitch = .5f;
+			}
+			if (camPitch < -.25f)
+			{
+				camPitch = -.25f;
+			}
+			myInput->SetPrevMouseState(mouseCurrState);
 		}
-		if (camPitch < -.25f)
-		{
-			camPitch = -.25f;
-		}
-		myInput->SetPrevMouseState(mouseCurrState);
 	}
 
 	SetCharacterPosition(time, desiredCharDir, player);

@@ -10,6 +10,7 @@
 #include "Shop.h"
 #include "Pickup.h"
 #include "ExplosiveBarrel.h"
+#include "FreezeBarrel.h"
 #include "Sound.h"
 #include "GeneralIncludes.h"
 class GameManager
@@ -49,6 +50,7 @@ class GameManager
 
 	vector<GameObject*> Obstacles;
 	vector<ExplosiveBarrel*> Barrels;
+	vector<FreezeBarrel*> FreBarrels;
 	vector<GameObject*> AllObstacles;
 	vector<Sound*> mySounds;
 
