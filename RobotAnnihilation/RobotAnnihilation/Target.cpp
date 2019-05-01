@@ -39,6 +39,7 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 		float3 forward2 = myPlayer->GetPhysicsComponent()->GetPosition() - GetPhysicsComponent()->GetPosition();
 		GetPhysicsComponent()->SetForward(forward2);
 		GetPhysicsComponent()->SetVelocity(forward2 * velocity);
+		//GetPhysicsComponent()->AddVelocity(forward2 * velocity);
 		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 2.0f, GetPhysicsComponent()->GetPosition().z });
 		GetCollider(0)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y, GetPhysicsComponent()->GetPosition().z };
 		GetCollider(1)->center = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 1.5f, GetPhysicsComponent()->GetPosition().z };

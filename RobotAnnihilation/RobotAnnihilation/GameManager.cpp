@@ -72,6 +72,12 @@ void GameManager::UpdateTimerText(float time)
 	tempT->SetText( "Total Time: " + std::to_string(static_cast<int>(time)) );
 }
 
+void GameManager::UpdateCurrentRound()
+{
+	TextElement* tempT = static_cast<TextElement*>(m_CurrentRound);
+	tempT->SetText( "Current Round: " + std::to_string(static_cast<int>(currentRound)) );
+}
+
 void GameManager::UpdateCurrencyText()
 {
 	TextElement* tempT = static_cast<TextElement*>(m_Currency);
@@ -254,6 +260,7 @@ void GameManager::Update(float delta, float total)
 		if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
 		{
 			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
+			myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
 			myPlayer->setJumping(true);
 		}
 		myPlayer->Update(delta);
@@ -487,12 +494,12 @@ void GameManager::Update(float delta, float total)
 				{
 					if (myPlayer->GetTimeDamage() > 0)
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount() * 1.5f, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(25 * 1.5f, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(myPlayer->GetCurrentGun()->GetDamageAmount(), Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(25, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
@@ -594,6 +601,7 @@ void GameManager::Update(float delta, float total)
 			countDown -= delta;
 			if (countDown < 0.0f)
 			{
+				UpdateCurrentRound();
 				myEnemyManager->StartNewRound();
 				betweenRounds = false;
 				countDown = 0;
@@ -634,7 +642,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	myPlayer->AddAninimation("Assets/Teddy_Run.anim", myDX->GetDevice(), 1);
 	myPlayer->AddAninimation("Assets/Teddy_Attack1.anim", myDX->GetDevice(), 2);
 	myPlayer->GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 });
-	myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.0, 0 });
+	//myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0, -3.0, 0 });
 	myPlayer->GetPhysicsComponent()->SetMass(100);
 	myPlayer->GetPhysicsComponent()->SetDamping(.99f);
 	myPlayer->SetAnimationUpper(1);
@@ -672,19 +680,35 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	{
 		Obstacles.push_back(new GameObject());
 		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
-		Obstacles[i]->GetPhysicsComponent()->SetPosition({(float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25)});
-		while (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 75 - 37.5), 0, (float)(rand() % 75 - 37.5) });		
+	}
+	for (int i = 0; i < Obstacles.size(); i++)
+	{
+		for (unsigned int j = 0; j < Obstacles.size(); j++)
 		{
-			Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+			if (Obstacles[i] == Obstacles[j])
+			{
+				continue;
+			}
+			while (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) < 20.0f || DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+			{
+				if (i == j)
+				{
+					j++;
+				}
+				Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 75 - 37.5), 0, (float)(rand() % 75 - 37.5) });
+				if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetPhysicsComponent()->GetPosition()) > 20.0f && DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) > 5.0f)
+				{
+					j = 0;
+				}
+			}
 		}
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
-		
 	}
-
 	this->window = window;
 
 	myShop = new Shop(GetUIManager(), myDX->GetDevice(), myPlayer);

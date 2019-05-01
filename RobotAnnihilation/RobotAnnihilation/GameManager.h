@@ -68,6 +68,7 @@ public:
 	UIElement* m_damagetimerText;
 	UIElement* m_Currency;
 	UIElement* m_Ammo;
+	UIElement* m_CurrentRound;
 
 	UIElement* m_YouLose;
 	UIElement* m_youLoseQuitButton;
@@ -86,6 +87,7 @@ public:
 	void UpdateCurrencyText();
 	void UpdateDamageTimerText();
 	void UpdateAmmoText();
+	void UpdateCurrentRound();
 	void SetLowHealthImage(bool val);
 	
 	InputManager* GetInputManager();

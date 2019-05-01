@@ -128,8 +128,8 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			accel = CalculateSeperation(*currBomb);
 			accel += CalculateObstacleSeperation(*currBomb, obstacles);
 			accel *= delta;
-			myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
-			//myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
+			//myEnemies[i]->GetPhysicsComponent()->SetVelocity({ myEnemies[i]->GetPhysicsComponent()->GetVelocity().x + accel.x,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().y + accel.y,  myEnemies[i]->GetPhysicsComponent()->GetVelocity().z + accel.z });
+			myEnemies[i]->GetPhysicsComponent()->AddVelocity({ accel.x, accel.y, accel.z });
 			//myEnemies[i]->GetPhysicsComponent()->AddForce({ accel.x, accel.y, accel.z });
 		}
 

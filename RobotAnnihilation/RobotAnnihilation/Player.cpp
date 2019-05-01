@@ -95,7 +95,8 @@ void Player::Update(float delta)
 		if (Jumping)
 		{
 			Jumping = false;
-			GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 });
+			GetPhysicsComponent()->SetVelocity(float3{ 0, 0.0f, 0 }); 
+			GetPhysicsComponent()->SetAccel(float3{ 0, 0.0, 0 });
 		}
 		GetPhysicsComponent()->SetPosition({ GetPhysicsComponent()->GetPosition().x, 1.0f, GetPhysicsComponent()->GetPosition().z });
 	}

@@ -59,10 +59,10 @@ void RangedEnemy::Update(float delta, Player * myPlayer, std::vector<Bullet*> &b
 		Attack(myPlayer, bullets, myDevice, window);
 	}
 
-	/*if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
+	if (DitanceFloat3(GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 15.0f)
 	{
 		GetPhysicsComponent()->SetPosition(float3{ (((float)rand() - (float)rand()) / RAND_MAX) * 60.0f, 2.0f, ((((float)rand() - (float)rand()) / RAND_MAX) * 60.0f) + 5.0f });
-	}*/
+	}
 
 	if (timeGetTime() >= HurtTime + 200)
 	{
@@ -90,7 +90,7 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 			forward = { forward.x + Offset, forward.y, forward.z + Offset };
 		}
 		bullets.push_back(new Bullet(1.0f));
-		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, GetPhysicsComponent()->GetPosition().y + 3.0f, GetPhysicsComponent()->GetPosition().z };
+		float3 playerPos = { GetPhysicsComponent()->GetPosition().x, 4.0f, GetPhysicsComponent()->GetPosition().z };
 		bullets[bullets.size() - 1]->Initialize(myDevice, "Assets/Bullet.mesh", forward, playerPos, "Enemy", 1.5f);
 		AddSound(new Sound((char*)"Assets/EnemyShoot.wav", 0));
 		GetSounds()[GetSounds().size() - 1]->Initialize(window);

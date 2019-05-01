@@ -150,8 +150,8 @@ void MyWindow::CreateWindows(int &screenW, int &screenH)
 	}
 	else
 	{
-		screenW = 1024;
-		screenH = 768;
+		screenW = 1920;
+		screenH = 1080;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenW) / 2;//Middle of the x-axis
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenH) / 2;//Middle of the y - axis
 	}
@@ -394,7 +394,7 @@ bool MyWindow::Initialize()
 	mainMenu[0] = robotAnnText;
 
 	//Images
-	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/MainMenu.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	UIElement* mainMenuBkrnd = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/NewMainMenuBackground.dds", gameManager->GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
 	mainMenuBkrnd->SetSize(float2{static_cast<float>(screenW), static_cast<float>(screenH)});
 	mainMenuBkrnd->SetPos(float2{ 0.0f, 0.0f });
 	mainMenu[1] = mainMenuBkrnd;
@@ -670,9 +670,11 @@ bool MyWindow::Initialize()
 
 	gameManager->m_damagetimerText->SetEnabled(false);
 
-	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 1000}, F_ARIAL, "");
+	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 950}, F_ARIAL, "");
 	
 	playerUI[10] = gameManager->m_Ammo = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 1700, 1000 }, F_ARIAL, "");
+	playerUI[11] = gameManager->m_CurrentRound = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 20, 1000 }, F_ARIAL, "");
+	gameManager->UpdateCurrentRound();
 #pragma endregion
 
 #pragma endregion
