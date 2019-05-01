@@ -32,7 +32,7 @@ class GameManager
 	char displayString2[65];
 
 	bool betweenRounds = false;
-	float countDown = 0.0f;
+	float countDown = 5.0f;
 	unsigned int currentRound = 0;
 
 	std::string numberToChr;
@@ -92,6 +92,7 @@ public:
 	UIElement* m_weapon;
 
 	UIElement* m_lowHealthImage;
+	UIElement* m_Frozen;
 
 	//UI Modifier Functions
 	void UpdateScoreText();

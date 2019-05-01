@@ -9,7 +9,7 @@ EnemyManager::EnemyManager()
 void EnemyManager::Initialize(ID3D11Device *myDevice)
 {
 	srand((unsigned int)time(NULL));
-	enemyCount = 5;
+	//enemyCount = 5;
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
@@ -50,7 +50,7 @@ void EnemyManager::Initialize(ID3D11Device *myDevice)
 	//	//currentEnemies++;
 	//	TotalEnemiesSpawned++;
 	//}
-	timeBetween = -2.5f;
+	//timeBetween = -5.0f;
 	this->myDevice = myDevice;
 }
 

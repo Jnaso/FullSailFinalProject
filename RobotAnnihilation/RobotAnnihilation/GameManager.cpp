@@ -224,20 +224,22 @@ void GameManager::Update(float delta, float total)
 		myGraphics->Update(myInput, delta, myPlayer);
 		bool moving = false;
 
-		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+		if (!myPlayer->GetFrozen())
 		{
-			moving = true;
-		}
-		
-		if (moving)
-		{
-			myPlayer->SetAnimationLower(1);
-		}
-		else
-		{
-			myPlayer->SetAnimationLower(0);
-		}
-		
+			if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
+			{
+				moving = true;
+			}
+
+			if (moving)
+			{
+				myPlayer->SetAnimationLower(1);
+			}
+			else
+			{
+				myPlayer->SetAnimationLower(0);
+			}
+		}		
 
 		myPlayer->GetPhysicsComponent()->SetForward(float3{ myGraphics->GetCamera()->GetCharDirection().m128_f32[0], myGraphics->GetCamera()->GetCharDirection().m128_f32[1], myGraphics->GetCamera()->GetCharDirection().m128_f32[2] });
 
@@ -270,27 +272,30 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->SubTimeLeft(delta);
 		}
-		if (myInput->GetCurrMouseState().rgbButtons[1])
+		if (!myPlayer->GetFrozen())
 		{
-			myPlayer->playOnce(2);
-		}
-		if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
-		{
-			ShootBullets();
-		}
-		if (myInput->GetKeyState('R') && myPlayer->GetCurrentGun()->GetCurrentAmmo() < myPlayer->GetCurrentGun()->GetMaxClipAmmo())
-		{
-			myPlayer->GetCurrentGun()->Reload();
-			myPlayer->AddSound(new Sound((char*)"Assets/Reload.wav", 0));
-			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
-			myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
-			myInput->SetKeyState('R', false);
-		}
-		if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
-		{
-			myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
-			myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
-			myPlayer->setJumping(true);
+			if (myInput->GetCurrMouseState().rgbButtons[1])
+			{
+				myPlayer->playOnce(2);
+			}
+			if (myInput->GetCurrMouseState().rgbButtons[0] && (!myGraphics->GetUIManager()->m_mainMenu && !myGraphics->GetUIManager()->m_pauseMenu) && !myPlayer->isAttacking())
+			{
+				ShootBullets();
+			}
+			if (myInput->GetKeyState('R') && myPlayer->GetCurrentGun()->GetCurrentAmmo() < myPlayer->GetCurrentGun()->GetMaxClipAmmo())
+			{
+				myPlayer->GetCurrentGun()->Reload();
+				myPlayer->AddSound(new Sound((char*)"Assets/Reload.wav", 0));
+				myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->Initialize(window);
+				myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
+				myInput->SetKeyState('R', false);
+			}
+			if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
+			{
+				myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
+				myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
+				myPlayer->setJumping(true);
+			}
 		}
 		myPlayer->Update(delta);
 		if (myPlayer->GetCurrentGun()->isReloading())
@@ -643,12 +648,10 @@ void GameManager::Update(float delta, float total)
 					if (myPlayer->GetTimeDamage() > 0)
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(15 * 1.5f, Enemy::DamageType::Melee, window);
-						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
 						myEnemyManager->GetEnemies()[i]->SubHealth(15, Enemy::DamageType::Melee, window);
-						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)
 					{
@@ -746,6 +749,14 @@ void GameManager::Update(float delta, float total)
 		{
 			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
 		}
+		if (myPlayer->GetFrozen())
+		{
+			m_Frozen->SetEnabled(true);
+		}
+		else
+		{
+			if(m_Frozen->GetEnabled()) m_Frozen->SetEnabled(false);
+		}
 		soundPlayTimer -= delta;
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
@@ -762,14 +773,9 @@ void GameManager::Update(float delta, float total)
 				m_timerTickSound->PlayWaveFile();
 			}
 		}
-		if (countDown > 0.0f && betweenRounds)
+		if (countDown >= 0.0f && betweenRounds)
 		{
 			countDown -= delta;
-			TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
-			if (countTextTemp)
-			{
-				countTextTemp->SetText("Time To Next Round: \n" + std::to_string((int)countDown + 1));
-			}
 			if (countDown < 0.0f)
 			{
 				UpdateCurrentRound();
@@ -780,8 +786,15 @@ void GameManager::Update(float delta, float total)
 					m_countDownText->SetEnabled(false); 
 				}
 				countDown = 0;
-				currentRound++;
-			
+				currentRound++;			
+			}
+			else
+			{
+				TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
+				if (countTextTemp)
+				{
+					countTextTemp->SetText("Time To Next Round: \n             " + std::to_string((int)countDown + 1));
+				}
 			}
 		}
 	}
@@ -937,6 +950,13 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	m_timerTickSound = new Sound((char*)"Assets/Boost.wav", -2000);
 	m_timerTickSound->Initialize(window);
 
+	m_Frozen = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/freezeduration.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	tempImg = static_cast<ImageElement*>(m_Frozen);
+	if (tempImg)
+	{
+		tempImg->SetSize(100, 100);
+		tempImg->SetPos(screenW * 0.5f - 50, screenH * 0.5f + screenH * 0.25f);
+	}
 
 	m_countDownText = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Time To Next Round: \n");
 	m_countDownText->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(screenH * 0.5f));

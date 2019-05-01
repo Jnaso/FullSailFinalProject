@@ -37,6 +37,7 @@ void Enemy::SubHealth(float newHealth, DamageType dmg, HWND window)
 			this->GetSounds()[this->GetSounds().size() - 1]->Initialize(window);
 			this->GetSounds()[this->GetSounds().size() - 1]->PlayWaveFile();
 			health -= newHealth;
+			SetHurt();
 			timeBetweenDamage = 0.25f;
 		}
 	}
