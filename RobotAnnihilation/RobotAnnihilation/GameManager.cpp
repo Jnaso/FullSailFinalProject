@@ -955,7 +955,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		mudPits[i]->Initialize("Assets/MudPit.mesh", myDX->GetDevice());
 		while (DitanceFloat3(mudPits[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
 		{
-			mudPits[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 1.0f, (float)(rand() % 50 - 25) });
+			mudPits[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0.0f, (float)(rand() % 50 - 25) });
 		}
 		mudPits[i]->AddCollider({ mudPits[i]->GetPhysicsComponent()->GetPosition().x,  mudPits[i]->GetPhysicsComponent()->GetPosition().y + 1.0f, mudPits[i]->GetPhysicsComponent()->GetPosition().z}, 2.0f);
 	}
