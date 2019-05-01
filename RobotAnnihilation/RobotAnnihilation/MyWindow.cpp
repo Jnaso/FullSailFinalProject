@@ -645,6 +645,7 @@ bool MyWindow::Initialize()
 		playerUI[7]->SetSize(42, 42);
 	}
 
+	//Crosshair Image
 	playerUI[8] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/Crosshair.dds", this->GetDevice());
 	if (playerUI[8])
 	{
@@ -652,6 +653,7 @@ bool MyWindow::Initialize()
 	}
 	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0, 100 }, F_ARIAL, "Current Weapon: ");
 
+	//Timer Text
 	std::string timerTxt = "Total Time: ";
 	playerUI[3] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, timerTxt);
 
@@ -664,15 +666,21 @@ bool MyWindow::Initialize()
 	const char* tempT100 = numToChr.c_str();
 	playerUI[5] = gameManager->m_timerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ CENTERX - 20, 0 }, F_ARIAL, tempT100);
 
+	//Fps Text
 	m_FPSText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1800, 50 }, F_ARIAL, "");
 
+	//Status Effect Timer Text
 	gameManager->m_damagetimerText = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, true, true, float2{ 1600, 900 }, F_ARIAL, "");
 
 	gameManager->m_damagetimerText->SetEnabled(false);
 
+	//Currency Text
 	playerUI[9] = gameManager->m_Currency = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{20, 950}, F_ARIAL, "");
 	
+	//Ammo Text
 	playerUI[10] = gameManager->m_Ammo = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 1700, 1000 }, F_ARIAL, "");
+
+	//Current Round Text
 	playerUI[11] = gameManager->m_CurrentRound = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 20, 1000 }, F_ARIAL, "");
 	gameManager->UpdateCurrentRound();
 #pragma endregion

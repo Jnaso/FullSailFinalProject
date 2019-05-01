@@ -16,7 +16,6 @@ public:
 	ExplosiveBarrel();
 
 	bool Initialize(ID3D11Device* myDevice, const char *fileName, float3 position);
-	void Update(float delta, Player * myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
 	void Destroy(Player *myPlayer, std::vector<Enemy*> &myEnemies, HWND window);
 
 	bool GetDestroy() { return readyToDestroy; }

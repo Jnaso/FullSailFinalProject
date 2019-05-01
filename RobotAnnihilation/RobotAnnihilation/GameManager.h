@@ -10,7 +10,9 @@
 #include "Shop.h"
 #include "Pickup.h"
 #include "ExplosiveBarrel.h"
+#include "FreezeBarrel.h"
 #include "Sound.h"
+#include "GeneralIncludes.h"
 class GameManager
 {
 	const float DEFAULTKEYPRESST = 0.01f;
@@ -41,8 +43,14 @@ class GameManager
 	EnemyManager *myEnemyManager;
 	Sphere playerSphere;
 
+	UIElement* m_youDiedImage;
+
+	float soundPlayTimer = 1.0f;
+	Sound* m_timerTickSound;
+
 	vector<GameObject*> Obstacles;
 	vector<ExplosiveBarrel*> Barrels;
+	vector<FreezeBarrel*> FreBarrels;
 	vector<GameObject*> AllObstacles;
 	vector<Sound*> mySounds;
 
@@ -74,6 +82,7 @@ public:
 	UIElement* m_Currency;
 	UIElement* m_Ammo;
 	UIElement* m_CurrentRound;
+	UIElement* m_countDownText;
 
 	UIElement* m_YouLose;
 	UIElement* m_youLoseQuitButton;
@@ -105,7 +114,7 @@ public:
 	void ShootBullets();
 
 	unsigned int GetEnemies() { return myEnemyManager->GetEnemyCount(); };
-	unsigned int GetHealth() { return myPlayer->GetHealth(); };
+	int GetHealth() { return myPlayer->GetHealth(); };
 	Player* GetPlayer() { return myPlayer; }
 
 	void SpawnHealthPickup(float3 pos);

@@ -5,6 +5,8 @@ Enemy::Enemy()
 	GameObject::GameObject();
 	readyToDestroy = false;
 	ImHurt = false;
+	isFrozen = false;
+	freezeTime = 0.0f;
 }
 
 bool Enemy::Destroy()

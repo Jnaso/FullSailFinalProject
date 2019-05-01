@@ -81,7 +81,7 @@ void GameManager::UpdateCurrentRound()
 void GameManager::UpdateCurrencyText()
 {
 	TextElement* tempT = static_cast<TextElement*>(m_Currency);
-	tempT->SetText( "Points: " + std::to_string(static_cast<int>(myPlayer->GetPoints())) );
+	tempT->SetText( "Gold: " + std::to_string(static_cast<int>(myPlayer->GetPoints())) );
 }
 
 void GameManager::UpdateDamageTimerText()
@@ -198,6 +198,14 @@ void GameManager::ExitLevel()
 	}
 
 	mySounds.clear();
+
+	for (unsigned int i = 0; i < FreBarrels.size(); i++)
+	{
+		FreBarrels[i]->Shutdown();
+		delete FreBarrels[i];
+	}
+
+	FreBarrels.clear();
 }
 
 void GameManager::EndRound()
@@ -215,10 +223,12 @@ void GameManager::Update(float delta, float total)
 	{
 		myGraphics->Update(myInput, delta, myPlayer);
 		bool moving = false;
+
 		if (myInput->GetKeyState((int)'W') || myInput->GetKeyState((int)'A') || myInput->GetKeyState((int)'S') || myInput->GetKeyState((int)'D'))
 		{
 			moving = true;
 		}
+		
 		if (moving)
 		{
 			myPlayer->SetAnimationLower(1);
@@ -227,6 +237,7 @@ void GameManager::Update(float delta, float total)
 		{
 			myPlayer->SetAnimationLower(0);
 		}
+		
 
 		myPlayer->GetPhysicsComponent()->SetForward(float3{ myGraphics->GetCamera()->GetCharDirection().m128_f32[0], myGraphics->GetCamera()->GetCharDirection().m128_f32[1], myGraphics->GetCamera()->GetCharDirection().m128_f32[2] });
 
@@ -449,6 +460,21 @@ void GameManager::Update(float delta, float total)
 				}
 				continue;
 			}
+
+			for (unsigned int j = 0; j < FreBarrels.size(); j++)
+			{
+				if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), FreBarrels[j]->GetCollider(0)->center) <= (bullets[i]->GetCollider(0)->radius + FreBarrels[j]->GetCollider(0)->radius))
+				{
+					if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *FreBarrels[j]->GetCollider(0), delta))
+					{
+						bullets[i]->SetDestroy();
+						FreBarrels[j]->Destroy(myPlayer, myEnemyManager->GetEnemies(), window);
+						mySounds.push_back(new Sound((char*)"Assets/Freeze.wav", 0));
+						mySounds[mySounds.size() - 1]->Initialize(window);
+						mySounds[mySounds.size() - 1]->PlayWaveFile();
+					}
+				}
+			}
 		}
 
 		myPlayer->SetForward(false);
@@ -526,6 +552,48 @@ void GameManager::Update(float delta, float total)
 				temp = Barrels[i];
 				Barrels.erase(Barrels.begin() + i);
 				AllObstacles.erase((Obstacles.size() + AllObstacles.begin()) + i);
+				delete temp;
+			}
+		}
+
+		for (unsigned int i = 0; i < FreBarrels.size(); i++)
+		{
+
+			if (DitanceFloat3(FreBarrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
+			{
+				if (lineCircle(myPlayer->GetForwardArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetForward(true);
+				}
+
+				if (lineCircle(myPlayer->GetBackwardArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetBackward(true);
+				}
+
+				if (lineCircle(myPlayer->GetLeftArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetLeft(true);
+				}
+
+				if (lineCircle(myPlayer->GetRightArrow(), *FreBarrels[i]->GetCollider(0)))
+				{
+					//std::cout << "BoomBoom" << std::endl;
+					myPlayer->SetRight(true);
+				}
+
+			}
+
+			if (FreBarrels[i]->GetDestroy())
+			{
+				FreezeBarrel *temp;
+				FreBarrels[i]->Shutdown();
+				temp = FreBarrels[i];
+				FreBarrels.erase(FreBarrels.begin() + i);
+				AllObstacles.erase(((Obstacles.size() + Barrels.size()) + AllObstacles.begin()) + i);
 				delete temp;
 			}
 		}
@@ -635,10 +703,20 @@ void GameManager::Update(float delta, float total)
 
 		if (GetHealth() <= 0)
 		{
+			m_lowHealthImage->SetEnabled(false);
 			if (!m_YouLose)
 			{
 				m_YouLose = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, true, float2{ 640,360 }, F_ARIAL, "YOU LOSE!!!");
 				paused = true;
+			}
+			if (!m_youDiedImage)
+			{
+				m_youDiedImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, true, float2{ 0,0 }, "DrawingStuff/DeathScreen.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+				ImageElement* youDiedImage = static_cast<ImageElement*>(m_youDiedImage);
+				if (youDiedImage)
+				{
+					youDiedImage->SetSize(static_cast<LONG>(screenW), static_cast<LONG>(screenH));
+				}
 			}
 			if (!m_youLoseQuitButton)
 			{
@@ -660,7 +738,7 @@ void GameManager::Update(float delta, float total)
 			}
 			GetPlayer()->SetHealth(0);
 		}
-		if (GetHealth() >= 0 && GetHealth() <= 100)
+		if (GetHealth() > 0 && GetHealth() <= 100)
 		{
 			m_lowHealthImage->SetEnabled(true);
 		}
@@ -668,22 +746,42 @@ void GameManager::Update(float delta, float total)
 		{
 			if(m_lowHealthImage->GetEnabled()) m_lowHealthImage->SetEnabled(false);
 		}
-
+		soundPlayTimer -= delta;
 		if (GetEnemies() <= 0 && !betweenRounds)
 		{
 			countDown = 5.0f;
 			betweenRounds = true;
+			if (!m_countDownText->GetEnabled())
+			{
+				m_countDownText->SetEnabled(true);
+			}
+			
+			if (soundPlayTimer <= 0)
+			{
+				soundPlayTimer = 1.0f;
+				m_timerTickSound->PlayWaveFile();
+			}
 		}
 		if (countDown > 0.0f && betweenRounds)
 		{
 			countDown -= delta;
+			TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
+			if (countTextTemp)
+			{
+				countTextTemp->SetText("Time To Next Round: \n" + std::to_string((int)countDown + 1));
+			}
 			if (countDown < 0.0f)
 			{
 				UpdateCurrentRound();
 				myEnemyManager->StartNewRound();
 				betweenRounds = false;
+				if (m_countDownText->GetEnabled())
+				{
+					m_countDownText->SetEnabled(false); 
+				}
 				countDown = 0;
 				currentRound++;
+			
 			}
 		}
 	}
@@ -693,7 +791,7 @@ bool GameManager::Render()
 {
 	if (myEnemyManager)
 	{
-		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels);
+		return myGraphics->Render(myInput, myPlayer, bullets, myEnemyManager->GetEnemies(), Obstacles, Pickups, Barrels, FreBarrels);
 	}
 	else
 	{
@@ -705,6 +803,10 @@ bool GameManager::Render()
 
 bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 {
+
+	screenW = windowWidth;
+	screenH = windowHeight;
+
 	bool result = myGraphics->Initialize(windowWidth, windowHeight, window, myInput);
 
 	myDX = myGraphics->GetGraphicsEngine();
@@ -788,7 +890,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 9.0f);
 		AllObstacles.push_back(Obstacles[i]);
 	}
-	unsigned int barrelCount = rand() % 6 + 1;
+	unsigned int barrelCount = rand() % 4 + 1;
 	for (unsigned int i = 0; i < barrelCount; i++)
 	{
 		Barrels.push_back(new ExplosiveBarrel());
@@ -800,6 +902,18 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		AllObstacles.push_back(Barrels[i]);
 	}
 
+	unsigned int freBarrelCount = rand() % 4 + 1;
+	for (unsigned int i = 0; i < freBarrelCount; i++)
+	{
+		FreBarrels.push_back(new FreezeBarrel());
+		FreBarrels[i]->Initialize(myDX->GetDevice(), "Assets/FreezeBarrel.mesh", { (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		while (DitanceFloat3(FreBarrels[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) < 5.0f)
+		{
+			FreBarrels[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 50 - 25), 0, (float)(rand() % 50 - 25) });
+		}
+		AllObstacles.push_back(FreBarrels[i]);
+	}
+
 	this->window = window;
 
 	myShop = new Shop(GetUIManager(), myDX->GetDevice(), myPlayer);
@@ -808,7 +922,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	if (!myShop->Initialize())
+	if (!myShop->Initialize(window))
 	{
 		return false;
 	}
@@ -817,15 +931,20 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
 	if (tempImg)
 	{
-
 		tempImg->SetSize(screenW, screenH);
 	}
 
-	screenW = windowWidth;
-	screenH = windowHeight;
+	m_timerTickSound = new Sound((char*)"Assets/Boost.wav", -2000);
+	m_timerTickSound->Initialize(window);
+
+
+	m_countDownText = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Time To Next Round: \n");
+	m_countDownText->SetPos(static_cast<LONG>(screenW * 0.5f), static_cast<LONG>(screenH * 0.5f));
 
 	return result;
 }
+
+
 
 void GameManager::ShutDown()
 {
@@ -889,4 +1008,12 @@ void GameManager::ShutDown()
 	}
 
 	mySounds.clear();
+
+	for (unsigned int i = 0; i < FreBarrels.size(); i++)
+	{
+		FreBarrels[i]->Shutdown();
+		delete FreBarrels[i];
+	}
+
+	FreBarrels.clear();
 }
