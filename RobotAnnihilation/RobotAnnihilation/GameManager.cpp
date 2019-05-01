@@ -605,8 +605,6 @@ void GameManager::Update(float delta, float total)
 						myPlayer->AddCurrency(myEnemyManager->GetEnemies()[i]->GetCurrency());
 
 					}
-					float3 dir = myEnemyManager->GetEnemies()[i]->GetPhysicsComponent()->GetPosition() - myPlayer->GetPhysicsComponent()->GetPosition();
-					dir.normalize();
 				}
 			}
 		}
@@ -759,7 +757,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	for (unsigned int i = 0; i < ObstaclesCount; i++)
 	{
 		Obstacles.push_back(new GameObject());
-		Obstacles[i]->Initialize("Assets/Obstacle.mesh", myDX->GetDevice());
+		Obstacles[i]->Initialize("Assets/Tree.mesh", myDX->GetDevice());
 		Obstacles[i]->GetPhysicsComponent()->SetPosition({ (float)(rand() % 75 - 37.5), 0, (float)(rand() % 75 - 37.5) });		
 	}
 	for (int i = 0; i < Obstacles.size(); i++)
@@ -787,7 +785,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 4.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 7.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
 		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 10.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
-		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 3.0f);
+		Obstacles[i]->AddCollider({ Obstacles[i]->GetPhysicsComponent()->GetPosition().x, Obstacles[i]->GetPhysicsComponent()->GetPosition().y + 13.0f, Obstacles[i]->GetPhysicsComponent()->GetPosition().z }, 9.0f);
 		AllObstacles.push_back(Obstacles[i]);
 	}
 	unsigned int barrelCount = rand() % 6 + 1;
