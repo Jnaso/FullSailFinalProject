@@ -313,6 +313,7 @@ void GameManager::Update(float delta, float total)
 					{
 						myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
 					}
+					continue;
 				}
 			}
 
@@ -365,6 +366,7 @@ void GameManager::Update(float delta, float total)
 							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency() * 1.5f);
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 						}
+						continue;
 					}
 					else if (MovingSphereToSphere(*bullets[i]->GetCollider(0), bullets[i]->GetPhysicsComponent()->GetVelocity(), *myEnemyManager->GetEnemies()[j]->GetCollider(0), delta))
 					{
@@ -413,6 +415,7 @@ void GameManager::Update(float delta, float total)
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 
 						}
+						continue;
 					}
 				}
 			}
@@ -426,6 +429,7 @@ void GameManager::Update(float delta, float total)
 						{
 							bullets[i]->SetDestroy();
 						}
+						continue;
 					}
 				}
 			}
@@ -443,6 +447,7 @@ void GameManager::Update(float delta, float total)
 						mySounds[mySounds.size() - 1]->PlayWaveFile();
 					}
 				}
+				continue;
 			}
 		}
 
