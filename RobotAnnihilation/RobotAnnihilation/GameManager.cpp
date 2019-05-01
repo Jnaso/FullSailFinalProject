@@ -784,16 +784,13 @@ void GameManager::Update(float delta, float total)
 			countDown = 5.0f;
 			betweenRounds = true;
 
-			if (!m_countDownText->GetEnabled())
+			if (m_countDownText->GetEnabled())
 			{
 				m_countDownText->SetEnabled(false);
 			}
 			else
 			{
-				if (m_countDownText->GetEnabled())
-				{
-					m_countDownText->SetEnabled(true);
-				}
+				
 			}
 		
 			if (soundPlayTimer <= 0)
@@ -819,6 +816,10 @@ void GameManager::Update(float delta, float total)
 			}
 			else
 			{
+				if (!m_countDownText->GetEnabled())
+				{
+					m_countDownText->SetEnabled(true);
+				}
 				TextElement* countTextTemp = static_cast<TextElement*>(m_countDownText);
 				if (countTextTemp)
 				{
