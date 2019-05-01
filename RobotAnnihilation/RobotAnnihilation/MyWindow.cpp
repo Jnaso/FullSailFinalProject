@@ -196,6 +196,7 @@ ID3D11Device * MyWindow::GetDevice()
 
 void MyWindow::HideMainMenu()
 {
+	gameManager->m_countDownText->SetEnabled(true);
 	gameManager->GetUIManager()->m_mainMenu = false;
 	for (unsigned int i = 0; i < 5; i++)
 	{
@@ -206,6 +207,7 @@ void MyWindow::HideMainMenu()
 
 void MyWindow::ShowMainMenu()
 {
+	gameManager->m_countDownText->SetEnabled(false);
 	gameManager->GetUIManager()->m_mainMenu = true;
 	for (unsigned int i = 0; i < 5; i++)
 	{
@@ -216,6 +218,7 @@ void MyWindow::ShowMainMenu()
 
 void MyWindow::SetPauseMenu(bool value)
 {
+	gameManager->m_countDownText->SetEnabled(!value);
 	gameManager->GetUIManager()->m_pauseMenu = value;
 	for (unsigned int i = 0; i < ARRAYSIZE(pauseMenu); i++)
 	{

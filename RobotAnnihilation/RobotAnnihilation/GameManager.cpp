@@ -783,13 +783,14 @@ void GameManager::Update(float delta, float total)
 		{
 			countDown = 5.0f;
 			betweenRounds = true;
+
 			if (!m_countDownText->GetEnabled())
 			{
-				if (GetUIManager()->m_mainMenu || GetUIManager()->m_pauseMenu)
-				{
-					m_countDownText->SetEnabled(false);
-				}
-				else
+				m_countDownText->SetEnabled(false);
+			}
+			else
+			{
+				if (m_countDownText->GetEnabled())
 				{
 					m_countDownText->SetEnabled(true);
 				}
