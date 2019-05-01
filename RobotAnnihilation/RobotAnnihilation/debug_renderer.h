@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Math_Types.h"
+//#include "Math_Types.h"
+#include "MathDefines.h"
 
 // Interface to the debug renderer
-namespace end
-{
+//namespace end
+//{
 	namespace debug_renderer
 	{
 		void add_line(float3 point_a, float3 point_b, float4 color_a, float4 color_b);
@@ -21,4 +22,4 @@ namespace end
 
 		size_t get_line_vert_capacity();
 	}
-}
+//}

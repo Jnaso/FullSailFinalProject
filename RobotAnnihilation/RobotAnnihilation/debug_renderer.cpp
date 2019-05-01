@@ -13,11 +13,11 @@ namespace
 	// CPU-side buffer of debug-line verts
 	// Copied to the GPU and reset every frame.
 	size_t line_vert_count = 0;
-	std::array< end::colored_vertex, MAX_LINE_VERTS> line_verts;
+	std::array< colored_vertex, MAX_LINE_VERTS> line_verts;
 }
 
-namespace end
-{
+//namespace end
+//{
 	namespace debug_renderer
 	{
 		void add_line(float3 point_a, float3 point_b, float4 color_a, float4 color_b)
@@ -75,4 +75,4 @@ namespace end
 			return MAX_LINE_VERTS;
 		}
 	}
-}
+//}

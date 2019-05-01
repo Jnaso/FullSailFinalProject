@@ -569,12 +569,12 @@ void GameManager::Update(float delta, float total)
 				{
 					if (myPlayer->GetTimeDamage() > 0)
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(25 * 1.5f, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(15 * 1.5f, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					else
 					{
-						myEnemyManager->GetEnemies()[i]->SubHealth(25, Enemy::DamageType::Melee, window);
+						myEnemyManager->GetEnemies()[i]->SubHealth(15, Enemy::DamageType::Melee, window);
 						myEnemyManager->GetEnemies()[i]->SetHurt();
 					}
 					if (myEnemyManager->GetEnemies()[i]->GetHealth() <= 0)

@@ -33,6 +33,7 @@ bool Target::Initialize(ID3D11Device * myDevice, const char * fileName, float3 p
 
 void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
 {
+	Enemy::Update(delta, myPlayer, bullets, myDevice, window);
 	if (!attacking)
 	{
 		GameObject::Update(delta);
@@ -65,10 +66,6 @@ void Target::Update(float delta, Player *myPlayer, std::vector<Bullet*> &bullets
 	if (attacking)
 	{
 		Attack(myPlayer);
-	}
-	if (timeBetweenDamage > 0)
-	{
-		timeBetweenDamage -= delta;
 	}
 
 	if (timeGetTime() >= HurtTime + 200)

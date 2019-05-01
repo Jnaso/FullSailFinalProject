@@ -24,7 +24,8 @@ public:
 
 	void MakeSphere(Sphere);
 	void MakeAABB(AABB);
-	void AddLine(end::float3, end::float3, end::float4);
+	//void AddLine(end::float3, end::float3, end::float4);
+	void AddLine(float3, float3, float4);
 
 	int GetVertCount();
 

@@ -719,3 +719,24 @@ inline XMMATRIX Float3x3toXMMatrix(float3x3 input)
 	//result.r[4].m128_f32[3] = 1.0f;
 	return result;
 }
+
+struct colored_vertex
+{
+	float3 pos = { 0.0f, 0.0f, 0.0f };
+	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	colored_vertex() = default;
+	colored_vertex(const colored_vertex&) = default;
+
+	inline colored_vertex(const float3& p, const float4& c) : pos{ p }, color{ c } {}
+	inline colored_vertex(const float3& p, const float3& c) : pos{ p }, color{ c.x, c.y, c.z, 1.0f } {}
+	inline colored_vertex(const float3& p, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) : pos{ p }, color{ r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f } {}
+};
+
+template<typename T>
+void Swap(T &a, T &b)
+{
+	T c = a;
+	a = b;
+	b = c;
+}

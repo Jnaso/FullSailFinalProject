@@ -449,7 +449,14 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 					{
 						myDebugRend->MakeSphere(*myTargets[i]->GetCollider(j));
 					}
-					
+					if (DitanceFloat3(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) > 5.0f)
+					{
+						myDebugRend->AddLine(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition(), float4{ 1.0f, 0, 0, 1.0f });
+					}
+					else
+					{
+						myDebugRend->AddLine(myTargets[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition(), float4{ 0.0f, 1.0f, 0, 1.0f });
+					}
 				}
 
 				//world = lookcopy;
