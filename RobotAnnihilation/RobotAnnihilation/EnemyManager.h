@@ -14,7 +14,7 @@ class EnemyManager
 {
 private:
 	vector<Enemy *> myEnemies;
-	unsigned int enemyCount;
+	unsigned int enemyCount = 5;
 	unsigned int currentEnemies = 0;
 	float timeBetween = 0.0f;
 	float CohesionStrength;
@@ -39,7 +39,7 @@ public:
 
 	void Initialize(ID3D11Device *myDevice);
 	void Shutdown();
-	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window);
+	void Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window, bool start);
 
 	vector<Enemy *> &GetEnemies();
 	unsigned int GetEnemyCount();

@@ -312,7 +312,7 @@ void GameManager::Update(float delta, float total)
 			myPlayer->GetCurrentGun()->Reload();
 
 
-		myEnemyManager->Update(delta, myPlayer, AllObstacles, bullets, myDX->GetDevice(), window);
+		myEnemyManager->Update(delta, myPlayer, AllObstacles, bullets, myDX->GetDevice(), window, betweenRounds);
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
@@ -785,14 +785,14 @@ void GameManager::Update(float delta, float total)
 
 			if (!m_countDownText->GetEnabled())
 			{
-				m_countDownText->SetEnabled(false);
+				m_countDownText->SetEnabled(true);
 			}
-			else
+		}
+		else if (!betweenRounds)
+		{
+			if (m_countDownText->GetEnabled())
 			{
-				if (m_countDownText->GetEnabled())
-				{
-					m_countDownText->SetEnabled(true);
-				}
+				m_countDownText->SetEnabled(false);
 			}
 		}
 		if (countDown >= 0.0f && betweenRounds)

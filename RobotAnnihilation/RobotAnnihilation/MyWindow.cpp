@@ -250,7 +250,7 @@ void MyWindow::HidePlayerUI()
 
 void MyWindow::SetOptionsMenu(bool val)
 {
-	gameManager->m_countDownText->SetEnabled(!val);
+	gameManager->m_countDownText->SetEnabled(false);
 	for (int i = 0; i < ARRAYSIZE(optionsMenu); i++)
 	{
 		optionsMenu[i]->SetEnabled(val);

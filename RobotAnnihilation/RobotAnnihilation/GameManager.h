@@ -31,7 +31,7 @@ class GameManager
 	char displayString1[65];
 	char displayString2[65];
 
-	bool betweenRounds = false;
+	bool betweenRounds = true;
 	float countDown = 5.0f;
 	unsigned int currentRound = 0;
 

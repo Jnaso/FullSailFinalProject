@@ -65,11 +65,11 @@ void EnemyManager::Shutdown()
 }
 
 
-void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window)
+void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obstacles, std::vector<Bullet*> &bullets, ID3D11Device *myDevice, HWND window, bool start)
 {
 	float3 accel;
 	float accelMulti = 0;
-	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned)
+	if (timeBetween > .25f && enemyCount > TotalEnemiesSpawned && !start)
 	{
 		if (rand() % 8 == 0)
 		{
