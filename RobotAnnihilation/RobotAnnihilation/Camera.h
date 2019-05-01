@@ -42,7 +42,7 @@ public:
 	void Update(XMFLOAT3 newLookAt);
 	void PassInViewMatrix(XMMATRIX&);
 
-	void SetCharacterPosition(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix);
+	void SetCharacterPosition(double time, XMVECTOR& destinationDirection, XMMATRIX& worldMatrix, bool slowed);
 };
 
 #endif // !_CAMERA_H
