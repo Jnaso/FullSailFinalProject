@@ -137,7 +137,7 @@ void GameManager::SpawnHealthPickup(float3 pos)
 	newpickup->SetLifeTime(15.0f);
 	newpickup->SetType(Pickup::PickupType::HEALTH);
 	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
-	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
+	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 2.0f);
 	Pickups.push_back(newpickup);
 }
 
@@ -148,7 +148,7 @@ void GameManager::SpawnDamagePickup(float3 pos)
 	newpickup->SetLifeTime(15.0f);
 	newpickup->SetType(Pickup::PickupType::DAMAGE);
 	newpickup->GetPhysicsComponent()->SetPosition({ pos.x, pos.y, pos.z });
-	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 1.0f);
+	newpickup->AddCollider(newpickup->GetPhysicsComponent()->GetPosition(), 2.0f);
 	Pickups.push_back(newpickup);
 }
 
@@ -229,6 +229,16 @@ void GameManager::Update(float delta, float total)
 	keyPressTimer -= delta;
 	if (!GetUIManager()->m_mainMenu && !GetUIManager()->m_pauseMenu)
 	{
+		if (myInput->GetKeyState('C'))
+		{
+			SpawnDamagePickup({myPlayer->GetPhysicsComponent()->GetPosition().x + 5.0f, myPlayer->GetPhysicsComponent()->GetPosition().y, myPlayer->GetPhysicsComponent()->GetPosition().z + 5.0f});
+			myInput->SetKeyState('C', false);
+		}
+		if (myInput->GetKeyState('V'))
+		{
+			SpawnHealthPickup({myPlayer->GetPhysicsComponent()->GetPosition().x + 5.0f, myPlayer->GetPhysicsComponent()->GetPosition().y, myPlayer->GetPhysicsComponent()->GetPosition().z + 5.0f});
+			myInput->SetKeyState('V', false);
+		}
 		myGraphics->Update(myInput, delta, myPlayer);
 		bool moving = false;
 
@@ -620,7 +630,7 @@ void GameManager::Update(float delta, float total)
 				--i;
 				continue;
 			}
-			if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 3.0f)
+			if (DitanceFloat3(Pickups[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 5.0f)
 			{
 				if (SphereToAABB(*Pickups[i]->GetCollider(0), myPlayer->GetAABB()))
 				{					
@@ -983,7 +993,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 		return false;
 	}
 
-	m_lowHealthImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/almostDead.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	m_lowHealthImage = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/almostDead.dds", myDX->GetDevice());
 	ImageElement* tempImg = static_cast<ImageElement*>(m_lowHealthImage);
 	if (tempImg)
 	{
@@ -993,7 +1003,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	m_timerTickSound = new Sound((char*)"Assets/Boost.wav", -2000);
 	m_timerTickSound->Initialize(window);
 
-	m_Frozen = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/freezeduration.dds", GetGraphicsManager()->GetGraphicsEngine()->GetDevice());
+	m_Frozen = GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/freezeduration.dds", myDX->GetDevice());
 	tempImg = static_cast<ImageElement*>(m_Frozen);
 	if (tempImg)
 	{

@@ -39,150 +39,156 @@ bool Shop::Initialize(HWND wnd)
 
 	m_buttonClickSound->Initialize(wnd);
 
-	#pragma region DESC_TEXT
-	m_shopUI["desc text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, 0, "Description");
-	TextElement* desText = static_cast<TextElement*>(m_shopUI["desc text"]);
-	if (desText)
-	{
-		desText->SetPos(float2{ 500, 200 });
-	}
-	#pragma endregion
 
-	#pragma region COST_TEXT
-	m_shopUI["cost text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Gold: ");
-	TextElement* costText = static_cast<TextElement*>(m_shopUI["cost text"]);
-	if (costText)
+	if (m_UIManager)
 	{
-		costText->SetPos(float2{ 500, 500 });
-	}
-	#pragma endregion
 
-	#pragma region BACKROUND_IMAGE
+#pragma region DESC_TEXT
+		m_shopUI["desc text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Description");
+		TextElement* desText = static_cast<TextElement*>(m_shopUI["desc text"]);
+		if (desText)
+		{
+			desText->SetPos(float2{ 500, 200 });
+		}
+
+#pragma endregion
+
+#pragma region COST_TEXT
+		m_shopUI["cost text"] = m_UIManager->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Gold: ");
+		TextElement* costText = static_cast<TextElement*>(m_shopUI["cost text"]);
+		if (costText)
+		{
+			costText->SetPos(float2{ 500, 500 });
+		}
+#pragma endregion
+
+#pragma region BACKROUND_IMAGE
 		m_shopUI["Background"] = m_UIManager->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/ShopBkrnd.dds", m_device);
 		if (m_shopUI["Background"])
 		{
 			m_shopUI["Background"]->SetSize(1920, 1080);
 		}
-	#pragma endregion
-	
-	#pragma region AR_BUTTON
-	m_shopUI["ARButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Assult Rifle");
-	ButtonElement* arB = static_cast<ButtonElement*>(m_shopUI["ARButton"]);
-	if (arB)
-	{
-		arB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		arB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		arB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		arB->m_OnMouseClick = [this]()
-		{
-			// Show Details In Description Window
-			ShowARStats();
-		};
-		arB->SetSize(float2{ 200,50 });
-		arB->SetPos(float2{ 300,0 });
-	}
-	else
-	{
-		return false;
-	}
-	#pragma endregion
-	
-	#pragma region SMG_BUTTON
-	m_shopUI["SMGButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Sub-Machine Gun Rifle");
-	ButtonElement* sMB = static_cast<ButtonElement*>(m_shopUI["SMGButton"]);
-	if (sMB)
-	{
-		sMB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		sMB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		sMB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		sMB->m_OnMouseClick = [this]()
-		{
-			//Show Details In Description Window
-			ShowSMGStats();
-		};
-	
-		sMB->SetSize(float2{ 200,50 });
-		sMB->SetPos(float2{ 300,50 });
-	}
-	else
-	{
-		return false;
-	}
-	#pragma endregion
-	
-	#pragma region PISTOL_BUTTON
-	m_shopUI["PistolButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Hand Gun Rifle");
-	ButtonElement* hGB = static_cast<ButtonElement*>(m_shopUI["PistolButton"]);
-	if (hGB)
-	{
-		hGB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		hGB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		hGB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		hGB->m_OnMouseClick = [this]()
-		{
-			//Show Details In Description Window
-			ShowPistolStats();
-		};
-	
-		hGB->SetSize(float2{ 200,50 });
-		hGB->SetPos(float2{ 300,100 });
-	}
-	else
-	{
-		return false;
-	}
-	#pragma endregion
-	
-	#pragma region MELEE_BUTTON
-	m_shopUI["MeleeButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Melee Weapon");
-	ButtonElement* mWB = static_cast<ButtonElement*>(m_shopUI["MeleeButton"]);
-	if (mWB)
-	{
-		mWB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		mWB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		mWB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		mWB->m_OnMouseClick = [this]()
-		{
-			//Show Details In Description Window
-			ShowMeleStats();
-		};
-	
-		mWB->SetSize(float2{ 200,50 });
-		mWB->SetPos(float2{ 300,150 });
-	}
-	else
-	{
-		return false;
-	}
-	#pragma endregion
-	
-	#pragma region UPGRADE_BUTTON
-	m_shopUI["Upgrade"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "UPGRADE");
-	ButtonElement* uGB = static_cast<ButtonElement*>(m_shopUI["Upgrade"]);
-	if (uGB)
-	{
-		uGB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
-		uGB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
-		uGB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
-		uGB->m_OnMouseClick = [this]()
-		{
-			//Show Details In Description Window
-			
-			
-			UpgradeWeapon(this->m_itemToDisplay);
-			Upgrade(this->m_itemToDisplay->m_weaponType);
-					
-		};
-	
-		uGB->SetSize(float2{ 200,50 });
-		uGB->SetPos(float2{ 300,200 });
-	}
-	else
-	{
-		return false;
-	}
-	#pragma endregion
+#pragma endregion
 
+#pragma region AR_BUTTON
+		m_shopUI["ARButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Assult Rifle");
+		ButtonElement* arB = static_cast<ButtonElement*>(m_shopUI["ARButton"]);
+		if (arB)
+		{
+			arB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+			arB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+			arB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+			arB->m_OnMouseClick = [this]()
+			{
+				// Show Details In Description Window
+				ShowARStats();
+			};
+			arB->SetSize(float2{ 200,50 });
+			arB->SetPos(float2{ 300,0 });
+		}
+		else
+		{
+			return false;
+		}
+#pragma endregion
+
+#pragma region SMG_BUTTON
+		m_shopUI["SMGButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Sub-Machine Gun Rifle");
+		ButtonElement* sMB = static_cast<ButtonElement*>(m_shopUI["SMGButton"]);
+		if (sMB)
+		{
+			sMB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+			sMB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+			sMB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+			sMB->m_OnMouseClick = [this]()
+			{
+				//Show Details In Description Window
+				ShowSMGStats();
+			};
+
+			sMB->SetSize(float2{ 200,50 });
+			sMB->SetPos(float2{ 300,50 });
+		}
+		else
+		{
+			return false;
+		}
+#pragma endregion
+
+#pragma region PISTOL_BUTTON
+		m_shopUI["PistolButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Hand Gun Rifle");
+		ButtonElement* hGB = static_cast<ButtonElement*>(m_shopUI["PistolButton"]);
+		if (hGB)
+		{
+			hGB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+			hGB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+			hGB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+			hGB->m_OnMouseClick = [this]()
+			{
+				//Show Details In Description Window
+				ShowPistolStats();
+			};
+
+			hGB->SetSize(float2{ 200,50 });
+			hGB->SetPos(float2{ 300,100 });
+		}
+		else
+		{
+			return false;
+		}
+#pragma endregion
+
+#pragma region MELEE_BUTTON
+		m_shopUI["MeleeButton"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "Melee Weapon");
+		ButtonElement* mWB = static_cast<ButtonElement*>(m_shopUI["MeleeButton"]);
+		if (mWB)
+		{
+			mWB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+			mWB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+			mWB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+			mWB->m_OnMouseClick = [this]()
+			{
+				//Show Details In Description Window
+				ShowMeleStats();
+			};
+
+			mWB->SetSize(float2{ 200,50 });
+			mWB->SetPos(float2{ 300,150 });
+		}
+		else
+		{
+			return false;
+		}
+#pragma endregion
+
+#pragma region UPGRADE_BUTTON
+		m_shopUI["Upgrade"] = m_UIManager->CreateButton(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, m_device, 0, "UPGRADE");
+		ButtonElement* uGB = static_cast<ButtonElement*>(m_shopUI["Upgrade"]);
+		if (uGB)
+		{
+			uGB->SetDefaultTexture("DrawingStuff/ButtonDefault.dds");
+			uGB->SetMouseOverTexture("DrawingStuff/ButtonMouseOver.dds");
+			uGB->SetMouseClickTexture("DrawingStuff/ButtonMouseClick.dds");
+			uGB->m_OnMouseClick = [this]()
+			{
+				//Show Details In Description Window
+
+
+				UpgradeWeapon(this->m_itemToDisplay);
+				Upgrade(this->m_itemToDisplay->m_weaponType);
+
+			};
+
+			uGB->SetSize(float2{ 200,50 });
+			uGB->SetPos(float2{ 300,200 });
+		}
+		else
+		{
+			return false;
+		}
+#pragma endregion
+
+	}
 	#pragma endregion
 
 	return true;
@@ -251,7 +257,7 @@ void Shop::ShowMeleStats()
 
 void Shop::Upgrade(WEAPONTYPE type)
 {
-	m_buttonClickSound->PlayWaveFile();
+	//m_buttonClickSound->PlayWaveFile();
 	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
 	if (res)
 	{
