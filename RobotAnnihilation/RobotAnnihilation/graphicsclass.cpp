@@ -570,7 +570,7 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 	{
 
 		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, spriteBlendState, nullptr, spriteDepthState, spriteRasterState);
-		 
+
 		myDX->GetDeviceContext()->RSSetState(spriteRasterState);
 		
 		myUI->Render(m_spriteBatch, m_arialFont, m_comicSansFont);
