@@ -356,12 +356,12 @@ bool Graphics::Render(InputManager *myInput, Player* myPlayer, std::vector<Bulle
 		{
 			world = XMMatrixMultiply(Float3x3toXMMatrix(myPlayer->GetPhysicsComponent()->GetRotation()), XMMatrixTranslation(myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y, myPlayer->GetPhysicsComponent()->GetPosition().z));
 			XMMATRIX worldcopy = world;
-			world = XMMatrixMultiply(XMMatrixTranslation(1.2f, 0.75f, 0), worldcopy);
+			world = XMMatrixMultiply(XMMatrixTranslation(0.65f, 0.85f, 0), worldcopy);
 			myCamera->Update({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 		}
 
 		XMMATRIX worldcopy = world;
-		world = XMMatrixMultiply(XMMatrixScaling(.035, .035, .035), XMMatrixMultiply(XMMatrixTranslation(-1.2f, -.75, 0), worldcopy));
+		world = XMMatrixMultiply(XMMatrixScaling(.035, .035, .035), XMMatrixMultiply(XMMatrixTranslation(-0.65f, -.85, 0), worldcopy));
 		myPlayer->Render(myDX->GetDeviceContext());
 		//myPlayer->GetPhysicsComponent()->AddPosition({ world.r[3].m128_f32[0],  world.r[3].m128_f32[1],  world.r[3].m128_f32[2] });
 		//world = XMMatrixTranslation(myPlayer->GetPhysicsComponent()->GetPosition().x, myPlayer->GetPhysicsComponent()->GetPosition().y, myPlayer->GetPhysicsComponent()->GetPosition().z);
