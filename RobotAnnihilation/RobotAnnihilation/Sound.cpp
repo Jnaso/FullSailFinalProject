@@ -112,7 +112,7 @@ bool Sound::LoadWaveFile(const char *filename, IDirectSoundBuffer8 **secondaryBu
 		return false;
 	}
 
-	count = fread(&wavFileHeader, sizeof(wavFileHeader), 1, filePtr);
+	count = (unsigned int)fread(&wavFileHeader, sizeof(wavFileHeader), 1, filePtr);
 	if (count != 1)
 	{
 		return false;
@@ -191,7 +191,7 @@ bool Sound::LoadWaveFile(const char *filename, IDirectSoundBuffer8 **secondaryBu
 		return false;
 	}
 
-	count = fread(waveData, 1, wavFileHeader.dataSize, filePtr);
+	count = (unsigned int)fread(waveData, 1, wavFileHeader.dataSize, filePtr);
 	if (count != wavFileHeader.dataSize)
 	{
 		return false;
