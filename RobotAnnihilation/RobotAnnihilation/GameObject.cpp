@@ -66,7 +66,7 @@ void GameObject::AddAninimation(const char * filePath, ID3D11Device * device, in
 	objectAnimations.resize(objectAnimations.size() + 1);
 	objectAnimations[index] = new Animation(filePath, device);
 	AnimationParents.clear();
-	for (size_t i = 0; i < objectAnimations[index]->GetAnimationClip().parent_indicies.size(); i++)
+	for (int i = 0; i < (int)objectAnimations[index]->GetAnimationClip().parent_indicies.size(); i++)
 	{
 		AnimationParents.push_back(GetParent(i, objectAnimations[index]->GetAnimationClip().parent_indicies));
 	}

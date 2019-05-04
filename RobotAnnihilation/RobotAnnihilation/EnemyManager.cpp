@@ -98,7 +98,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 			myEnemies[myEnemies.size() - 1]->SetAnimation(1);
 		}
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
-		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
+		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99f);
 		myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
 		myEnemies[myEnemies.size() - 1]->SetCurrency(10);
 		TotalEnemiesSpawned++;
@@ -211,7 +211,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 				myEnemies[myEnemies.size() - 1]->SetAnimation(0);
 			}
 			myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetAccel({ 0, -1, 0 });
-			myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99);
+			myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetDamping(.99f);
 			myEnemies[myEnemies.size() - 1]->GetPhysicsComponent()->SetMass(10);
 			myEnemies[myEnemies.size() - 1]->SetCurrency(10);
 		}
@@ -227,7 +227,7 @@ void EnemyManager::Update(float delta, Player *myPlayer, vector<GameObject*> obs
 	}
 		
 
-	currentEnemies = myEnemies.size();
+	currentEnemies = (unsigned int)myEnemies.size();
 }
 
 
@@ -238,7 +238,7 @@ vector<Enemy*> &EnemyManager::GetEnemies()
 
 unsigned int EnemyManager::GetEnemyCount()
 {
-	return myEnemies.size();
+	return (unsigned int)myEnemies.size();
 }
 
 float3 EnemyManager::CalculateCohesion(Target * myT)

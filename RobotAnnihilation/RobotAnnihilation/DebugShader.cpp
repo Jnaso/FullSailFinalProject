@@ -158,7 +158,7 @@ void DebugShader::ProcessShaderErrors(ID3D10Blob * errors)
 	ofstream fout;
 
 	errorMessages = (char*)(errors->GetBufferPointer());
-	bufferSize = errors->GetBufferSize();
+	bufferSize = (unsigned int)errors->GetBufferSize();
 	fout.open("ShaderErrors.txt");
 
 	for (unsigned int i = 0; i < bufferSize; i++)
@@ -207,7 +207,7 @@ void DebugShader::DrawShaders(ID3D11DeviceContext * myContext)
 	myContext->PSSetShader(myPixelShader, NULL, 0);
 
 	//myContext->Draw(end::debug_renderer::get_line_vert_count(), 0);
-	myContext->Draw(debug_renderer::get_line_vert_count(), 0);
+	myContext->Draw((UINT)debug_renderer::get_line_vert_count(), 0);
 	//end::debug_renderer::clear_lines();
 	debug_renderer::clear_lines();
 }

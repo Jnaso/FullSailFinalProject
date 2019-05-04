@@ -236,7 +236,7 @@ void AnimatedShader::ProcessShaderErrors(ID3D10Blob *errors)
 
 	//Store the error messages and the amount of error messages 
 	errorMessages = (char*)(errors->GetBufferPointer());
-	bufferSize = errors->GetBufferSize();
+	bufferSize = (unsigned int)errors->GetBufferSize();
 	fout.open("ShaderErrors.txt");
 
 	//Write each error message to the file

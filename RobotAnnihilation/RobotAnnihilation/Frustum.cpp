@@ -8,9 +8,9 @@ Frustum::Frustum()
 void Frustum::Construct(float screenDepth, XMMATRIX projection, XMMATRIX view)
 {
 	float zMinimum, r;
-	XMMATRIX matrix;
-	XMMATRIX proj;
-	XMMATRIX temp;
+	XMMATRIX matrix = XMMatrixIdentity();
+	XMMATRIX proj = XMMatrixIdentity();
+	XMMATRIX temp = XMMatrixIdentity();
 
 	zMinimum = -projection.r[3].m128_f32[2] / projection.r[2].m128_f32[2];
 	r = screenDepth / (screenDepth - zMinimum);

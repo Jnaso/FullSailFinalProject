@@ -28,6 +28,7 @@ bool Sound::Initialize(HWND window)
 	{
 		return false;
 	}
+	return true;
 }
 
 //Cleans up all objects

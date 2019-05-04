@@ -107,7 +107,7 @@ void RangedEnemy::Attack(Player * myPlayer, std::vector<Bullet*> &bullets, ID3D1
 		AddSound(new Sound((char*)"Assets/EnemyShoot.wav", 0));
 		GetSounds()[GetSounds().size() - 1]->Initialize(window);
 		GetSounds()[GetSounds().size() - 1]->PlayWaveFile();
-		timeBetweenAttacks = timeGetTime();
+		timeBetweenAttacks = (float)timeGetTime();
 	}
 	
 }

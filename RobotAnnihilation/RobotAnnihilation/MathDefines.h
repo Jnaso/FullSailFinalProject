@@ -93,7 +93,10 @@ struct float3
 
 	inline float3& operator*(const float& value) const
 	{
-		float3 NewVal = { this->x * value, this->y * value, this->z * value };
+		static float3 NewVal = { 0.0f, 0.0f, 0.0f }; 
+		NewVal.x = this->x * value;
+		NewVal.y = this->y * value;
+		NewVal.z = this->z * value;
 		return NewVal;
 	}
 
@@ -106,8 +109,11 @@ struct float3
 
 	inline float3& operator+(const float3& value) const
 	{
-		float3 newVal = { this->x + value.x, this->y + value.y, this->z + value.z };
-		return newVal;
+		static float3 NewVal = { 0.0f, 0.0f, 0.0f };
+		NewVal.x = this->x + value.x;
+		NewVal.y = this->y + value.y;
+		NewVal.z = this->z + value.z;
+		return NewVal;
 	}
 
 	inline void operator-=(const float3& value)
@@ -119,8 +125,11 @@ struct float3
 
 	inline float3& operator-(const float3& value) const
 	{
-		float3 newVal = { this->x - value.x, this->y - value.y, this->z - value.z };
-		return newVal;
+		static float3 NewVal = { 0.0f, 0.0f, 0.0f };
+		NewVal.x = this->x - value.x;
+		NewVal.y = this->y - value.y;
+		NewVal.z = this->z - value.z;
+		return NewVal;
 	}
 
 	inline void addScaledVec(const float3& vec, const float& scale)
@@ -631,7 +640,7 @@ inline float AngleBetweenVectors(float3 a, float3 b)
 
 inline float3x3 CreateRotationMatrixX(float angle)
 {
-	float newangle = angle * 3.14159 / 180;
+	float newangle = angle * 3.14159f / 180.0f;
 	float3x3 rotationMatrix;
 	rotationMatrix[0].x = 1;
 	rotationMatrix[0].y = 0;
@@ -647,7 +656,7 @@ inline float3x3 CreateRotationMatrixX(float angle)
 
 inline float3x3 CreateRotationMatrixY(float angle)
 {
-	float newangle = angle * 3.14159 / 180;
+	float newangle = angle * 3.14159f / 180.0f;
 	float3x3 rotationMatrix;
 	rotationMatrix[0].x = cos(newangle);
 	rotationMatrix[0].y = 0;
@@ -663,7 +672,7 @@ inline float3x3 CreateRotationMatrixY(float angle)
 
 inline float3x3 CreateRotationMatrixZ(float angle)
 {
-	float newangle = angle * 3.14159 / 180;
+	float newangle = angle * 3.14159f / 180.0f;
 	float3x3 rotationMatrix;
 	rotationMatrix[0].x = cos(newangle);
 	rotationMatrix[0].y = -sin(newangle);
@@ -688,7 +697,7 @@ inline float3 VectorMatrixMultiplication(float3x3 mat, float3 vec)
 
 inline int Pth(int x, int y)
 {
-	return sqrt(pow(x, 2) + pow(y, 2));
+	return (int)sqrt(pow(x, 2) + pow(y, 2));
 }
 
 inline float3x3 XMMatrixtoFloat3x3(XMMATRIX input)

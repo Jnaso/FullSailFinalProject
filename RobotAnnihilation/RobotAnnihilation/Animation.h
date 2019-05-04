@@ -17,7 +17,7 @@
 #pragma comment(lib, "DXGI.lib")
 class Animation
 {
-	float frameTime = 0;
+	double frameTime = 0;
 	anim_clip ObjAnim;
 
 	std::vector<float4x4> Joints;
@@ -26,15 +26,15 @@ public:
 	Animation(const char* filePath, ID3D11Device* device);
 	~Animation();
 	void ReadAnimFile(const char * filePath, ID3D11Device * device);
-	std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio);
-	void SetJoints(float frametime);
-	void Update(float update);
+	std::vector<float4x4> LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, double ratio);
+	void SetJoints(double frametime);
+	void Update(double update);
 	std::vector<float4x4> GetJoints();
 	void SetJoints(std::vector<float4x4> newJ);
 	std::vector<int32_t> GetParents();
 
-	float GetFrameTime();
-	void SetFrameTime(float delta);
+	double GetFrameTime();
+	void SetFrameTime(double delta);
 
 	anim_clip GetAnimationClip() { return ObjAnim; }
 

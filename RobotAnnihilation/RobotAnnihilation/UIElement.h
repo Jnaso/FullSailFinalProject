@@ -13,7 +13,7 @@
 
 inline LONG LLerp(LONG l1, LONG l2, float r)
 {
-	return static_cast<float>((l2 - l1) * r + l1);
+	return (LONG)static_cast<float>((l2 - l1) * r + l1);
 }
 
 class UIElement

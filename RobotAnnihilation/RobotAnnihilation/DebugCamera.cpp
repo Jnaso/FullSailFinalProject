@@ -111,7 +111,7 @@ void DebugCamera::GetInput(InputManager *myManager, float time)
 		moveUpDown += speed;
 	}
 
-	if (myManager->GetKeyState(_SPACE))
+	if (myManager->GetKeyState(_SPACE_))
 	{
 		moveUpDown -= speed;
 	}

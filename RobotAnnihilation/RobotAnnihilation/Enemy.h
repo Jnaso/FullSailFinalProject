@@ -37,7 +37,7 @@ public:
 	float GetHealth() { return health; }
 	void SubHealth(float newHealth, DamageType dmg, HWND window);
 
-	float GetCurrency() { return CurrencyGiven; }
+	unsigned int GetCurrency() { return CurrencyGiven; }
 	void SetCurrency(unsigned int newCurr) { CurrencyGiven = newCurr; };
 
 	void SetHurt();

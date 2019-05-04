@@ -71,7 +71,9 @@ void Camera::Update(XMFLOAT3 newLookAt)
 {
 	XMVECTOR DefaultRight = { 1.0f, 0.0f, 0.0f, 0.0f };
 
-	XMFLOAT3 up, position, lookAt;
+	XMFLOAT3 up = { 0.0f, 0.0f, 0.0f }; 
+	XMFLOAT3 position = { 0.0f, 0.0f, 0.0f }; 
+	XMFLOAT3 lookAt = { 0.0f, 0.0f, 0.0f };
 	//float yaw, pitch, roll;
 	
 	//XMMATRIX groundWorld;
@@ -169,7 +171,7 @@ void Camera::GetInput(InputManager *myInput, float time, XMMATRIX& player, Playe
 		moveChar = true;
 	}
 
-	if (myInput->GetKeyState(_SPACE) && upMovement <= 0.0f)
+	if (myInput->GetKeyState(_SPACE_) && upMovement <= 0.0f)
 	{
 		upMovement += 1.0f;
 		moveChar = true;
@@ -260,11 +262,11 @@ void Camera::SetCharacterPosition(double time, XMVECTOR& destinationDirection, X
 	float speed;
 	if (!slowed)
 	{
-		speed = 20.0f * time;
+		speed = 20.0f * (float)time;
 	}
 	else
 	{
-		speed = 5.0f * time;
+		speed = 5.0f * (float)time;
 	}
 	charPosition = charPosition + (destinationDirection * speed);
 

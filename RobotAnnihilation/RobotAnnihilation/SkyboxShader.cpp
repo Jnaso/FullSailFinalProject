@@ -187,7 +187,7 @@ void SkyboxShader::ProcessShaderErrors(ID3D10Blob *errors)
 	ofstream fout;
 
 	errorMessages = (char*)(errors->GetBufferPointer());
-	bufferSize = errors->GetBufferSize();
+	bufferSize = (unsigned int)errors->GetBufferSize();
 	fout.open("ShaderErrors.txt");
 
 	for (unsigned int i = 0; i < bufferSize; i++)

@@ -98,9 +98,9 @@ void Target::Attack(Player *myPlayer)
 	{
 		if (!myPlayer->GetInvincible())
 		{
-			myPlayer->SetHealth(myPlayer->GetHealth() - 3.0f);
+			myPlayer->SetHealth(myPlayer->GetHealth() - 3);
 		}
-		timeBetweenAttacks = timeGetTime();
+		timeBetweenAttacks = (float)timeGetTime();
 	}
 }
 

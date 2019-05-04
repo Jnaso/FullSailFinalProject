@@ -119,7 +119,7 @@ void Animation::ReadAnimFile(const char* filePath, ID3D11Device* device)
 	}
 }
 
-void Animation::Update(float delta)
+void Animation::Update(double delta)
 {
 	if (this)
 	{
@@ -128,34 +128,34 @@ void Animation::Update(float delta)
 	}
 }
 
-std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, float ratio)
+std::vector<float4x4> Animation::LerpJoints(std::vector<float4x4>frame1, std::vector<float4x4>frame2, double ratio)
 {
 	// Calculate lerp between keyframes using ratio calculated above
 	std::vector<float4x4> newJoints;
 	for (uint32_t i = 0; i < frame1.size(); i++)
 	{
-		XMVECTOR result = XMQuaternionSlerp(XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame1[i])), XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame2[i])), ratio);
+		XMVECTOR result = XMQuaternionSlerp(XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame1[i])), XMQuaternionRotationMatrix(Float4x4ToXMMatrix(frame2[i])), (float)ratio);
 		XMMATRIX back = XMMatrixRotationQuaternion(result);
 		//((p2 - p1) * ratio + p1);
-		XMVECTOR pos;
-		pos.m128_f32[0] = ((frame2[i][3].x - frame1[i][3].x) * ratio + frame1[i][3].x);
-		pos.m128_f32[1] = ((frame2[i][3].y - frame1[i][3].y) * ratio + frame1[i][3].y);
-		pos.m128_f32[2] = ((frame2[i][3].z - frame1[i][3].z) * ratio + frame1[i][3].z);
-		pos.m128_f32[3] = ((frame2[i][3].w - frame1[i][3].w) * ratio + frame1[i][3].w);
-		back.r[3].m128_f32[0] = pos.m128_f32[0];
-		back.r[3].m128_f32[1] = pos.m128_f32[1];
-		back.r[3].m128_f32[2] = pos.m128_f32[2];
-		back.r[3].m128_f32[3] = pos.m128_f32[3];
+		//XMVECTOR pos;
+		back.r[3].m128_f32[0] = (float)((frame2[i][3].x - frame1[i][3].x) * ratio + frame1[i][3].x);
+		back.r[3].m128_f32[1] = (float)((frame2[i][3].y - frame1[i][3].y) * ratio + frame1[i][3].y);
+		back.r[3].m128_f32[2] = (float)((frame2[i][3].z - frame1[i][3].z) * ratio + frame1[i][3].z);
+		back.r[3].m128_f32[3] = (float)((frame2[i][3].w - frame1[i][3].w) * ratio + frame1[i][3].w);
+		//back.r[3].m128_f32[0] = pos.m128_f32[0];
+		//back.r[3].m128_f32[1] = pos.m128_f32[1];
+		//back.r[3].m128_f32[2] = pos.m128_f32[2];
+		//back.r[3].m128_f32[3] = pos.m128_f32[3];
 		newJoints.push_back(XMMatrixToFloat4x4(back));
 	}
 	return newJoints;
 }
 
-void Animation::SetJoints(float frametime)
+void Animation::SetJoints(double frametime)
 {
 	std::vector<float4x4> newJoints;
-	uint32_t frame1 = 0;
-	uint32_t frame2 = 0;
+	size_t frame1 = 0;
+	size_t frame2 = 0;
 	for (size_t i = 0; i < ObjAnim.frames.size(); i++)
 	{
 		// Checks if time is before the first keyframe
@@ -179,7 +179,7 @@ void Animation::SetJoints(float frametime)
 			break;
 		}
 	}
-	float ratio = 0;
+	double ratio = 0;
 	if (frame2 == 0)
 		ratio = (frametime - (ObjAnim.frames[frame1].time - ObjAnim.duration)) / (ObjAnim.frames[frame2].time - (ObjAnim.frames[frame1].time - ObjAnim.duration));
 	else
@@ -207,12 +207,12 @@ std::vector<int32_t> Animation::GetParents()
 	return ObjAnim.parent_indicies;
 }
 
-float Animation::GetFrameTime()
+double Animation::GetFrameTime()
 {
 	return frameTime;
 }
 
-void Animation::SetFrameTime(float delta)
+void Animation::SetFrameTime(double delta)
 {
 	frameTime += delta;
 	while (frameTime > ObjAnim.duration)

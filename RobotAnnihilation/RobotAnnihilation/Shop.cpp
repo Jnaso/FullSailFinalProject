@@ -258,7 +258,7 @@ void Shop::ShowMeleStats()
 void Shop::Upgrade(WEAPONTYPE type)
 {
 	//m_buttonClickSound->PlayWaveFile();
-	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
+	bool res = (unsigned int)this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
 	if (res)
 	{
 		switch (type)
@@ -283,7 +283,7 @@ void Shop::Upgrade(WEAPONTYPE type)
 
 void Shop::UpgradeWeapon(Item* item)
 {
-	bool res = this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
+	bool res = (unsigned int)this->m_itemToDisplay->m_cost <= m_playerRef->GetPoints() ? true : false;
 	if (item)
 	{
 		if (res)

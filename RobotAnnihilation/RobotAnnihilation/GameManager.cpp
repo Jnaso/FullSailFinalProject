@@ -308,7 +308,7 @@ void GameManager::Update(float delta, float total)
 				myPlayer->GetSounds()[myPlayer->GetSounds().size() - 1]->PlayWaveFile();
 				myInput->SetKeyState('R', false);
 			}
-			if (myInput->GetKeyState(_SPACE) && !myPlayer->isJumping())
+			if (myInput->GetKeyState(_SPACE_) && !myPlayer->isJumping())
 			{
 				myPlayer->GetPhysicsComponent()->AddVelocity(float3{ 0.0f, 3.0f, 0.0f });
 				myPlayer->GetPhysicsComponent()->SetAccel(float3{ 0.0f, -3.0f, 0.0f });
@@ -345,7 +345,7 @@ void GameManager::Update(float delta, float total)
 					bullets[i]->SetDestroy();
 					if (!myPlayer->GetInvincible())
 					{
-						myPlayer->SetHealth(myPlayer->GetHealth() - 10.0f);
+						myPlayer->SetHealth(myPlayer->GetHealth() - 10);
 					}
 					continue;
 				}
@@ -397,7 +397,7 @@ void GameManager::Update(float delta, float total)
 									SpawnHealthPickup(myEnemyManager->GetEnemies()[j]->GetPhysicsComponent()->GetPosition());
 								}
 							}
-							myPlayer->AddCurrency(myEnemyManager->GetEnemies()[j]->GetCurrency() * 1.5f);
+							myPlayer->AddCurrency((int)(myEnemyManager->GetEnemies()[j]->GetCurrency() * 1.5f));
 							myEnemyManager->GetEnemies()[j]->SetDestroy();
 						}
 						continue;
@@ -453,9 +453,9 @@ void GameManager::Update(float delta, float total)
 					}
 				}
 			}
-			for (size_t j = 0; j < Obstacles.size(); j++)
+			for (int j = 0; j < (int)Obstacles.size(); j++)
 			{
-				for (size_t k = 0; k < Obstacles[j]->GetColliders().size(); k++)
+				for (int k = 0; k < (int)Obstacles[j]->GetColliders().size(); k++)
 				{
 					if (DitanceFloat3(bullets[i]->GetPhysicsComponent()->GetPosition(), Obstacles[j]->GetCollider(k)->center) <= (bullets[i]->GetCollider(0)->radius + Obstacles[j]->GetCollider(k)->radius))
 					{				
@@ -504,11 +504,11 @@ void GameManager::Update(float delta, float total)
 		myPlayer->SetBackward(false);
 		myPlayer->SetLeft(false);
 		myPlayer->SetRight(false);
-		for (size_t i = 0; i < Obstacles.size(); i++)
+		for (int i = 0; i < (int)Obstacles.size(); i++)
 		{
 			if (DitanceFloat3(Obstacles[i]->GetPhysicsComponent()->GetPosition(), myPlayer->GetPhysicsComponent()->GetPosition()) <= 8.0f)
 			{
-				for (size_t j = 0; j < Obstacles[i]->GetColliders().size(); j++)
+				for (int j = 0; j < (int)Obstacles[i]->GetColliders().size(); j++)
 				{
 					if (lineCircle(myPlayer->GetForwardArrow(), *Obstacles[i]->GetCollider(j)))
 					{
@@ -767,7 +767,7 @@ void GameManager::Update(float delta, float total)
 						
 					};
 					lqb->SetSize(100, 50);
-					lqb->SetPos((screenW * 0.5f) - (lqb->GetSize().x * 0.5f), (screenH * 0.5f) - (lqb->GetSize().y * 0.5f));
+					lqb->SetPos((LONG)((screenW * 0.5f) - (lqb->GetSize().x * 0.5f)), (LONG)((screenH * 0.5f) - (lqb->GetSize().y * 0.5f)));
 				}
 			}
 			GetPlayer()->SetHealth(0);
@@ -1008,7 +1008,7 @@ bool GameManager::Initialize(int windowWidth, int windowHeight, HWND window)
 	if (tempImg)
 	{
 		tempImg->SetSize(100, 100);
-		tempImg->SetPos(screenW * 0.5f - 50, screenH * 0.5f + screenH * 0.25f);
+		tempImg->SetPos((LONG)(screenW * 0.5f - 50), (LONG)(screenH * 0.5f + screenH * 0.25f));
 	}
 
 	m_countDownText = GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, F_ARIAL, "Time To Next Round: \n");

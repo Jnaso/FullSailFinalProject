@@ -132,12 +132,12 @@ bool Model::Initialize(const char* filePath, ID3D11Device* device)
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = sizeof(Vertex) * ObjectVerts.size();
+	desc.ByteWidth = sizeof(Vertex) * (UINT)ObjectVerts.size();
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexData.pSysMem = ObjectVerts.data();
 	result = device->CreateBuffer(&desc, &vertexData, &ObjectVBuffer);
 	if (FAILED(result)) return false;
-	desc.ByteWidth = sizeof(uint32_t) * ObjectIndices.size();
+	desc.ByteWidth = sizeof(uint32_t) * (UINT)ObjectIndices.size();
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexData.pSysMem = ObjectIndices.data();
 	result = device->CreateBuffer(&desc, &indexData, &ObjectIndexBuffer);

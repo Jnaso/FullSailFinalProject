@@ -45,7 +45,7 @@ class Shop
 			m_stats[STATS::DAMAGE] = baseDamage;
 			m_stats[STATS::AMMO_COUNT] = baseAmmoCount;
 			m_stats[STATS::FIRE_RATE] = baseDamage;
-			m_cost = baseCost;
+			m_cost = (int)baseCost;
 			m_description = description;
 			m_weaponType = weaponType;
 		}

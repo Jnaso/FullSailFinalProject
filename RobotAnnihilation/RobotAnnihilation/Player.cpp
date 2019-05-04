@@ -121,7 +121,7 @@ void Player::Update(float delta)
 				currentLowerAnimation->SetFrameTime(delta);
 				currentUpperAnimation->SetFrameTime(delta);
 			}
-			AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), currentUpperAnimation->GetFrameTime(), currentLowerAnimation->GetFrameTime());
+			AnimationJoints = SetSkeletonLines(currentUpperAnimation->GetAnimationClip(), currentLowerAnimation->GetAnimationClip(), (float)currentUpperAnimation->GetFrameTime(), (float)currentLowerAnimation->GetFrameTime());
 			
 		}
 	if (timeLeftDamage > 0)
@@ -190,7 +190,7 @@ std::vector<float4x4> Player::SetSkeletonLines(anim_clip animationUpper, anim_cl
 		// Checks if time is before the first keyframe
 		if (i == 0 && timeUpper < animationUpper.frames[i].time)
 		{
-			frame1Upper = animationUpper.frames.size() - 1;
+			frame1Upper = (uint32_t)animationUpper.frames.size() - 1;
 			frame2Upper = i;
 			break;
 		}
@@ -208,7 +208,7 @@ std::vector<float4x4> Player::SetSkeletonLines(anim_clip animationUpper, anim_cl
 			break;
 		}
 	}
-	float ratioUpper = 0;
+	double ratioUpper = 0;
 	if (frame2Upper == 0)
 		ratioUpper = (timeUpper - (animationUpper.frames[frame1Upper].time - animationUpper.duration)) / (animationUpper.frames[frame2Upper].time - (animationUpper.frames[frame1Upper].time - animationUpper.duration));
 	else
@@ -221,7 +221,7 @@ std::vector<float4x4> Player::SetSkeletonLines(anim_clip animationUpper, anim_cl
 		// Checks if time is before the first keyframe
 		if (i == 0 && timeLower < animationLower.frames[i].time)
 		{
-			frame1Lower = animationLower.frames.size() - 1;
+			frame1Lower = (uint32_t)animationLower.frames.size() - 1;
 			frame2Lower = i;
 			break;
 		}
@@ -239,7 +239,7 @@ std::vector<float4x4> Player::SetSkeletonLines(anim_clip animationUpper, anim_cl
 			break;
 		}
 	}
-	float ratioLower = 0;
+	double ratioLower = 0;
 	if (frame2Lower == 0)
 		ratioLower = (timeLower - (animationLower.frames[frame1Lower].time - animationLower.duration)) / (animationLower.frames[frame2Lower].time - (animationLower.frames[frame1Lower].time - animationLower.duration));
 	else
@@ -250,27 +250,27 @@ std::vector<float4x4> Player::SetSkeletonLines(anim_clip animationUpper, anim_cl
 	std::vector<float4x4> Frame2UpperJoints = animationUpper.frames[frame2Upper].joints;
 	std::vector<float4x4> Frame1LowerJoints = animationLower.frames[frame1Lower].joints;
 	std::vector<float4x4> Frame2LowerJoints = animationLower.frames[frame2Lower].joints;
-	float4x4 LerpRootUpper = LerpJoint(Frame1UpperJoints[0], Frame2UpperJoints[0], ratioUpper);
-	float4x4 LerpRootLower = LerpJoint(Frame1LowerJoints[0], Frame2LowerJoints[0], ratioLower);
+	float4x4 LerpRootUpper = LerpJoint(Frame1UpperJoints[0], Frame2UpperJoints[0], (float)ratioUpper);
+	float4x4 LerpRootLower = LerpJoint(Frame1LowerJoints[0], Frame2LowerJoints[0], (float)ratioLower);
 	NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[0]), Float4x4ToXMMatrix(LerpJoint(LerpRootUpper, LerpRootLower, .5f))))));
-	LerpRootUpper = LerpJoint(Frame1UpperJoints[1], Frame2UpperJoints[1], ratioUpper);
-	LerpRootLower = LerpJoint(Frame1LowerJoints[1], Frame2LowerJoints[1], ratioLower);
+	LerpRootUpper = LerpJoint(Frame1UpperJoints[1], Frame2UpperJoints[1], (float)ratioUpper);
+	LerpRootLower = LerpJoint(Frame1LowerJoints[1], Frame2LowerJoints[1], (float)ratioLower);
 	NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[1]), Float4x4ToXMMatrix(LerpJoint(LerpRootUpper, LerpRootLower, .25f))))));
-	LerpRootUpper = LerpJoint(Frame1UpperJoints[2], Frame2UpperJoints[2], ratioUpper);
-	LerpRootLower = LerpJoint(Frame1LowerJoints[2], Frame2LowerJoints[2], ratioLower);
+	LerpRootUpper = LerpJoint(Frame1UpperJoints[2], Frame2UpperJoints[2], (float)ratioUpper);
+	LerpRootLower = LerpJoint(Frame1LowerJoints[2], Frame2LowerJoints[2], (float)ratioLower);
 	NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[2]), Float4x4ToXMMatrix(LerpJoint(LerpRootUpper, LerpRootLower, .75f))))));
-	LerpRootUpper = LerpJoint(Frame1UpperJoints[3], Frame2UpperJoints[3], ratioUpper);
-	LerpRootLower = LerpJoint(Frame1LowerJoints[3], Frame2LowerJoints[3], ratioLower);
+	LerpRootUpper = LerpJoint(Frame1UpperJoints[3], Frame2UpperJoints[3], (float)ratioUpper);
+	LerpRootLower = LerpJoint(Frame1LowerJoints[3], Frame2LowerJoints[3], (float)ratioLower);
 	NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[3]), Float4x4ToXMMatrix(LerpJoint(LerpRootUpper, LerpRootLower, .75f))))));
 	for (unsigned int i = 4; i < Frame1LowerJoints.size(); i++)
 	{
 		if (AnimationParents[i] == 1)// GetParent(i, animationLower->GetAnimationClip().parent_indicies) == 1)// animationLower.parent_indicies[i] == 1)
 		{
-			NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[i]), Float4x4ToXMMatrix(LerpJoint(Frame1UpperJoints[i], Frame2UpperJoints[i], ratioUpper))))));
+			NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[i]), Float4x4ToXMMatrix(LerpJoint(Frame1UpperJoints[i], Frame2UpperJoints[i], (float)ratioUpper))))));
 		}
 		else
 		{
-			NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[i]), Float4x4ToXMMatrix(LerpJoint(Frame1LowerJoints[i], Frame2LowerJoints[i], ratioUpper))))));
+			NewJoints.push_back(XMMatrixToFloat4x4(XMMatrixTranspose(XMMatrixMultiply(Float4x4ToXMMatrix(Bindpose[i]), Float4x4ToXMMatrix(LerpJoint(Frame1LowerJoints[i], Frame2LowerJoints[i], (float)ratioUpper))))));
 		}
 	}
 	return NewJoints;

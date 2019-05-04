@@ -14,7 +14,7 @@ bool DebugRenderer::InitializeBuffer(ID3D11Device *device)
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	//vertexBufferDesc.ByteWidth = sizeof(end::colored_vertex) * end::debug_renderer::get_line_vert_capacity();
-	vertexBufferDesc.ByteWidth = sizeof(colored_vertex) * debug_renderer::get_line_vert_capacity();
+	vertexBufferDesc.ByteWidth = sizeof(colored_vertex) * (UINT)debug_renderer::get_line_vert_capacity();
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;

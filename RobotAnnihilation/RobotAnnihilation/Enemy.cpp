@@ -54,7 +54,7 @@ void Enemy::SetHurt()
 {
 	if (!ImHurt)
 	{
-		HurtTime = timeGetTime();
+		HurtTime = (float)timeGetTime();
 		ImHurt = true;
 	}
 }

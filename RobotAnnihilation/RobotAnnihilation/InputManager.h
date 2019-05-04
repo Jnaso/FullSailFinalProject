@@ -11,7 +11,7 @@
 
 #define _SHIFT 16
 #define _CTRL 17
-#define _SPACE 32
+#define _SPACE_ 32
 #define _ESCAPE 27
 #define _TILDE 192
 		

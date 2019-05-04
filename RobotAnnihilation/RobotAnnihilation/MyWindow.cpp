@@ -19,7 +19,7 @@ bool MyWindow::Run()
 	timer.Signal();
 
 	//Subtract Time So Input Isnt checked every frame
-	keyPressTimer -= timer.Delta();
+	keyPressTimer -= (float)timer.Delta();
 	
 	#pragma region Shop_Controls
 	if (gameManager->GetInputManager()->GetKeyState('K'))
@@ -37,9 +37,9 @@ bool MyWindow::Run()
 
 	if (!gameManager->paused)
 	{
-		Update(timer.Delta());
+		Update((float)timer.Delta());
 	}
-	gameManager->GetUIManager()->Update(timer.Delta());
+	gameManager->GetUIManager()->Update((float)timer.Delta());
 	
 	UpdateVolumeText();
 
@@ -298,9 +298,9 @@ void MyWindow::CalcFPS()
 	static const int NUM_SAMPLES = 100;
 	static float frameTimes[NUM_SAMPLES];
 	static int currentFrame = 0;
-	static float prevTicks = GetTickCount();
+	static float prevTicks = (float)GetTickCount();
 
-	float currTicks = GetTickCount();
+	float currTicks = (float)GetTickCount();
 
 	_frameTime = currTicks - prevTicks;
 	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
@@ -569,7 +569,7 @@ bool MyWindow::Initialize()
 			this->VolumeUp();
 		};
 		upButton->SetSize(100, 50);
-		upButton->SetPos(screenW * 0.5f, screenH * 0.5f);
+		upButton->SetPos((LONG)(screenW * 0.5f), (LONG)(screenH * 0.5f));
 	}
 	#pragma endregion
 
@@ -588,7 +588,7 @@ bool MyWindow::Initialize()
 			this->VolumeDown();
 		};
 		downButton->SetSize(100, 50);
-		downButton->SetPos(screenW * 0.5f + 100, screenH  * 0.5f);
+		downButton->SetPos((LONG)(screenW * 0.5f + 100), (LONG)(screenH  * 0.5f));
 	}
 	#pragma endregion
 
@@ -617,7 +617,7 @@ bool MyWindow::Initialize()
 			}
 		};
 		backButton->SetSize(100, 50);
-		backButton->SetPos(0.0f, screenH - static_cast<float>(backButton->GetBottom()));
+		backButton->SetPos((LONG)0.0f, (LONG)(screenH - static_cast<float>(backButton->GetBottom())));
 	}
 	#pragma endregion
 
@@ -654,7 +654,7 @@ bool MyWindow::Initialize()
 	playerUI[8] = gameManager->GetUIManager()->CreateImage(RECT{ 0,0,0,0 }, false, false, float2{ 0,0 }, "DrawingStuff/Crosshair.dds", this->GetDevice());
 	if (playerUI[8])
 	{
-		playerUI[8]->SetPos(((screenW * 0.5f) - (playerUI[8]->GetSize().x * 0.5f)) - 18.2, ((screenH * 0.5f) - (playerUI[8]->GetSize().y * 0.5f)) - 5);
+		playerUI[8]->SetPos((LONG)(((screenW * 0.5f) - (playerUI[8]->GetSize().x * 0.5f)) - 18.2f), (LONG)(((screenH * 0.5f) - (playerUI[8]->GetSize().y * 0.5f)) - 5));
 	}
 	playerUI[2] = gameManager->m_weapon = gameManager->GetUIManager()->CreateText(RECT{ 0,0,0,0 }, false, false, float2{ 0, 100 }, F_ARIAL, "Current Weapon: ");
 
@@ -750,13 +750,13 @@ LRESULT MyWindow::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	case WM_KEYDOWN:
 	{
 		//Update the input object on every key press
-		gameManager->SetKeyState(wparam, true);
+		gameManager->SetKeyState((int)wparam, true);
 		return 0;
 	}
 	case WM_KEYUP:
 	{
 		//Update the input object on every key release
-		gameManager->SetKeyState(wparam, false);
+		gameManager->SetKeyState((int)wparam, false);
 		return 0;
 	}
 	case WM_MOUSEMOVE:
@@ -810,5 +810,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 void MyWindow::Update(float delta)
 {
-	gameManager->Update(delta, timer.TotalTime());
+	gameManager->Update(delta, (float)timer.TotalTime());
 }
